@@ -1,6 +1,15 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="no-transition">
 <head>
+  <script>
+    (function() {
+      const savedTheme = localStorage.getItem('midwest-underground-theme');
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
+    })();
+  </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Midwest Underground project portfolio - View our completed directional drilling, fiber optic installation, and underground utilities projects throughout central Minnesota.">
@@ -365,6 +374,17 @@
         <a href="tel:3203826636" class="nav-phone" aria-label="Call us at 320-382-6636">
           📞 (320) 382-6636
         </a>
+        <button
+          id="dark-mode-toggle"
+          class="dark-mode-toggle"
+          aria-label="Toggle dark mode"
+          aria-pressed="false"
+          title="Toggle dark/light mode"
+        >
+          <span class="toggle-circle"></span>
+          <span class="sun-icon">☀️</span>
+          <span class="moon-icon">🌙</span>
+        </button>
       </nav>
 
       <!-- Mobile Menu Toggle -->
@@ -384,6 +404,17 @@
       <li><a href="contact.html">Contact</a></li>
     </ul>
     <a href="tel:3203826636" class="mobile-menu-phone">📞 (320) 382-6636</a>
+    <button
+      id="mobile-dark-mode-toggle"
+      class="dark-mode-toggle"
+      aria-label="Toggle dark mode"
+      aria-pressed="false"
+      title="Toggle dark/light mode"
+    >
+      <span class="toggle-circle"></span>
+      <span class="sun-icon">☀️</span>
+      <span class="moon-icon">🌙</span>
+    </button>
   </div>
 
   <!-- Mobile Menu Backdrop -->

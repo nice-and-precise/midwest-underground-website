@@ -3,6 +3,7 @@
  * Main JavaScript File
  *
  * Handles:
+ * - Dark mode toggle
  * - Mobile menu toggle
  * - Smooth scrolling
  * - Sticky header on scroll
@@ -13,10 +14,115 @@
  */
 
 // ==========================================================================
+// DARK MODE
+// ==========================================================================
+
+/**
+ * Dark Mode Class
+ * Handles theme toggle, localStorage persistence, and system preference detection
+ */
+class DarkMode {
+  constructor() {
+    this.html = document.documentElement;
+    this.storageKey = 'midwest-underground-theme';
+    this.toggleButtons = [];
+
+    // Remove no-transition class after load to enable smooth transitions
+    setTimeout(() => {
+      this.html.classList.remove('no-transition');
+    }, 100);
+  }
+
+  init() {
+    // Find all toggle buttons (desktop and mobile)
+    const desktopToggle = document.getElementById('dark-mode-toggle');
+    const mobileToggle = document.getElementById('mobile-dark-mode-toggle');
+
+    if (desktopToggle) this.toggleButtons.push(desktopToggle);
+    if (mobileToggle) this.toggleButtons.push(mobileToggle);
+
+    // Load saved preference or check system preference
+    const savedTheme = localStorage.getItem(this.storageKey);
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+    if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+      this.setTheme('dark', false);
+    }
+
+    // Setup toggle button event listeners
+    this.toggleButtons.forEach(button => {
+      button.addEventListener('click', () => this.toggleTheme());
+    });
+
+    // Listen for system theme changes
+    window.matchMedia('(prefers-color-scheme: dark)')
+      .addEventListener('change', (e) => {
+        if (!localStorage.getItem(this.storageKey)) {
+          this.setTheme(e.matches ? 'dark' : 'light');
+        }
+      });
+  }
+
+  setTheme(theme, announce = true) {
+    if (theme === 'dark') {
+      this.html.setAttribute('data-theme', 'dark');
+    } else {
+      this.html.removeAttribute('data-theme');
+    }
+
+    this.updateToggleButtons(theme === 'dark');
+
+    if (announce) {
+      this.announceThemeChange(theme);
+    }
+  }
+
+  toggleTheme() {
+    const currentTheme = this.html.getAttribute('data-theme');
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+
+    this.setTheme(newTheme);
+    localStorage.setItem(this.storageKey, newTheme);
+  }
+
+  updateToggleButtons(isDark) {
+    this.toggleButtons.forEach(button => {
+      button.setAttribute('aria-pressed', isDark.toString());
+      if (isDark) {
+        button.setAttribute('title', 'Switch to light mode');
+        button.setAttribute('aria-label', 'Switch to light mode');
+      } else {
+        button.setAttribute('title', 'Switch to dark mode');
+        button.setAttribute('aria-label', 'Switch to dark mode');
+      }
+    });
+  }
+
+  announceThemeChange(theme) {
+    // Create screen reader announcement
+    const announcement = document.createElement('div');
+    announcement.setAttribute('role', 'status');
+    announcement.setAttribute('aria-live', 'polite');
+    announcement.className = 'sr-only';
+    announcement.textContent = `${theme === 'dark' ? 'Dark' : 'Light'} mode activated`;
+
+    document.body.appendChild(announcement);
+
+    // Remove after announcement
+    setTimeout(() => {
+      document.body.removeChild(announcement);
+    }, 1000);
+  }
+}
+
+// ==========================================================================
 // MOBILE MENU
 // ==========================================================================
 
 document.addEventListener('DOMContentLoaded', function() {
+  // Initialize Dark Mode
+  const darkMode = new DarkMode();
+  darkMode.init();
   const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
   const mobileMenu = document.querySelector('.mobile-menu');
   const mobileMenuBackdrop = document.querySelector('.mobile-menu-backdrop');

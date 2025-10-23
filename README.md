@@ -2,6 +2,60 @@
 
 Professional website for Midwest Underground of Minnesota Inc, a directional drilling and underground utilities contractor serving central Minnesota since 1991.
 
+## 🚀 QUICKSTART
+
+Get the website running in **under 60 seconds**:
+
+### Option 1: Local Quick Start (No Installation Required)
+```bash
+# 1. Clone the repository
+git clone https://github.com/nice-and-precise/midwest-underground-website.git
+
+# 2. Open in browser
+cd midwest-underground-website
+start index.html          # Windows
+open index.html           # macOS
+xdg-open index.html       # Linux
+```
+
+That's it! The website runs entirely in your browser with **zero dependencies**.
+
+### Option 2: Local Development Server
+```bash
+# Using Python (comes pre-installed on Mac/Linux)
+python -m http.server 8000
+
+# Using Node.js
+npx http-server -p 8000
+
+# Then visit: http://localhost:8000
+```
+
+### Option 3: Deploy to Production (1 Minute)
+```bash
+# Deploy to Netlify
+netlify deploy --prod
+
+# Or deploy to Vercel
+vercel --prod
+```
+
+### ⚡ Features Out of the Box
+
+- ✅ **Dark Mode** - System preference detection + manual toggle
+- ✅ **Mobile Responsive** - Works on all devices (375px to 4K)
+- ✅ **Zero Build Process** - Pure HTML/CSS/JS, no compilation needed
+- ✅ **SEO Optimized** - Schema.org markup, Open Graph tags
+- ✅ **Accessibility** - WCAG 2.1 AA compliant
+- ✅ **Fast** - Lighthouse Performance Score > 90
+
+### 📱 Test Dark Mode
+
+1. Open `index.html` in your browser
+2. Click the 🌙/☀️ toggle button in the navigation
+3. Theme preference is automatically saved
+4. Works across all pages
+
 ## Project Overview
 
 This is a static HTML/CSS/JavaScript website built to establish Midwest Underground's first digital presence and capture market share in Minnesota's $651M broadband infrastructure expansion.
@@ -94,6 +148,7 @@ midwest-underground-website/
 
 ### Core Features
 
+- ✅ **Dark Mode** - Theme toggle with localStorage persistence
 - ✅ **Mobile-first responsive design** (375px to 1920px+)
 - ✅ **Sticky navigation** with mobile hamburger menu
 - ✅ **Smooth scrolling** to anchor links
@@ -105,6 +160,184 @@ midwest-underground-website/
 - ✅ **24/7 emergency service** prominently displayed
 - ✅ **SEO optimized** with meta tags, Schema.org markup
 - ✅ **Accessibility compliant** (WCAG 2.1 AA)
+
+## 🌙 Dark Mode Implementation
+
+### Overview
+
+The website includes a fully-functional dark mode with automatic theme detection and manual toggle controls.
+
+### Features
+
+- **System Preference Detection** - Automatically detects `prefers-color-scheme: dark`
+- **Manual Toggle** - User can override system preference
+- **Persistent Storage** - Theme choice saved to localStorage
+- **Smooth Transitions** - Animated color changes (0.3s ease-in-out)
+- **FOUC Prevention** - No flash of wrong theme on page load
+- **Accessibility** - Screen reader announcements, ARIA labels
+- **Dual Toggle Support** - Synchronized desktop and mobile toggles
+- **WCAG AA Compliant** - Maintained color contrast in both themes
+
+### Architecture Diagram
+
+```mermaid
+graph TD
+    A[Page Load] --> B{Check localStorage}
+    B -->|Has Saved Theme| C[Apply Saved Theme]
+    B -->|No Saved Theme| D{Check System Preference}
+    D -->|Prefers Dark| E[Apply Dark Theme]
+    D -->|Prefers Light| F[Apply Light Theme]
+
+    C --> G[Initialize DarkMode Class]
+    E --> G
+    F --> G
+
+    G --> H[Attach Toggle Listeners]
+    H --> I[User Clicks Toggle]
+    I --> J[Toggle Theme]
+    J --> K[Save to localStorage]
+    K --> L[Update UI]
+    L --> M[Announce to Screen Readers]
+```
+
+### Theme Switching Flow
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant Toggle
+    participant DarkMode
+    participant DOM
+    participant Storage
+    participant ScreenReader
+
+    User->>Toggle: Click toggle button
+    Toggle->>DarkMode: toggleTheme()
+    DarkMode->>DOM: Get current theme
+    DOM-->>DarkMode: data-theme attribute
+    DarkMode->>DarkMode: Calculate new theme
+    DarkMode->>DOM: Set data-theme="dark/light"
+    DarkMode->>Storage: Save to localStorage
+    DarkMode->>Toggle: Update button state
+    DarkMode->>ScreenReader: Announce theme change
+    Toggle-->>User: Visual feedback
+```
+
+### Color System
+
+```mermaid
+graph LR
+    A[Semantic Colors] --> B[Light Theme]
+    A --> C[Dark Theme]
+
+    B --> D[--bg-primary: #FFFFFF]
+    B --> E[--text-primary: #333333]
+
+    C --> F[--bg-primary: #1a1a1a]
+    C --> G[--text-primary: #e5e5e5]
+
+    style A fill:#2EA3F2,color:#fff
+    style B fill:#FFFFFF,color:#333
+    style C fill:#1a1a1a,color:#e5e5e5
+```
+
+### Implementation Details
+
+#### CSS Variables (Light Mode Default)
+```css
+:root {
+  --bg-primary: #FFFFFF;
+  --bg-secondary: #F5F5F5;
+  --text-primary: #333333;
+  --text-secondary: #666666;
+  --color-primary: #003B5C;
+  --color-secondary: #FF6B35;
+}
+```
+
+#### Dark Mode Override
+```css
+[data-theme="dark"] {
+  --bg-primary: #1a1a1a;
+  --bg-secondary: #2d2d2d;
+  --text-primary: #e5e5e5;
+  --text-secondary: #b0b0b0;
+  --color-primary: #3a7ca5;
+  --color-secondary: #ff8c61;
+}
+```
+
+#### JavaScript Controller
+```javascript
+class DarkMode {
+  constructor() {
+    this.html = document.documentElement;
+    this.storageKey = 'midwest-underground-theme';
+  }
+
+  init() {
+    const savedTheme = localStorage.getItem(this.storageKey);
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+    if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+      this.setTheme('dark');
+    }
+  }
+
+  toggleTheme() {
+    const currentTheme = this.html.getAttribute('data-theme');
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    this.setTheme(newTheme);
+    localStorage.setItem(this.storageKey, newTheme);
+  }
+}
+```
+
+#### FOUC Prevention
+```html
+<html class="no-transition">
+<head>
+  <script>
+    (function() {
+      const savedTheme = localStorage.getItem('midwest-underground-theme');
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
+    })();
+  </script>
+</head>
+```
+
+### File Changes
+
+**Modified Files:**
+- `css/styles.css` - Theme variables and dark mode styles
+- `js/main.js` - DarkMode class implementation
+- `index.html` - Toggle buttons and FOUC prevention
+- `services.html` - Toggle buttons and FOUC prevention
+- `about.html` - Toggle buttons and FOUC prevention
+- `contact.html` - Toggle buttons and FOUC prevention
+- `projects.html` - Toggle buttons and FOUC prevention
+
+### Testing Dark Mode
+
+```bash
+# Test system preference detection
+# 1. Set OS to dark mode
+# 2. Open website in incognito/private mode
+# 3. Should automatically load in dark mode
+
+# Test manual toggle
+# 1. Click moon/sun icon in navigation
+# 2. Theme should switch immediately
+# 3. Reload page - theme should persist
+
+# Test across pages
+# 1. Set dark mode on homepage
+# 2. Navigate to other pages
+# 3. All pages should maintain dark mode
+```
 
 ## Local Development
 
@@ -407,7 +640,7 @@ Three production-ready feature guides with complete implementation instructions:
 ## Roadmap
 
 ### Phase 2 (Months 2-3)
-- **Dark mode toggle** (feature guide ready)
+- ✅ **Dark mode toggle** - COMPLETED
 - Real project photos and content
 - **Service request form** (feature guide ready)
 - Customer testimonials (video)

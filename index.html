@@ -1,6 +1,16 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="no-transition">
 <head>
+  <!-- Prevent flash of light theme on page load -->
+  <script>
+    (function() {
+      const savedTheme = localStorage.getItem('midwest-underground-theme');
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
+    })();
+  </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Midwest Underground of Minnesota Inc - 34 years of precision directional drilling, fiber optic installation, and underground utilities expertise in central Minnesota. Serving Willmar, Kandiyohi County, and surrounding areas.">
@@ -80,6 +90,19 @@
         <a href="tel:3203826636" class="nav-phone" aria-label="Call us at 320-382-6636">
           📞 (320) 382-6636
         </a>
+
+        <!-- Dark Mode Toggle (Desktop) -->
+        <button
+          id="dark-mode-toggle"
+          class="dark-mode-toggle"
+          aria-label="Toggle dark mode"
+          aria-pressed="false"
+          title="Toggle dark/light mode"
+        >
+          <span class="toggle-circle"></span>
+          <span class="sun-icon">☀️</span>
+          <span class="moon-icon">🌙</span>
+        </button>
       </nav>
 
       <!-- Mobile Menu Toggle -->
@@ -98,6 +121,26 @@
       <li><a href="about.html">About</a></li>
       <li><a href="contact.html">Contact</a></li>
     </ul>
+
+    <!-- Dark Mode Toggle (Mobile) -->
+    <div style="padding: var(--space-md); border-top: 1px solid var(--border-color); margin-top: var(--space-md);">
+      <label for="mobile-dark-mode-toggle" style="display: flex; align-items: center; justify-content: space-between; cursor: pointer;">
+        <span style="font-family: var(--font-heading); font-weight: 600; color: var(--text-primary);">Dark Mode</span>
+        <button
+          id="mobile-dark-mode-toggle"
+          class="dark-mode-toggle"
+          aria-label="Toggle dark mode"
+          aria-pressed="false"
+          title="Toggle dark/light mode"
+          style="margin: 0;"
+        >
+          <span class="toggle-circle"></span>
+          <span class="sun-icon">☀️</span>
+          <span class="moon-icon">🌙</span>
+        </button>
+      </label>
+    </div>
+
     <a href="tel:3203826636" class="mobile-menu-phone">📞 (320) 382-6636</a>
   </div>
 

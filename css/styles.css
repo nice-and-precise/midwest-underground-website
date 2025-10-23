@@ -7,16 +7,29 @@
    ========================================================================== */
 
 :root {
-  /* Brand Colors */
+  /* Brand Colors (static) */
   --primary-blue: #003B5C;
   --secondary-orange: #FF6B35;
   --accent-blue: #2EA3F2;
 
-  /* Neutral Palette */
+  /* Neutral Palette (static) */
   --neutral-dark: #333333;
   --neutral-medium: #666666;
   --neutral-light: #F5F5F5;
   --white: #FFFFFF;
+
+  /* Semantic Colors (theme-aware) - Light Mode Default */
+  --bg-primary: #FFFFFF;
+  --bg-secondary: #F5F5F5;
+  --bg-accent: #FAFAFA;
+  --text-primary: #333333;
+  --text-secondary: #666666;
+  --text-muted: #999999;
+  --color-primary: #003B5C;
+  --color-secondary: #FF6B35;
+  --color-accent: #2EA3F2;
+  --border-color: #E0E0E0;
+  --shadow-color: rgba(0, 0, 0, 0.1);
 
   /* Functional Colors */
   --success: #28A745;
@@ -84,6 +97,22 @@
   --z-tooltip: 1070;
 }
 
+/* Dark Mode Theme */
+[data-theme="dark"] {
+  /* Semantic Colors - Dark Mode */
+  --bg-primary: #1a1a1a;
+  --bg-secondary: #2d2d2d;
+  --bg-accent: #242424;
+  --text-primary: #e5e5e5;
+  --text-secondary: #b0b0b0;
+  --text-muted: #808080;
+  --color-primary: #3a7ca5;
+  --color-secondary: #ff8c61;
+  --color-accent: #5eb8e5;
+  --border-color: #404040;
+  --shadow-color: rgba(0, 0, 0, 0.3);
+}
+
 /* ==========================================================================
    RESET & BASE STYLES
    ========================================================================== */
@@ -92,6 +121,24 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+}
+
+/* Smooth color transitions for dark mode */
+*,
+*::before,
+*::after {
+  transition: background-color var(--transition-base),
+              color var(--transition-base),
+              border-color var(--transition-base),
+              box-shadow var(--transition-base);
+}
+
+/* Disable transitions on page load */
+.no-transition,
+.no-transition *,
+.no-transition *::before,
+.no-transition *::after {
+  transition: none !important;
 }
 
 html {
@@ -105,8 +152,8 @@ body {
   font-family: var(--font-body);
   font-size: var(--text-base);
   line-height: 1.6;
-  color: var(--neutral-dark);
-  background-color: var(--white);
+  color: var(--text-primary);
+  background-color: var(--bg-primary);
   overflow-x: hidden;
 }
 
@@ -116,7 +163,7 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: 700;
   line-height: 1.2;
   margin-bottom: var(--space-md);
-  color: var(--primary-blue);
+  color: var(--color-primary);
 }
 
 h1 { font-size: var(--text-4xl); }
@@ -843,4 +890,95 @@ ul, ol {
 .back-to-top:hover {
   background-color: var(--primary-blue);
   transform: translateY(-5px);
+}
+
+/* ==========================================================================
+   DARK MODE TOGGLE
+   ========================================================================== */
+
+.dark-mode-toggle {
+  position: relative;
+  width: 60px;
+  height: 30px;
+  background-color: var(--bg-secondary);
+  border: 2px solid var(--border-color);
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  display: flex;
+  align-items: center;
+  padding: 0;
+  margin-left: var(--space-md);
+}
+
+.dark-mode-toggle:hover {
+  border-color: var(--color-secondary);
+}
+
+.dark-mode-toggle:focus {
+  outline: 2px solid var(--color-secondary);
+  outline-offset: 2px;
+}
+
+/* Toggle Circle */
+.toggle-circle {
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  background-color: var(--color-secondary);
+  border-radius: 50%;
+  top: 2px;
+  left: 2px;
+  transition: transform var(--transition-base), background-color var(--transition-base);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+}
+
+[data-theme="dark"] .toggle-circle {
+  transform: translateX(30px);
+  background-color: var(--color-accent);
+}
+
+/* Icons */
+.sun-icon,
+.moon-icon {
+  width: 16px;
+  height: 16px;
+  position: absolute;
+  transition: opacity var(--transition-fast);
+  pointer-events: none;
+}
+
+.sun-icon {
+  left: 8px;
+  opacity: 1;
+}
+
+.moon-icon {
+  right: 8px;
+  opacity: 0.4;
+}
+
+[data-theme="dark"] .sun-icon {
+  opacity: 0.4;
+}
+
+[data-theme="dark"] .moon-icon {
+  opacity: 1;
+}
+
+/* Mobile placement */
+@media (max-width: 1023px) {
+  .dark-mode-toggle {
+    margin: var(--space-md) 0;
+  }
+}
+
+/* Hide on mobile in header, show in mobile menu */
+@media (max-width: 1023px) {
+  .header-container .dark-mode-toggle {
+    display: none;
+  }
 }
