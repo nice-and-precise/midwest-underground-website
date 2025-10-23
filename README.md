@@ -85,6 +85,31 @@ midwest-underground-website/
 ├── contact.html            # Contact form & info
 ├── projects.html           # Project portfolio
 │
+├── dashboard/              # Business Dashboard
+│   ├── index.html          # Dashboard home
+│   ├── projects.html       # Projects management
+│   ├── financials.html     # Financial analytics
+│   ├── customers.html      # Customer management
+│   │
+│   ├── css/
+│   │   └── dashboard.css   # Dashboard styles
+│   │
+│   ├── js/
+│   │   ├── dashboard.js    # Core dashboard logic
+│   │   ├── charts.js       # Chart.js initializations
+│   │   ├── projects.js     # Projects page logic
+│   │   ├── financials.js   # Financials page logic
+│   │   └── customers.js    # Customers page logic
+│   │
+│   └── api/
+│       ├── auth/           # Authentication endpoints
+│       ├── dashboard/      # Dashboard data endpoints
+│       └── data/           # JSON data files
+│           ├── projects.json
+│           ├── customers.json
+│           ├── financials.json
+│           └── equipment.json
+│
 ├── css/
 │   └── styles.css          # All custom styles
 │
@@ -95,6 +120,8 @@ midwest-underground-website/
 │   └── .gitkeep
 │
 ├── docs/
+│   ├── features/
+│   │   └── BUSINESS-DASHBOARD.md  # Dashboard documentation
 │   ├── ARCHITECTURE.md     # Technical decisions
 │   ├── PLACEHOLDERS.md     # Content to replace
 │   ├── MAINTENANCE.md      # Update procedures
@@ -645,18 +672,58 @@ A comprehensive business intelligence dashboard providing real-time insights int
 
 **Access Dashboard:** [/dashboard/](dashboard/index.html)
 
-### Features
+### Dashboard Pages
 
+#### 1. Main Dashboard ([dashboard/index.html](dashboard/index.html))
 - **KPIs:** Revenue YTD, Active Projects, Profit Margin, Cash on Hand
 - **Charts:** Revenue trends, Project status, Service breakdown
-- **Analytics:** Customer insights, Equipment utilization
-- **Alerts:** Overdue invoices, Maintenance reminders
-- **Dummy Data:** 15 projects, 13 customers, 24 months financials
+- **Analytics:** Top customers, Recent activity feed
+- **Alerts:** System notifications and reminders
+
+#### 2. Projects Management ([dashboard/projects.html](dashboard/projects.html))
+- **Overview:** 15 projects with 5 summary KPI cards
+- **Filtering:** Status, service type, customer type, search
+- **Sorting:** 6 sort options (date, budget, completion %)
+- **Visualization:** Progress bars, status badges
+- **Export:** CSV/PDF export functionality
+
+#### 3. Financial Management ([dashboard/financials.html](dashboard/financials.html))
+- **KPIs:** Revenue, Profit, Margin, Cash, A/R Outstanding
+- **Charts:** Revenue & Profit trend (12-month), Expense breakdown
+- **Cash Flow:** Current position with runway calculation
+- **A/R Aging:** Outstanding invoices with aging categories
+- **Date Filtering:** Preset periods + custom date ranges
+
+#### 4. Customer Management ([dashboard/customers.html](dashboard/customers.html))
+- **KPIs:** 13 customers, $14.5M lifetime value, 4.8 avg satisfaction
+- **Charts:** Customer type distribution, Top 5 by LTV
+- **Filtering:** Type, credit rating, search
+- **Sorting:** 8 sort options (LTV, projects, satisfaction, name)
+- **Contact Info:** Full customer details and project history
+
+### Technical Features
+
+- **Dark Mode:** Full theme support across all dashboard pages
+- **Responsive:** Mobile-first design for all screen sizes
+- **Real-time Filtering:** Debounced search with multi-criteria filters
+- **Chart.js 4.4:** Professional data visualizations
+- **CSV Export:** Client-side data export for all pages
+- **JSON API:** Structured dummy data in dashboard/api/data/
+
+### Dummy Data Included
+
+- **Projects:** 15 realistic projects ($4.25M total value)
+- **Customers:** 13 customer profiles with complete history
+- **Financials:** 24 months of revenue/expense data
+- **Equipment:** 8 equipment items with utilization tracking
 
 ### Quick Access
 
 ```
 Dashboard: http://localhost:8000/dashboard/
+Projects:  http://localhost:8000/dashboard/projects.html
+Financials: http://localhost:8000/dashboard/financials.html
+Customers: http://localhost:8000/dashboard/customers.html
 
 Demo Login:
 - Admin: admin / MidwestUnderground2025!
