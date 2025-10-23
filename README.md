@@ -637,10 +637,41 @@ Three production-ready feature guides with complete implementation instructions:
 - **Quality gates** (accessibility, performance, security)
 - **Deployment workflows** (git, Netlify, Vercel)
 
+## 📊 Business Dashboard
+
+### Overview
+
+A comprehensive business intelligence dashboard providing real-time insights into operations, financials, and project management.
+
+**Access Dashboard:** [/dashboard/](dashboard/index.html)
+
+### Features
+
+- **KPIs:** Revenue YTD, Active Projects, Profit Margin, Cash on Hand
+- **Charts:** Revenue trends, Project status, Service breakdown
+- **Analytics:** Customer insights, Equipment utilization
+- **Alerts:** Overdue invoices, Maintenance reminders
+- **Dummy Data:** 15 projects, 13 customers, 24 months financials
+
+### Quick Access
+
+```
+Dashboard: http://localhost:8000/dashboard/
+
+Demo Login:
+- Admin: admin / MidwestUnderground2025!
+- Manager: manager / Manager2025!
+```
+
+**Full Documentation:** [docs/features/BUSINESS-DASHBOARD.md](docs/features/BUSINESS-DASHBOARD.md)
+
+---
+
 ## Roadmap
 
 ### Phase 2 (Months 2-3)
 - ✅ **Dark mode toggle** - COMPLETED
+- ✅ **Business Dashboard Phase 1** - COMPLETED
 - Real project photos and content
 - **Service request form** (feature guide ready)
 - Customer testimonials (video)
@@ -650,12 +681,12 @@ Three production-ready feature guides with complete implementation instructions:
 
 ### Phase 3 (Months 4-6)
 - **Invoice payment system** (feature guide ready)
+- **Business Dashboard Phase 2** - Advanced features
 - CMS integration (Netlify CMS)
 - Client portal for project tracking
 - Interactive service area map
 - Live chat widget
 - Video content (equipment demos)
-- Analytics dashboard
 
 ### Phase 4 (Months 7-12)
 - Equipment availability calendar

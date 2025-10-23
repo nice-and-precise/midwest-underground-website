@@ -34,9 +34,14 @@ class DarkMode {
   }
 
   init() {
+    console.log('[DarkMode] Initializing dark mode...');
+
     // Find all toggle buttons (desktop and mobile)
     const desktopToggle = document.getElementById('dark-mode-toggle');
     const mobileToggle = document.getElementById('mobile-dark-mode-toggle');
+
+    console.log('[DarkMode] Desktop toggle found:', !!desktopToggle);
+    console.log('[DarkMode] Mobile toggle found:', !!mobileToggle);
 
     if (desktopToggle) this.toggleButtons.push(desktopToggle);
     if (mobileToggle) this.toggleButtons.push(mobileToggle);
@@ -45,14 +50,22 @@ class DarkMode {
     const savedTheme = localStorage.getItem(this.storageKey);
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
 
+    console.log('[DarkMode] Saved theme:', savedTheme);
+    console.log('[DarkMode] System prefers dark:', prefersDark);
+
     if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
       this.setTheme('dark', false);
     }
 
     // Setup toggle button event listeners
     this.toggleButtons.forEach(button => {
-      button.addEventListener('click', () => this.toggleTheme());
+      button.addEventListener('click', () => {
+        console.log('[DarkMode] Toggle button clicked!');
+        this.toggleTheme();
+      });
     });
+
+    console.log('[DarkMode] Event listeners attached to', this.toggleButtons.length, 'buttons');
 
     // Listen for system theme changes
     window.matchMedia('(prefers-color-scheme: dark)')
@@ -64,6 +77,8 @@ class DarkMode {
   }
 
   setTheme(theme, announce = true) {
+    console.log('[DarkMode] Setting theme to:', theme);
+
     if (theme === 'dark') {
       this.html.setAttribute('data-theme', 'dark');
     } else {
@@ -75,11 +90,15 @@ class DarkMode {
     if (announce) {
       this.announceThemeChange(theme);
     }
+
+    console.log('[DarkMode] Theme applied. Current data-theme:', this.html.getAttribute('data-theme'));
   }
 
   toggleTheme() {
     const currentTheme = this.html.getAttribute('data-theme');
     const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+
+    console.log('[DarkMode] Toggling from', currentTheme || 'light', 'to', newTheme);
 
     this.setTheme(newTheme);
     localStorage.setItem(this.storageKey, newTheme);
