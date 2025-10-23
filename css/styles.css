@@ -28,6 +28,11 @@
   --color-primary: #003B5C;
   --color-secondary: #FF6B35;
   --color-accent: #2EA3F2;
+  --color-primary-dark: #002840;
+  --color-secondary: #FF6B35;
+  --color-secondary-dark: var(--color-secondary);
+  --color-accent: #2EA3F2;
+  --color-accent-dark: #2685C7;
   --border-color: #E0E0E0;
   --shadow-color: rgba(0, 0, 0, 0.1);
 
@@ -304,8 +309,8 @@ ul, ol {
 }
 
 .btn-primary:hover {
-  background-color: #E55A25;
-  border-color: #E55A25;
+  background-color: var(--color-secondary);
+  border-color: var(--color-secondary);
   color: var(--white);
   transform: translateY(-2px);
   box-shadow: var(--shadow-lg);

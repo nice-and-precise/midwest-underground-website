@@ -297,11 +297,11 @@
 }
 
 .kpi-change.positive {
-  color: #28A745;
+  color: var(--success);
 }
 
 .kpi-change.negative {
-  color: #DC3545;
+  color: var(--error);
 }
 
 .kpi-period {
@@ -423,22 +423,22 @@
 
 .badge-blue {
   background-color: rgba(46, 163, 242, 0.1);
-  color: #2EA3F2;
+  color: var(--color-accent);
 }
 
 .badge-green {
   background-color: rgba(40, 167, 69, 0.1);
-  color: #28A745;
+  color: var(--success);
 }
 
 .badge-orange {
   background-color: rgba(255, 107, 53, 0.1);
-  color: #FF6B35;
+  color: var(--color-secondary);
 }
 
 .badge-yellow {
   background-color: rgba(255, 193, 7, 0.1);
-  color: #FFC107;
+  color: var(--warning);
 }
 
 /* Activity Section */
@@ -555,17 +555,17 @@
 
 .alert-warning {
   background-color: rgba(255, 193, 7, 0.1);
-  border-left-color: #FFC107;
+  border-left-color: var(--warning);
 }
 
 .alert-info {
   background-color: rgba(23, 162, 184, 0.1);
-  border-left-color: #17A2B8;
+  border-left-color: var(--info);
 }
 
 .alert-success {
   background-color: rgba(40, 167, 69, 0.1);
-  border-left-color: #28A745;
+  border-left-color: var(--success);
 }
 
 .alert-icon {
