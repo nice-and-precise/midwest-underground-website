@@ -358,17 +358,65 @@ See `docs/MAINTENANCE.md` for detailed instructions on:
 3. Edit description text
 4. Save and redeploy
 
+## Adding New Features
+
+This project includes comprehensive guides for adding new features with AI assistance.
+
+### 🚀 Quick Start
+
+See **[docs/FEATURE-REQUESTS.md](docs/FEATURE-REQUESTS.md)** for complete feature development guide.
+
+### Ready-to-Implement Features
+
+Three production-ready feature guides with complete implementation instructions:
+
+1. **[Dark Mode Toggle](docs/features/DARK-MODE.md)** (~2 hours)
+   - Light/dark theme switcher
+   - localStorage persistence
+   - System preference detection
+   - Complete CSS/JS implementation
+
+2. **[Service Request Form](docs/features/SERVICE-REQUEST-FORM.md)** (~3-4 hours)
+   - Multi-step form (Service → Details → Contact)
+   - File upload capability
+   - Formspree integration
+   - Complete validation logic
+
+3. **[Invoice Payment System](docs/features/INVOICE-PAYMENT.md)** (~2-8 hours)
+   - Secure payment processing
+   - Stripe integration
+   - Invoice lookup system
+   - Production + MVP modes
+
+### How to Add a Feature
+
+1. Read [docs/FEATURE-REQUESTS.md](docs/FEATURE-REQUESTS.md)
+2. Choose a feature template or create custom request
+3. Copy-paste template into Claude Code
+4. Let AI build autonomously
+5. Review, test, deploy
+
+### Feature Request System
+
+- **General template** for any feature
+- **Testing checklists** (100+ test cases)
+- **Documentation requirements** (auto-update guides)
+- **Quality gates** (accessibility, performance, security)
+- **Deployment workflows** (git, Netlify, Vercel)
+
 ## Roadmap
 
 ### Phase 2 (Months 2-3)
+- **Dark mode toggle** (feature guide ready)
 - Real project photos and content
+- **Service request form** (feature guide ready)
 - Customer testimonials (video)
 - Blog/news section
-- Online quote request system
 - Enhanced project filtering
 - Case studies
 
 ### Phase 3 (Months 4-6)
+- **Invoice payment system** (feature guide ready)
 - CMS integration (Netlify CMS)
 - Client portal for project tracking
 - Interactive service area map
