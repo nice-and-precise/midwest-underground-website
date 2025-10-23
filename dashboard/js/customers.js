@@ -111,6 +111,14 @@ function setupFilters() {
       showNotification('Customers data refreshed!', 'success');
     });
   }
+
+  // Add New Customer button
+  const addBtn = document.getElementById('add-customer-btn');
+  if (addBtn) {
+    addBtn.addEventListener('click', function() {
+      openAddCustomerModal();
+    });
+  }
 }
 
 /**
@@ -228,6 +236,7 @@ function renderCustomers() {
         <div class="action-btns">
           <button class="btn-icon" title="View Details" onclick="viewCustomer('${customer.id}')">👁️</button>
           <button class="btn-icon" title="Edit" onclick="editCustomer('${customer.id}')">✏️</button>
+          <button class="btn-icon" title="Delete" onclick="deleteCustomer('${customer.id}')">🗑️</button>
         </div>
       </td>
     </tr>
@@ -421,14 +430,293 @@ function getCreditBadgeClass(rating) {
 
 function viewCustomer(id) {
   console.log('[Customers] View customer:', id);
-  showNotification(`Viewing customer ${id}`, 'info');
-  // In production, this would open a modal or navigate to detail page
+  const customer = allCustomers.find(c => c.id === id);
+  if (!customer) return;
+
+  // Show view modal with customer details
+  const content = `
+    <div class="customer-details">
+      <div class="detail-grid">
+        <div class="detail-item">
+          <label>Customer ID:</label>
+          <span>${customer.id}</span>
+        </div>
+        <div class="detail-item">
+          <label>Name:</label>
+          <span>${customer.name}</span>
+        </div>
+        <div class="detail-item">
+          <label>Type:</label>
+          <span class="badge ${getTypeBadgeClass(customer.type)}">${customer.type}</span>
+        </div>
+        <div class="detail-item">
+          <label>Status:</label>
+          <span class="badge ${customer.status === 'Active' ? 'badge-green' : 'badge-red'}">${customer.status}</span>
+        </div>
+        <div class="detail-item">
+          <label>Contact Person:</label>
+          <span>${customer.contact_person}</span>
+        </div>
+        <div class="detail-item">
+          <label>Phone:</label>
+          <span>${customer.phone}</span>
+        </div>
+        <div class="detail-item">
+          <label>Email:</label>
+          <span>${customer.email}</span>
+        </div>
+        <div class="detail-item">
+          <label>Address:</label>
+          <span>${customer.address || 'N/A'}</span>
+        </div>
+        <div class="detail-item">
+          <label>Total Projects:</label>
+          <span>${customer.projects_count}</span>
+        </div>
+        <div class="detail-item">
+          <label>Active Projects:</label>
+          <span>${customer.active_projects}</span>
+        </div>
+        <div class="detail-item">
+          <label>Lifetime Value:</label>
+          <span>$${customer.lifetime_value.toLocaleString()}</span>
+        </div>
+        <div class="detail-item">
+          <label>Credit Standing:</label>
+          <span class="badge ${getCreditBadgeClass(customer.credit_standing)}">${customer.credit_standing}</span>
+        </div>
+        <div class="detail-item">
+          <label>Satisfaction Score:</label>
+          <span>${customer.satisfaction_score}/5.0</span>
+        </div>
+        <div class="detail-item">
+          <label>Last Project:</label>
+          <span>${customer.last_project_date ? formatDate(customer.last_project_date) : 'N/A'}</span>
+        </div>
+      </div>
+    </div>
+  `;
+
+  showModal(`Customer Details: ${customer.name}`, content, {
+    buttons: [
+      {
+        id: 'modal-close-btn-bottom',
+        text: 'Close',
+        className: 'btn-secondary',
+        onClick: function() {
+          hideModal();
+        }
+      }
+    ],
+    width: '700px'
+  });
 }
 
 function editCustomer(id) {
   console.log('[Customers] Edit customer:', id);
-  showNotification(`Edit mode for customer ${id}`, 'info');
-  // In production, this would open edit modal
+  const customer = allCustomers.find(c => c.id === id);
+  if (!customer) return;
+
+  openEditCustomerModal(customer);
+}
+
+/**
+ * Open edit customer modal
+ */
+function openEditCustomerModal(customer) {
+  const formData = {
+    fields: [
+      { name: 'id', label: 'Customer ID', type: 'text', value: customer.id, required: true, readonly: true },
+      { name: 'name', label: 'Customer Name', type: 'text', value: customer.name, required: true },
+      {
+        name: 'type',
+        label: 'Customer Type',
+        type: 'select',
+        value: customer.type,
+        required: true,
+        options: [
+          { value: 'Municipal', label: 'Municipal' },
+          { value: 'Commercial', label: 'Commercial' },
+          { value: 'Telecommunications', label: 'Telecommunications' },
+          { value: 'Residential', label: 'Residential' }
+        ]
+      },
+      { name: 'contact_person', label: 'Contact Person', type: 'text', value: customer.contact_person, required: true },
+      { name: 'phone', label: 'Phone', type: 'text', value: customer.phone, required: true },
+      { name: 'email', label: 'Email', type: 'email', value: customer.email, required: true },
+      { name: 'address', label: 'Address', type: 'textarea', value: customer.address || '', rows: 2 },
+      {
+        name: 'status',
+        label: 'Status',
+        type: 'select',
+        value: customer.status,
+        required: true,
+        options: [
+          { value: 'Active', label: 'Active' },
+          { value: 'Inactive', label: 'Inactive' }
+        ]
+      }
+    ]
+  };
+
+  showEditModal(`Edit Customer: ${customer.name}`, formData, async function(data) {
+    await updateCustomer(data);
+  });
+}
+
+/**
+ * Open add new customer modal
+ */
+function openAddCustomerModal() {
+  const formData = {
+    fields: [
+      { name: 'name', label: 'Customer Name', type: 'text', value: '', required: true, placeholder: 'Enter customer name' },
+      {
+        name: 'type',
+        label: 'Customer Type',
+        type: 'select',
+        value: '',
+        required: true,
+        placeholder: 'Select customer type',
+        options: [
+          { value: 'Municipal', label: 'Municipal' },
+          { value: 'Commercial', label: 'Commercial' },
+          { value: 'Telecommunications', label: 'Telecommunications' },
+          { value: 'Residential', label: 'Residential' }
+        ]
+      },
+      { name: 'contact_person', label: 'Contact Person', type: 'text', value: '', required: true, placeholder: 'Enter contact name' },
+      { name: 'phone', label: 'Phone', type: 'text', value: '', required: true, placeholder: '(555) 123-4567' },
+      { name: 'email', label: 'Email', type: 'email', value: '', required: true, placeholder: 'email@example.com' },
+      { name: 'address', label: 'Address', type: 'textarea', value: '', rows: 2, placeholder: 'Street address, City, State ZIP' },
+      {
+        name: 'status',
+        label: 'Status',
+        type: 'select',
+        value: 'Active',
+        required: true,
+        options: [
+          { value: 'Active', label: 'Active' },
+          { value: 'Inactive', label: 'Inactive' }
+        ]
+      }
+    ]
+  };
+
+  showEditModal('Add New Customer', formData, async function(data) {
+    await createCustomer(data);
+  });
+}
+
+/**
+ * Delete customer with confirmation
+ */
+function deleteCustomer(id) {
+  const customer = allCustomers.find(c => c.id === id);
+  if (!customer) return;
+
+  showDeleteModal('customer', customer.name, async function() {
+    await performDeleteCustomer(id);
+  });
+}
+
+/**
+ * Update customer via API
+ */
+async function updateCustomer(data) {
+  try {
+    const response = await fetch('api/customers/update.php', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    });
+
+    const result = await response.json();
+
+    if (!response.ok || !result.success) {
+      throw new Error(result.error || 'Failed to update customer');
+    }
+
+    showNotification('Customer updated successfully!', 'success');
+    await loadCustomersData();
+    applyFilters();
+
+    // Refresh charts
+    if (customerTypeChart) customerTypeChart.destroy();
+    if (topCustomersChart) topCustomersChart.destroy();
+    initializeCharts();
+  } catch (error) {
+    console.error('[Customers] Update error:', error);
+    throw error;
+  }
+}
+
+/**
+ * Create new customer via API
+ */
+async function createCustomer(data) {
+  try {
+    const response = await fetch('api/customers/create.php', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    });
+
+    const result = await response.json();
+
+    if (!response.ok || !result.success) {
+      throw new Error(result.error || 'Failed to create customer');
+    }
+
+    showNotification('Customer created successfully!', 'success');
+    await loadCustomersData();
+    applyFilters();
+
+    // Refresh charts
+    if (customerTypeChart) customerTypeChart.destroy();
+    if (topCustomersChart) topCustomersChart.destroy();
+    initializeCharts();
+  } catch (error) {
+    console.error('[Customers] Create error:', error);
+    throw error;
+  }
+}
+
+/**
+ * Delete customer via API
+ */
+async function performDeleteCustomer(id) {
+  try {
+    const response = await fetch('api/customers/delete.php', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ id: id })
+    });
+
+    const result = await response.json();
+
+    if (!response.ok || !result.success) {
+      throw new Error(result.error || 'Failed to delete customer');
+    }
+
+    showNotification('Customer deleted successfully!', 'success');
+    await loadCustomersData();
+    applyFilters();
+
+    // Refresh charts
+    if (customerTypeChart) customerTypeChart.destroy();
+    if (topCustomersChart) topCustomersChart.destroy();
+    initializeCharts();
+  } catch (error) {
+    console.error('[Customers] Delete error:', error);
+    throw error;
+  }
 }
 
 function showNotification(message, type = 'info') {
