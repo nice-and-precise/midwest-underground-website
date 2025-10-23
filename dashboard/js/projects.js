@@ -86,6 +86,14 @@ function setupFilters() {
       showNotification('Projects data refreshed!', 'success');
     });
   }
+
+  // Add New Project button
+  const addBtn = document.getElementById('add-project-btn');
+  if (addBtn) {
+    addBtn.addEventListener('click', function() {
+      openAddProjectModal();
+    });
+  }
 }
 
 /**
@@ -197,6 +205,7 @@ function renderProjects() {
         <div class="action-btns">
           <button class="btn-icon" title="View Details" onclick="viewProject('${project.id}')">👁️</button>
           <button class="btn-icon" title="Edit" onclick="editProject('${project.id}')">✏️</button>
+          <button class="btn-icon" title="Delete" onclick="deleteProject('${project.id}')">🗑️</button>
         </div>
       </td>
     </tr>
@@ -304,14 +313,311 @@ function formatDate(dateString) {
 
 function viewProject(id) {
   console.log('[Projects] View project:', id);
-  showNotification(`Viewing project ${id}`, 'info');
-  // In production, this would open a modal or navigate to detail page
+  const project = allProjects.find(p => p.id === id);
+  if (!project) return;
+
+  // Show view modal with project details
+  const content = `
+    <div class="project-details">
+      <div class="detail-grid">
+        <div class="detail-item">
+          <label>Project ID:</label>
+          <span>${project.id}</span>
+        </div>
+        <div class="detail-item">
+          <label>Name:</label>
+          <span>${project.name}</span>
+        </div>
+        <div class="detail-item">
+          <label>Customer:</label>
+          <span>${project.customer_name}</span>
+        </div>
+        <div class="detail-item">
+          <label>Type:</label>
+          <span class="badge ${getBadgeClass(project.type)}">${project.type}</span>
+        </div>
+        <div class="detail-item">
+          <label>Service:</label>
+          <span>${project.service}</span>
+        </div>
+        <div class="detail-item">
+          <label>Status:</label>
+          <span class="badge ${getStatusBadgeClass(project.status)}">${project.status}</span>
+        </div>
+        <div class="detail-item">
+          <label>Budget:</label>
+          <span>$${project.budget.toLocaleString()}</span>
+        </div>
+        <div class="detail-item">
+          <label>Completion:</label>
+          <span>${project.completion_percentage}%</span>
+        </div>
+        <div class="detail-item">
+          <label>Start Date:</label>
+          <span>${formatDate(project.start_date)}</span>
+        </div>
+        <div class="detail-item">
+          <label>Est. Completion:</label>
+          <span>${formatDate(project.estimated_completion)}</span>
+        </div>
+        ${project.location ? `
+        <div class="detail-item">
+          <label>Location:</label>
+          <span>${project.location}</span>
+        </div>
+        ` : ''}
+        ${project.description ? `
+        <div class="detail-item full-width">
+          <label>Description:</label>
+          <p>${project.description}</p>
+        </div>
+        ` : ''}
+      </div>
+    </div>
+  `;
+
+  showModal(`Project Details: ${project.name}`, content, {
+    buttons: [
+      {
+        id: 'modal-close-btn-bottom',
+        text: 'Close',
+        className: 'btn-secondary',
+        onClick: function() {
+          hideModal();
+        }
+      }
+    ],
+    width: '700px'
+  });
 }
 
 function editProject(id) {
   console.log('[Projects] Edit project:', id);
-  showNotification(`Edit mode for project ${id}`, 'info');
-  // In production, this would open edit modal
+  const project = allProjects.find(p => p.id === id);
+  if (!project) return;
+
+  openEditProjectModal(project);
+}
+
+/**
+ * Open edit project modal
+ */
+function openEditProjectModal(project) {
+  const formData = {
+    fields: [
+      { name: 'id', label: 'Project ID', type: 'text', value: project.id, required: true, readonly: true },
+      { name: 'name', label: 'Project Name', type: 'text', value: project.name, required: true },
+      { name: 'customer_name', label: 'Customer Name', type: 'text', value: project.customer_name, required: true },
+      {
+        name: 'type',
+        label: 'Customer Type',
+        type: 'select',
+        value: project.type,
+        required: true,
+        options: [
+          { value: 'Municipal', label: 'Municipal' },
+          { value: 'Commercial', label: 'Commercial' },
+          { value: 'Telecommunications', label: 'Telecommunications' },
+          { value: 'Residential', label: 'Residential' },
+          { value: 'Emergency', label: 'Emergency' }
+        ]
+      },
+      {
+        name: 'service',
+        label: 'Service Type',
+        type: 'select',
+        value: project.service,
+        required: true,
+        options: [
+          { value: 'Fiber Optic Installation', label: 'Fiber Optic Installation' },
+          { value: 'Directional Drilling', label: 'Directional Drilling' },
+          { value: 'Underground Utilities', label: 'Underground Utilities' },
+          { value: 'Geothermal Systems', label: 'Geothermal Systems' },
+          { value: 'Emergency Services', label: 'Emergency Services' }
+        ]
+      },
+      {
+        name: 'status',
+        label: 'Status',
+        type: 'select',
+        value: project.status,
+        required: true,
+        options: [
+          { value: 'Planning', label: 'Planning' },
+          { value: 'In Progress', label: 'In Progress' },
+          { value: 'Completed', label: 'Completed' }
+        ]
+      },
+      { name: 'budget', label: 'Budget ($)', type: 'number', value: project.budget, required: true, min: 0 },
+      { name: 'completion_percentage', label: 'Completion %', type: 'number', value: project.completion_percentage, min: 0, max: 100 },
+      { name: 'start_date', label: 'Start Date', type: 'date', value: project.start_date },
+      { name: 'estimated_completion', label: 'Est. Completion', type: 'date', value: project.estimated_completion },
+      { name: 'location', label: 'Location', type: 'text', value: project.location || '' },
+      { name: 'description', label: 'Description', type: 'textarea', value: project.description || '', rows: 3 }
+    ]
+  };
+
+  showEditModal(`Edit Project: ${project.name}`, formData, async function(data) {
+    await updateProject(data);
+  });
+}
+
+/**
+ * Open add new project modal
+ */
+function openAddProjectModal() {
+  const formData = {
+    fields: [
+      { name: 'name', label: 'Project Name', type: 'text', value: '', required: true, placeholder: 'Enter project name' },
+      { name: 'customer_name', label: 'Customer Name', type: 'text', value: '', required: true, placeholder: 'Enter customer name' },
+      {
+        name: 'type',
+        label: 'Customer Type',
+        type: 'select',
+        value: '',
+        required: true,
+        placeholder: 'Select customer type',
+        options: [
+          { value: 'Municipal', label: 'Municipal' },
+          { value: 'Commercial', label: 'Commercial' },
+          { value: 'Telecommunications', label: 'Telecommunications' },
+          { value: 'Residential', label: 'Residential' },
+          { value: 'Emergency', label: 'Emergency' }
+        ]
+      },
+      {
+        name: 'service',
+        label: 'Service Type',
+        type: 'select',
+        value: '',
+        required: true,
+        placeholder: 'Select service type',
+        options: [
+          { value: 'Fiber Optic Installation', label: 'Fiber Optic Installation' },
+          { value: 'Directional Drilling', label: 'Directional Drilling' },
+          { value: 'Underground Utilities', label: 'Underground Utilities' },
+          { value: 'Geothermal Systems', label: 'Geothermal Systems' },
+          { value: 'Emergency Services', label: 'Emergency Services' }
+        ]
+      },
+      {
+        name: 'status',
+        label: 'Status',
+        type: 'select',
+        value: 'Planning',
+        required: true,
+        options: [
+          { value: 'Planning', label: 'Planning' },
+          { value: 'In Progress', label: 'In Progress' },
+          { value: 'Completed', label: 'Completed' }
+        ]
+      },
+      { name: 'budget', label: 'Budget ($)', type: 'number', value: '', required: true, min: 0, placeholder: '100000' },
+      { name: 'start_date', label: 'Start Date', type: 'date', value: new Date().toISOString().split('T')[0] },
+      { name: 'location', label: 'Location', type: 'text', value: '', placeholder: 'City, State' },
+      { name: 'description', label: 'Description', type: 'textarea', value: '', rows: 3, placeholder: 'Project description...' }
+    ]
+  };
+
+  showEditModal('Add New Project', formData, async function(data) {
+    await createProject(data);
+  });
+}
+
+/**
+ * Delete project with confirmation
+ */
+function deleteProject(id) {
+  const project = allProjects.find(p => p.id === id);
+  if (!project) return;
+
+  showDeleteModal('project', project.name, async function() {
+    await performDeleteProject(id);
+  });
+}
+
+/**
+ * Update project via API
+ */
+async function updateProject(data) {
+  try {
+    const response = await fetch('api/projects/update.php', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    });
+
+    const result = await response.json();
+
+    if (!response.ok || !result.success) {
+      throw new Error(result.error || 'Failed to update project');
+    }
+
+    showNotification('Project updated successfully!', 'success');
+    await loadProjectsData();
+    applyFilters();
+  } catch (error) {
+    console.error('[Projects] Update error:', error);
+    throw error;
+  }
+}
+
+/**
+ * Create new project via API
+ */
+async function createProject(data) {
+  try {
+    const response = await fetch('api/projects/create.php', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    });
+
+    const result = await response.json();
+
+    if (!response.ok || !result.success) {
+      throw new Error(result.error || 'Failed to create project');
+    }
+
+    showNotification('Project created successfully!', 'success');
+    await loadProjectsData();
+    applyFilters();
+  } catch (error) {
+    console.error('[Projects] Create error:', error);
+    throw error;
+  }
+}
+
+/**
+ * Delete project via API
+ */
+async function performDeleteProject(id) {
+  try {
+    const response = await fetch('api/projects/delete.php', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ id: id })
+    });
+
+    const result = await response.json();
+
+    if (!response.ok || !result.success) {
+      throw new Error(result.error || 'Failed to delete project');
+    }
+
+    showNotification('Project deleted successfully!', 'success');
+    await loadProjectsData();
+    applyFilters();
+  } catch (error) {
+    console.error('[Projects] Delete error:', error);
+    throw error;
+  }
 }
 
 function showNotification(message, type = 'info') {

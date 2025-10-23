@@ -12,7 +12,7 @@
   </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Projects Management | Midwest Underground Dashboard</title>
+  <title>Equipment Management | Midwest Underground Dashboard</title>
 
   <link rel="stylesheet" href="../css/styles.css">
   <link rel="stylesheet" href="css/dashboard.css">
@@ -56,7 +56,7 @@
           <span class="nav-icon">📊</span>
           <span class="nav-label">Dashboard</span>
         </a>
-        <a href="projects.html" class="nav-item active">
+        <a href="projects.html" class="nav-item">
           <span class="nav-icon">🚧</span>
           <span class="nav-label">Projects</span>
         </a>
@@ -68,7 +68,7 @@
           <span class="nav-icon">👥</span>
           <span class="nav-label">Customers</span>
         </a>
-        <a href="equipment.html" class="nav-item">
+        <a href="equipment.html" class="nav-item active">
           <span class="nav-icon">🔧</span>
           <span class="nav-label">Equipment</span>
         </a>
@@ -90,85 +90,79 @@
         <!-- Page Header -->
         <div class="page-header">
           <div>
-            <h1>Projects Management</h1>
-            <p class="page-subtitle">Track and manage all active, completed, and planned projects</p>
+            <h1>Equipment Management</h1>
+            <p class="page-subtitle">Track utilization, maintenance, and revenue by equipment</p>
           </div>
           <div class="page-actions">
             <button class="btn btn-secondary" id="export-csv-btn">
               <span>📄</span> Export CSV
             </button>
-            <button class="btn btn-secondary" id="export-pdf-btn">
-              <span>📑</span> Export PDF
-            </button>
-            <button class="btn btn-success" id="add-project-btn">
-              <span>➕</span> Add New Project
-            </button>
-            <button class="btn btn-primary" id="refresh-projects-btn">
-              <span>🔄</span> Refresh
+            <button class="btn btn-primary" id="add-equipment-btn">
+              <span>➕</span> Add Equipment
             </button>
           </div>
         </div>
 
-        <!-- Summary Cards -->
+        <!-- Equipment KPIs -->
         <div class="kpi-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
           <div class="kpi-card">
             <div class="kpi-header">
-              <span class="kpi-label">Total Projects</span>
-              <span class="kpi-icon">📋</span>
+              <span class="kpi-label">Total Equipment</span>
+              <span class="kpi-icon">🔧</span>
             </div>
-            <div class="kpi-value" id="total-projects">15</div>
+            <div class="kpi-value" id="total-equipment">8</div>
             <div class="kpi-footer">
-              <span class="kpi-period">All time</span>
+              <span class="kpi-period">Fleet inventory</span>
             </div>
           </div>
 
           <div class="kpi-card">
             <div class="kpi-header">
-              <span class="kpi-label">In Progress</span>
-              <span class="kpi-icon">🚧</span>
+              <span class="kpi-label">Avg Utilization</span>
+              <span class="kpi-icon">📈</span>
             </div>
-            <div class="kpi-value" id="in-progress-projects">7</div>
+            <div class="kpi-value" id="avg-utilization">82.5%</div>
             <div class="kpi-footer">
               <span class="kpi-change positive">
-                <span>↑</span> 2
+                <span>↑</span> 5.2%
               </span>
-              <span class="kpi-period">from last month</span>
+              <span class="kpi-period">vs last month</span>
             </div>
           </div>
 
           <div class="kpi-card">
             <div class="kpi-header">
-              <span class="kpi-label">Completed</span>
-              <span class="kpi-icon">✓</span>
+              <span class="kpi-label">Revenue YTD</span>
+              <span class="kpi-icon">💰</span>
             </div>
-            <div class="kpi-value" id="completed-projects">6</div>
-            <div class="kpi-footer">
-              <span class="kpi-period">This month</span>
-            </div>
-          </div>
-
-          <div class="kpi-card">
-            <div class="kpi-header">
-              <span class="kpi-label">Planning</span>
-              <span class="kpi-icon">📅</span>
-            </div>
-            <div class="kpi-value" id="planning-projects">2</div>
-            <div class="kpi-footer">
-              <span class="kpi-period">Upcoming</span>
-            </div>
-          </div>
-
-          <div class="kpi-card">
-            <div class="kpi-header">
-              <span class="kpi-label">Total Value</span>
-              <span class="kpi-icon">💵</span>
-            </div>
-            <div class="kpi-value" id="total-value">$4.25M</div>
+            <div class="kpi-value" id="equipment-revenue">$3.2M</div>
             <div class="kpi-footer">
               <span class="kpi-change positive">
-                <span>↑</span> 18.5%
+                <span>↑</span> 12.8%
               </span>
-              <span class="kpi-period">YoY growth</span>
+              <span class="kpi-period">from equipment use</span>
+            </div>
+          </div>
+
+          <div class="kpi-card">
+            <div class="kpi-header">
+              <span class="kpi-label">Maintenance Due</span>
+              <span class="kpi-icon">⚠️</span>
+            </div>
+            <div class="kpi-value" id="maintenance-due">2</div>
+            <div class="kpi-footer">
+              <span class="kpi-period">Within 30 days</span>
+            </div>
+          </div>
+
+          <div class="kpi-card">
+            <div class="kpi-header">
+              <span class="kpi-label">Hours This Month</span>
+              <span class="kpi-icon">⏱️</span>
+            </div>
+            <div class="kpi-value" id="hours-month">1,248</div>
+            <div class="kpi-footer">
+              <span class="kpi-period">Total billable hours</span>
             </div>
           </div>
         </div>
@@ -181,83 +175,96 @@
           </div>
           <div class="filters-grid">
             <div class="filter-group">
-              <label for="filter-status">Status</label>
-              <select id="filter-status" class="filter-select">
-                <option value="">All Statuses</option>
-                <option value="In Progress">In Progress</option>
-                <option value="Completed">Completed</option>
-                <option value="Planning">Planning</option>
-              </select>
-            </div>
-
-            <div class="filter-group">
-              <label for="filter-service">Service Type</label>
-              <select id="filter-service" class="filter-select">
-                <option value="">All Services</option>
-                <option value="Fiber Optic Installation">Fiber Optic</option>
-                <option value="Directional Drilling">Directional Drilling</option>
-                <option value="Underground Utilities">Underground Utilities</option>
-                <option value="Geothermal Systems">Geothermal</option>
-                <option value="Emergency Services">Emergency Services</option>
-              </select>
-            </div>
-
-            <div class="filter-group">
-              <label for="filter-customer-type">Customer Type</label>
-              <select id="filter-customer-type" class="filter-select">
+              <label for="filter-type">Equipment Type</label>
+              <select id="filter-type" class="filter-select">
                 <option value="">All Types</option>
-                <option value="Municipal">Municipal</option>
-                <option value="Commercial">Commercial</option>
-                <option value="Telecommunications">Telecommunications</option>
-                <option value="Residential">Residential</option>
-                <option value="Emergency">Emergency</option>
+                <option value="Drill Rig">Drill Rig</option>
+                <option value="Excavator">Excavator</option>
+                <option value="Utility Truck">Utility Truck</option>
+                <option value="Vacuum Truck">Vacuum Truck</option>
+              </select>
+            </div>
+
+            <div class="filter-group">
+              <label for="filter-status">Maintenance Status</label>
+              <select id="filter-status" class="filter-select">
+                <option value="">All Status</option>
+                <option value="Operational">Operational</option>
+                <option value="Maintenance Due">Maintenance Due</option>
+                <option value="In Service">In Service</option>
               </select>
             </div>
 
             <div class="filter-group">
               <label for="filter-search">Search</label>
-              <input type="text" id="filter-search" class="filter-input" placeholder="Search projects...">
+              <input type="text" id="filter-search" class="filter-input" placeholder="Search equipment...">
             </div>
 
             <div class="filter-group">
               <label for="sort-by">Sort By</label>
               <select id="sort-by" class="filter-select">
-                <option value="date-desc">Date (Newest First)</option>
-                <option value="date-asc">Date (Oldest First)</option>
-                <option value="budget-desc">Budget (Highest First)</option>
-                <option value="budget-asc">Budget (Lowest First)</option>
-                <option value="completion-desc">Completion % (Highest)</option>
-                <option value="completion-asc">Completion % (Lowest)</option>
+                <option value="utilization-desc">Utilization (Highest)</option>
+                <option value="utilization-asc">Utilization (Lowest)</option>
+                <option value="revenue-desc">Revenue (Highest)</option>
+                <option value="revenue-asc">Revenue (Lowest)</option>
+                <option value="hours-desc">Hours (Most)</option>
+                <option value="hours-asc">Hours (Least)</option>
               </select>
             </div>
           </div>
         </div>
 
-        <!-- Projects Table -->
+        <!-- Charts Section -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: var(--space-2xl); margin-bottom: var(--space-2xl);">
+
+          <!-- Utilization Chart -->
+          <div class="chart-card">
+            <div class="chart-header">
+              <h3>Equipment Utilization</h3>
+              <span class="chart-subtitle">Current Month</span>
+            </div>
+            <div class="chart-container" style="height: 300px;">
+              <canvas id="utilization-chart"></canvas>
+            </div>
+          </div>
+
+          <!-- Revenue by Equipment -->
+          <div class="chart-card">
+            <div class="chart-header">
+              <h3>Revenue by Equipment (YTD)</h3>
+            </div>
+            <div class="chart-container" style="height: 300px;">
+              <canvas id="revenue-chart"></canvas>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Equipment Table -->
         <div class="chart-card">
           <div class="chart-header">
-            <h3>All Projects</h3>
+            <h3>Equipment Fleet</h3>
             <div class="results-count">
-              Showing <strong id="results-count">15</strong> of <strong id="total-count">15</strong> projects
+              Showing <strong id="results-count">8</strong> of <strong id="total-count">8</strong> equipment
             </div>
           </div>
           <div class="table-container">
-            <table class="data-table" id="projects-table">
+            <table class="data-table" id="equipment-table">
               <thead>
                 <tr>
-                  <th>Project ID</th>
-                  <th>Project Name</th>
-                  <th>Customer</th>
+                  <th>Equipment ID</th>
+                  <th>Name</th>
                   <th>Type</th>
-                  <th>Service</th>
-                  <th>Status</th>
-                  <th>Progress</th>
-                  <th>Budget</th>
-                  <th>Start Date</th>
+                  <th style="text-align: center;">Utilization %</th>
+                  <th style="text-align: right;">Hours (Month)</th>
+                  <th style="text-align: right;">Revenue (YTD)</th>
+                  <th>Crew Assigned</th>
+                  <th>Maintenance Status</th>
+                  <th>Next Service</th>
                   <th>Actions</th>
                 </tr>
               </thead>
-              <tbody id="projects-table-body">
+              <tbody id="equipment-table-body">
                 <!-- Dynamically populated -->
               </tbody>
             </table>
@@ -270,8 +277,7 @@
 
   <script src="../js/main.js"></script>
   <script src="js/dashboard.js"></script>
-  <script src="js/modal.js"></script>
-  <script src="js/projects.js"></script>
+  <script src="js/equipment.js"></script>
 
 </body>
 </html>
