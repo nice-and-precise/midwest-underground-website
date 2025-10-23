@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Contact Midwest Underground of Minnesota for directional drilling, fiber optic installation, and underground utilities. 24/7 emergency service available. Located in Willmar, MN. Call (320) 382-6636.">
+  <meta name="keywords" content="contact directional drilling, fiber optic quote, underground utilities Minnesota, HDD contractor Willmar, emergency utility service">
+
+  <!-- Open Graph Tags -->
+  <meta property="og:title" content="Contact Midwest Underground | Get Your Free Quote Today">
+  <meta property="og:description" content="Expert directional drilling and fiber optic installation in central Minnesota. Contact us for a free consultation. 24/7 emergency service available.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="[PLACEHOLDER: og-image.jpg]">
+
+  <!-- Title -->
+  <title>Contact Us | Midwest Underground of Minnesota | Free Quote</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS CDN (for utility classes) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="css/styles.css">
+
+  <!-- Schema.org Markup -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "name": "Midwest Underground of Minnesota Inc",
+    "image": "[PLACEHOLDER: logo-url]",
+    "telephone": "(320) 382-6636",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "4320 County Rd 8 SE",
+      "addressLocality": "Willmar",
+      "addressRegion": "MN",
+      "postalCode": "56201",
+      "addressCountry": "US"
+    },
+    "geo": {
+      "@type": "GeoCoordinates",
+      "latitude": "45.1217",
+      "longitude": "-95.0431"
+    },
+    "url": "[PLACEHOLDER: domain-url]",
+    "priceRange": "$$",
+    "openingHours": "Mo-Fr 07:00-17:00",
+    "foundingDate": "1991",
+    "description": "Professional directional drilling and underground utilities contractor serving central Minnesota for over 34 years."
+  }
+  </script>
+
+  <style>
+    /* Contact Page Specific Styles */
+    .contact-hero {
+      background: linear-gradient(135deg, var(--primary-blue), var(--accent-blue));
+      color: var(--white);
+      padding: 4rem 0;
+      text-align: center;
+    }
+
+    .contact-hero h1 {
+      color: var(--white);
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .contact-hero p {
+      font-size: 1.25rem;
+      color: var(--neutral-light);
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    .contact-main {
+      padding: 4rem 0;
+    }
+
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 3rem;
+      margin-bottom: 4rem;
+    }
+
+    @media (min-width: 768px) {
+      .contact-grid {
+        grid-template-columns: 1.5fr 1fr;
+      }
+    }
+
+    /* Contact Form Styles */
+    .contact-form {
+      background: var(--white);
+      padding: 2rem;
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-base);
+    }
+
+    .contact-form h2 {
+      margin-bottom: 1.5rem;
+      color: var(--primary-blue);
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+      display: block;
+      font-weight: 600;
+      color: var(--neutral-dark);
+      margin-bottom: 0.5rem;
+    }
+
+    .form-group label .required {
+      color: var(--secondary-orange);
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 0.75rem;
+      border: 2px solid var(--neutral-light);
+      border-radius: var(--radius-md);
+      font-size: 1rem;
+      font-family: var(--font-body);
+      transition: border-color 0.3s ease;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: var(--primary-blue);
+    }
+
+    .form-group textarea {
+      resize: vertical;
+      min-height: 150px;
+    }
+
+    .form-submit {
+      width: 100%;
+      padding: 1rem;
+      background: var(--primary-blue);
+      color: var(--white);
+      border: none;
+      border-radius: var(--radius-md);
+      font-size: 1.125rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .form-submit:hover {
+      background: var(--accent-blue);
+    }
+
+    /* Contact Sidebar Styles */
+    .contact-sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    .contact-info-card {
+      background: var(--white);
+      padding: 2rem;
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-base);
+    }
+
+    .contact-info-card h3 {
+      color: var(--primary-blue);
+      margin-bottom: 1rem;
+      font-size: 1.5rem;
+    }
+
+    .contact-info-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      margin-bottom: 1.25rem;
+      padding-bottom: 1.25rem;
+      border-bottom: 1px solid var(--neutral-light);
+    }
+
+    .contact-info-item:last-child {
+      margin-bottom: 0;
+      padding-bottom: 0;
+      border-bottom: none;
+    }
+
+    .contact-info-icon {
+      font-size: 1.5rem;
+      color: var(--secondary-orange);
+      flex-shrink: 0;
+    }
+
+    .contact-info-content h4 {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--neutral-dark);
+      margin-bottom: 0.25rem;
+    }
+
+    .contact-info-content p {
+      color: var(--neutral-medium);
+      margin: 0;
+    }
+
+    .contact-info-content a {
+      color: var(--primary-blue);
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .contact-info-content a:hover {
+      text-decoration: underline;
+    }
+
+    .emergency-card {
+      background: linear-gradient(135deg, var(--secondary-orange), #FF8C5A);
+      color: var(--white);
+      padding: 2rem;
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-base);
+      text-align: center;
+    }
+
+    .emergency-card h3 {
+      color: var(--white);
+      margin-bottom: 0.75rem;
+    }
+
+    .emergency-card .emergency-number {
+      font-size: 1.75rem;
+      font-weight: 700;
+      margin: 1rem 0;
+    }
+
+    .emergency-card a {
+      color: var(--white);
+      text-decoration: none;
+    }
+
+    .social-links {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .social-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      background: var(--neutral-light);
+      border-radius: 50%;
+      text-decoration: none;
+      font-size: 1.25rem;
+      transition: background-color 0.3s ease;
+    }
+
+    .social-link:hover {
+      background: var(--primary-blue);
+      color: var(--white);
+    }
+
+    /* Map Section */
+    .map-section {
+      margin-bottom: 4rem;
+    }
+
+    .map-section h2 {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .map-container {
+      background: var(--white);
+      padding: 1.5rem;
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-base);
+    }
+
+    .map-embed {
+      width: 100%;
+      height: 450px;
+      border: none;
+      border-radius: var(--radius-md);
+    }
+
+    .map-directions {
+      margin-top: 1rem;
+      text-align: center;
+    }
+
+    .map-directions a {
+      display: inline-block;
+      padding: 0.75rem 2rem;
+      background: var(--primary-blue);
+      color: var(--white);
+      text-decoration: none;
+      border-radius: var(--radius-md);
+      font-weight: 600;
+      transition: background-color 0.3s ease;
+    }
+
+    .map-directions a:hover {
+      background: var(--accent-blue);
+    }
+
+    /* Response Time Section */
+    .response-section {
+      background: var(--neutral-light);
+      padding: 3rem 2rem;
+      border-radius: var(--radius-lg);
+      margin-bottom: 4rem;
+      text-align: center;
+    }
+
+    .response-section h2 {
+      margin-bottom: 2rem;
+    }
+
+    .response-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .response-item {
+      background: var(--white);
+      padding: 2rem;
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .response-item .response-icon {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .response-item h3 {
+      font-size: 1.25rem;
+      color: var(--primary-blue);
+      margin-bottom: 0.5rem;
+    }
+
+    .response-item .response-time {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--secondary-orange);
+      margin-bottom: 0.5rem;
+    }
+
+    /* FAQ Section */
+    .faq-section {
+      margin-bottom: 4rem;
+    }
+
+    .faq-section h2 {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .faq-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .faq-item {
+      background: var(--white);
+      padding: 2rem;
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-base);
+      border-left: 4px solid var(--secondary-orange);
+    }
+
+    .faq-item h3 {
+      color: var(--primary-blue);
+      font-size: 1.25rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .faq-item p {
+      color: var(--neutral-medium);
+      line-height: 1.6;
+    }
+
+    /* Final CTA Section */
+    .final-cta {
+      background: linear-gradient(135deg, var(--primary-blue), var(--accent-blue));
+      color: var(--white);
+      padding: 4rem 2rem;
+      border-radius: var(--radius-lg);
+      text-align: center;
+    }
+
+    .final-cta h2 {
+      color: var(--white);
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+
+    .final-cta p {
+      font-size: 1.25rem;
+      color: var(--neutral-light);
+      max-width: 600px;
+      margin: 0 auto 2rem auto;
+    }
+
+    .final-cta .cta-buttons {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    @media (max-width: 767px) {
+      .contact-hero h1 {
+        font-size: 1.875rem;
+      }
+
+      .contact-hero p {
+        font-size: 1rem;
+      }
+
+      .contact-main {
+        padding: 2rem 0;
+      }
+
+      .contact-form,
+      .contact-info-card {
+        padding: 1.5rem;
+      }
+
+      .map-embed {
+        height: 350px;
+      }
+
+      .response-section {
+        padding: 2rem 1rem;
+      }
+
+      .faq-item {
+        padding: 1.5rem;
+      }
+
+      .final-cta {
+        padding: 3rem 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Skip to Content Link (Accessibility) -->
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <!-- Header -->
+  <header class="site-header" role="banner">
+    <div class="container header-container">
+      <!-- Logo -->
+      <a href="index.html" class="site-logo">
+        <span>⚙️</span>
+        <span>Midwest Underground</span>
+      </a>
+
+      <!-- Desktop Navigation -->
+      <nav class="site-nav" role="navigation" aria-label="Main Navigation">
+        <ul class="nav-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="services.html">Services</a></li>
+          <li><a href="projects.html">Projects</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="contact.html" class="active">Contact</a></li>
+        </ul>
+        <a href="tel:3203826636" class="nav-phone" aria-label="Call us at 320-382-6636">
+          📞 (320) 382-6636
+        </a>
+      </nav>
+
+      <!-- Mobile Menu Toggle -->
+      <button class="mobile-menu-toggle" aria-label="Toggle mobile menu" aria-expanded="false">
+        <span class="hamburger"></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-menu" role="navigation" aria-label="Mobile Navigation">
+    <ul class="mobile-menu-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="services.html">Services</a></li>
+      <li><a href="projects.html">Projects</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="contact.html" class="active">Contact</a></li>
+    </ul>
+    <a href="tel:3203826636" class="mobile-menu-phone">📞 (320) 382-6636</a>
+  </div>
+
+  <!-- Mobile Menu Backdrop -->
+  <div class="mobile-menu-backdrop"></div>
+
+  <!-- Main Content -->
+  <main id="main-content">
+    <!-- Hero Section -->
+    <section class="contact-hero">
+      <div class="container">
+        <h1>Get in Touch with Our Team</h1>
+        <p>Ready to start your project? Contact us for a free consultation and quote. Our expert team is here to help with all your underground utilities needs.</p>
+      </div>
+    </section>
+
+    <!-- Contact Form & Info Section -->
+    <section class="contact-main">
+      <div class="container">
+        <div class="contact-grid">
+          <!-- Contact Form -->
+          <div class="contact-form">
+            <h2>Send Us a Message</h2>
+            <form id="contact-form" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+              <!-- Name Field -->
+              <div class="form-group">
+                <label for="name">
+                  Full Name <span class="required">*</span>
+                </label>
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  required
+                  placeholder="John Smith"
+                  aria-required="true"
+                >
+              </div>
+
+              <!-- Email Field -->
+              <div class="form-group">
+                <label for="email">
+                  Email Address <span class="required">*</span>
+                </label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  required
+                  placeholder="john.smith@example.com"
+                  aria-required="true"
+                >
+              </div>
+
+              <!-- Phone Field -->
+              <div class="form-group">
+                <label for="phone">
+                  Phone Number
+                </label>
+                <input
+                  type="tel"
+                  id="phone"
+                  name="phone"
+                  placeholder="(320) 555-1234"
+                  pattern="[\(\)\d\s\-\+]+"
+                  title="Please enter a valid phone number"
+                >
+              </div>
+
+              <!-- Service Interest Dropdown -->
+              <div class="form-group">
+                <label for="service">
+                  Service Interest <span class="required">*</span>
+                </label>
+                <select id="service" name="service" required aria-required="true">
+                  <option value="">-- Select a Service --</option>
+                  <option value="Horizontal Directional Drilling">Horizontal Directional Drilling (HDD)</option>
+                  <option value="Fiber Optic Installation">Fiber Optic Cable Installation</option>
+                  <option value="Underground Utilities">Underground Utilities</option>
+                  <option value="Telecommunications Infrastructure">Telecommunications Infrastructure</option>
+                  <option value="Underground Geothermal">Underground Geothermal Systems</option>
+                  <option value="Emergency Services">24/7 Emergency Services</option>
+                  <option value="Other">Other / Multiple Services</option>
+                </select>
+              </div>
+
+              <!-- Project Type -->
+              <div class="form-group">
+                <label for="project-type">
+                  Project Type <span class="required">*</span>
+                </label>
+                <select id="project-type" name="project-type" required aria-required="true">
+                  <option value="">-- Select Project Type --</option>
+                  <option value="Commercial">Commercial</option>
+                  <option value="Residential">Residential</option>
+                  <option value="Municipal">Municipal / Government</option>
+                  <option value="Emergency">Emergency / Urgent Repair</option>
+                  <option value="Industrial">Industrial</option>
+                  <option value="Telecommunications">Telecommunications / ISP</option>
+                </select>
+              </div>
+
+              <!-- Message Textarea -->
+              <div class="form-group">
+                <label for="message">
+                  Project Details <span class="required">*</span>
+                </label>
+                <textarea
+                  id="message"
+                  name="message"
+                  required
+                  placeholder="Please describe your project, including location, timeline, and any specific requirements..."
+                  aria-required="true"
+                ></textarea>
+              </div>
+
+              <!-- Submit Button -->
+              <button type="submit" class="form-submit">
+                Send Message
+              </button>
+            </form>
+          </div>
+
+          <!-- Contact Info Sidebar -->
+          <div class="contact-sidebar">
+            <!-- Contact Information Card -->
+            <div class="contact-info-card">
+              <h3>Contact Information</h3>
+
+              <!-- Phone -->
+              <div class="contact-info-item">
+                <div class="contact-info-icon">📞</div>
+                <div class="contact-info-content">
+                  <h4>Phone</h4>
+                  <p><a href="tel:3203826636">(320) 382-6636</a></p>
+                </div>
+              </div>
+
+              <!-- Email -->
+              <div class="contact-info-item">
+                <div class="contact-info-icon">✉️</div>
+                <div class="contact-info-content">
+                  <h4>Email</h4>
+                  <p><a href="mailto:info@midwestundergroundmn.com">info@midwestundergroundmn.com</a></p>
+                </div>
+              </div>
+
+              <!-- Address -->
+              <div class="contact-info-item">
+                <div class="contact-info-icon">📍</div>
+                <div class="contact-info-content">
+                  <h4>Office Location</h4>
+                  <p>
+                    4320 County Rd 8 SE<br>
+                    Willmar, MN 56201
+                  </p>
+                </div>
+              </div>
+
+              <!-- Hours -->
+              <div class="contact-info-item">
+                <div class="contact-info-icon">🕐</div>
+                <div class="contact-info-content">
+                  <h4>Business Hours</h4>
+                  <p>
+                    Monday - Friday: 7:00 AM - 5:00 PM<br>
+                    Saturday - Sunday: Closed<br>
+                    <em style="font-size: 0.875rem; color: var(--neutral-medium);">Emergency services available 24/7</em>
+                  </p>
+                </div>
+              </div>
+
+              <!-- Social Media Placeholders -->
+              <div class="contact-info-item" style="border-bottom: none;">
+                <div class="contact-info-icon">🌐</div>
+                <div class="contact-info-content">
+                  <h4>Follow Us</h4>
+                  <div class="social-links">
+                    <a href="[PLACEHOLDER: facebook-url]" class="social-link" aria-label="Facebook" title="Facebook">f</a>
+                    <a href="[PLACEHOLDER: linkedin-url]" class="social-link" aria-label="LinkedIn" title="LinkedIn">in</a>
+                    <a href="[PLACEHOLDER: twitter-url]" class="social-link" aria-label="Twitter" title="Twitter">𝕏</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Emergency Contact Card -->
+            <div class="emergency-card">
+              <h3>24/7 Emergency Service</h3>
+              <p>Utility emergencies don't wait. Neither do we.</p>
+              <div class="emergency-number">
+                <a href="tel:3203826636">(320) 382-6636</a>
+              </div>
+              <p style="font-size: 0.875rem;">Available for fiber breaks, utility damage, and urgent repairs</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Google Maps Section -->
+    <section class="map-section">
+      <div class="container">
+        <h2>Find Our Location</h2>
+        <div class="map-container">
+          <iframe
+            class="map-embed"
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2801.4267891234567!2d-95.04549!3d45.12170!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x52b5f6c1a1a1a1a1%3A0x1a1a1a1a1a1a1a1a!2s4320%20County%20Rd%208%20SE%2C%20Willmar%2C%20MN%2056201!5e0!3m2!1sen!2sus!4v1234567890"
+            allowfullscreen=""
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+            title="Midwest Underground of Minnesota Office Location"
+            aria-label="Google Map showing 4320 County Rd 8 SE, Willmar, MN 56201"
+          ></iframe>
+          <div class="map-directions">
+            <a href="https://www.google.com/maps/dir/?api=1&destination=4320+County+Rd+8+SE,+Willmar,+MN+56201" target="_blank" rel="noopener">
+              Get Directions
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Response Time Expectations -->
+    <section class="response-section">
+      <div class="container">
+        <h2>What to Expect When You Contact Us</h2>
+        <div class="response-grid">
+          <div class="response-item">
+            <div class="response-icon">⚡</div>
+            <h3>Quote Requests</h3>
+            <div class="response-time">< 24hrs</div>
+            <p>We respond to all quote requests within one business day</p>
+          </div>
+
+          <div class="response-item">
+            <div class="response-icon">🚨</div>
+            <h3>Emergency Calls</h3>
+            <div class="response-time">< 1hr</div>
+            <p>Emergency response teams dispatched immediately, 24/7</p>
+          </div>
+
+          <div class="response-item">
+            <div class="response-icon">📋</div>
+            <h3>Project Planning</h3>
+            <div class="response-time">2-3 days</div>
+            <p>Detailed project assessment and comprehensive proposal</p>
+          </div>
+
+          <div class="response-item">
+            <div class="response-icon">🤝</div>
+            <h3>Consultation</h3>
+            <div class="response-time">Same day</div>
+            <p>Speak with an expert about your project needs</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq-section">
+      <div class="container">
+        <h2>Frequently Asked Questions</h2>
+        <div class="faq-grid">
+          <div class="faq-item">
+            <h3>What areas do you serve?</h3>
+            <p>We are based in Willmar, MN and primarily serve Kandiyohi County and the central Minnesota region. For larger projects, we can extend our service area throughout Minnesota. Contact us to discuss your specific location.</p>
+          </div>
+
+          <div class="faq-item">
+            <h3>Do you offer free quotes?</h3>
+            <p>Yes! We provide free, no-obligation consultations and quotes for all projects. Simply fill out our contact form or give us a call at (320) 382-6636, and we'll schedule a time to assess your project and provide a detailed estimate.</p>
+          </div>
+
+          <div class="faq-item">
+            <h3>How quickly can you start a project?</h3>
+            <p>Project timelines vary based on scope, permitting requirements, and our current schedule. Emergency services are available immediately 24/7. For planned projects, we typically can begin within 1-2 weeks after approval, though large municipal or commercial projects may require more lead time for permitting.</p>
+          </div>
+
+          <div class="faq-item">
+            <h3>Are you licensed and insured?</h3>
+            <p>Absolutely. Midwest Underground of Minnesota is a fully licensed Technology Systems Contractor with comprehensive liability insurance and workers' compensation coverage. We maintain all required state and local licenses and certifications for underground utility work.</p>
+          </div>
+
+          <div class="faq-item">
+            <h3>Can you handle emergency utility repairs?</h3>
+            <p>Yes. We offer 24/7 emergency services for fiber breaks, utility line damage, and urgent underground infrastructure repairs. Our emergency response team can be on-site quickly to assess the situation and begin repairs immediately to minimize downtime.</p>
+          </div>
+
+          <div class="faq-item">
+            <h3>What information do you need for a quote?</h3>
+            <p>To provide an accurate quote, we need details about your project including: the type of service needed (HDD, fiber installation, utilities, etc.), project location, approximate scope or length of work, timeline requirements, and any site-specific challenges. Photos or site plans are helpful but not required for initial quotes.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Final CTA Section -->
+    <section class="final-cta">
+      <div class="container">
+        <h2>Ready to Get Started?</h2>
+        <p>
+          Our team of underground utilities experts is ready to help you plan and execute your next project. Contact us today to discuss your needs.
+        </p>
+        <div class="cta-buttons">
+          <a href="tel:3203826636" class="btn btn-white btn-lg">Call (320) 382-6636</a>
+          <a href="mailto:info@midwestundergroundmn.com" class="btn btn-primary btn-lg">Email Us</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer" role="contentinfo">
+    <div class="container">
+      <div class="footer-content">
+        <!-- Company Info -->
+        <div class="footer-section">
+          <h3>Midwest Underground of Minnesota Inc</h3>
+          <p>Serving central Minnesota with precision underground utilities installation since 1991.</p>
+          <p><strong>Licensed Technology Systems Contractor</strong></p>
+        </div>
+
+        <!-- Contact Info -->
+        <div class="footer-section">
+          <h3>Contact Us</h3>
+          <p><strong>Phone:</strong> <a href="tel:3203826636">(320) 382-6636</a></p>
+          <p><strong>Email:</strong> <a href="mailto:info@midwestundergroundmn.com">info@midwestundergroundmn.com</a></p>
+          <p><strong>Address:</strong><br>4320 County Rd 8 SE<br>Willmar, MN 56201</p>
+        </div>
+
+        <!-- Quick Links -->
+        <div class="footer-section">
+          <h3>Quick Links</h3>
+          <ul class="footer-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="services.html">Services</a></li>
+            <li><a href="projects.html">Projects</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="contact.html">Contact</a></li>
+          </ul>
+        </div>
+
+        <!-- Services -->
+        <div class="footer-section">
+          <h3>Our Services</h3>
+          <ul class="footer-links">
+            <li><a href="services.html#hdd">Directional Drilling</a></li>
+            <li><a href="services.html#fiber">Fiber Optic Installation</a></li>
+            <li><a href="services.html#utilities">Underground Utilities</a></li>
+            <li><a href="services.html#telecom">Telecommunications</a></li>
+            <li><a href="services.html#emergency">Emergency Services</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; 2025 Midwest Underground of Minnesota Inc. All rights reserved. | Licensed & Insured</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Back to Top Button -->
+  <button class="back-to-top" aria-label="Back to top">↑</button>
+
+  <!-- JavaScript -->
+  <script src="js/main.js"></script>
+
+  <!-- Contact Form Validation Script -->
+  <script>
+    // Enhanced form validation and user feedback
+    document.addEventListener('DOMContentLoaded', function() {
+      const contactForm = document.getElementById('contact-form');
+
+      if (contactForm) {
+        // Add custom validation messages
+        contactForm.addEventListener('submit', function(e) {
+          const name = document.getElementById('name');
+          const email = document.getElementById('email');
+          const service = document.getElementById('service');
+          const projectType = document.getElementById('project-type');
+          const message = document.getElementById('message');
+
+          // Basic validation checks
+          if (!name.value.trim()) {
+            e.preventDefault();
+            name.focus();
+            alert('Please enter your name.');
+            return false;
+          }
+
+          if (!email.value.trim() || !email.validity.valid) {
+            e.preventDefault();
+            email.focus();
+            alert('Please enter a valid email address.');
+            return false;
+          }
+
+          if (!service.value) {
+            e.preventDefault();
+            service.focus();
+            alert('Please select a service.');
+            return false;
+          }
+
+          if (!projectType.value) {
+            e.preventDefault();
+            projectType.focus();
+            alert('Please select a project type.');
+            return false;
+          }
+
+          if (!message.value.trim()) {
+            e.preventDefault();
+            message.focus();
+            alert('Please provide details about your project.');
+            return false;
+          }
+
+          // If all validation passes, show loading state
+          const submitBtn = contactForm.querySelector('.form-submit');
+          submitBtn.textContent = 'Sending...';
+          submitBtn.disabled = true;
+        });
+
+        // Real-time email validation
+        const emailInput = document.getElementById('email');
+        emailInput.addEventListener('blur', function() {
+          if (this.value && !this.validity.valid) {
+            this.style.borderColor = 'var(--secondary-orange)';
+          } else {
+            this.style.borderColor = 'var(--neutral-light)';
+          }
+        });
+
+        // Phone number formatting
+        const phoneInput = document.getElementById('phone');
+        phoneInput.addEventListener('input', function(e) {
+          let value = e.target.value.replace(/\D/g, '');
+          if (value.length > 0) {
+            if (value.length <= 3) {
+              e.target.value = '(' + value;
+            } else if (value.length <= 6) {
+              e.target.value = '(' + value.slice(0, 3) + ') ' + value.slice(3);
+            } else {
+              e.target.value = '(' + value.slice(0, 3) + ') ' + value.slice(3, 6) + '-' + value.slice(6, 10);
+            }
+          }
+        });
+      }
+    });
+  </script>
+</body>
+</html>
