@@ -70,7 +70,7 @@
   <style>
     /* Contact Page Specific Styles */
     .contact-hero {
-      background: linear-gradient(135deg, var(--primary-blue), var(--accent-blue));
+      background: linear-gradient(135deg, var(--primary-charcoal), var(--accent-blue));
       color: var(--white);
       padding: 4rem 0;
       text-align: center;
@@ -116,7 +116,7 @@
 
     .contact-form h2 {
       margin-bottom: 1.5rem;
-      color: var(--primary-blue);
+      color: var(--primary-charcoal);
     }
 
     .form-group {
@@ -131,7 +131,7 @@
     }
 
     .form-group label .required {
-      color: var(--secondary-orange);
+      color: var(--safety-orange);
     }
 
     .form-group input,
@@ -150,7 +150,7 @@
     .form-group select:focus,
     .form-group textarea:focus {
       outline: none;
-      border-color: var(--primary-blue);
+      border-color: var(--primary-charcoal);
     }
 
     .form-group textarea {
@@ -161,7 +161,7 @@
     .form-submit {
       width: 100%;
       padding: 1rem;
-      background: var(--primary-blue);
+      background: var(--primary-charcoal);
       color: var(--white);
       border: none;
       border-radius: var(--radius-md);
@@ -190,7 +190,7 @@
     }
 
     .contact-info-card h3 {
-      color: var(--primary-blue);
+      color: var(--primary-charcoal);
       margin-bottom: 1rem;
       font-size: 1.5rem;
     }
@@ -212,7 +212,7 @@
 
     .contact-info-icon {
       font-size: 1.5rem;
-      color: var(--secondary-orange);
+      color: var(--safety-orange);
       flex-shrink: 0;
     }
 
@@ -224,12 +224,12 @@
     }
 
     .contact-info-content p {
-      color: var(--neutral-medium);
+      color: var(--steel);
       margin: 0;
     }
 
     .contact-info-content a {
-      color: var(--primary-blue);
+      color: var(--primary-charcoal);
       text-decoration: none;
       font-weight: 500;
     }
@@ -239,7 +239,7 @@
     }
 
     .emergency-card {
-      background: linear-gradient(135deg, var(--secondary-orange), #FF8C5A);
+      background: linear-gradient(135deg, var(--safety-orange), #FF8C5A);
       color: var(--white);
       padding: 2rem;
       border-radius: var(--radius-lg);
@@ -283,7 +283,7 @@
     }
 
     .social-link:hover {
-      background: var(--primary-blue);
+      background: var(--primary-charcoal);
       color: var(--white);
     }
 
@@ -319,7 +319,7 @@
     .map-directions a {
       display: inline-block;
       padding: 0.75rem 2rem;
-      background: var(--primary-blue);
+      background: var(--primary-charcoal);
       color: var(--white);
       text-decoration: none;
       border-radius: var(--radius-md);
@@ -366,14 +366,14 @@
 
     .response-item h3 {
       font-size: 1.25rem;
-      color: var(--primary-blue);
+      color: var(--primary-charcoal);
       margin-bottom: 0.5rem;
     }
 
     .response-item .response-time {
       font-size: 2rem;
       font-weight: 700;
-      color: var(--secondary-orange);
+      color: var(--safety-orange);
       margin-bottom: 0.5rem;
     }
 
@@ -400,23 +400,23 @@
       padding: 2rem;
       border-radius: var(--radius-lg);
       box-shadow: var(--shadow-base);
-      border-left: 4px solid var(--secondary-orange);
+      border-left: 4px solid var(--safety-orange);
     }
 
     .faq-item h3 {
-      color: var(--primary-blue);
+      color: var(--primary-charcoal);
       font-size: 1.25rem;
       margin-bottom: 0.75rem;
     }
 
     .faq-item p {
-      color: var(--neutral-medium);
+      color: var(--steel);
       line-height: 1.6;
     }
 
     /* Final CTA Section */
     .final-cta {
-      background: linear-gradient(135deg, var(--primary-blue), var(--accent-blue));
+      background: linear-gradient(135deg, var(--primary-charcoal), var(--accent-blue));
       color: var(--white);
       padding: 4rem 2rem;
       border-radius: var(--radius-lg);
@@ -710,7 +710,7 @@
                   <p>
                     Monday - Friday: 7:00 AM - 5:00 PM<br>
                     Saturday - Sunday: Closed<br>
-                    <em style="font-size: 0.875rem; color: var(--neutral-medium);">Emergency services available 24/7</em>
+                    <em style="font-size: 0.875rem; color: var(--steel);">Emergency services available 24/7</em>
                   </p>
                 </div>
               </div>
@@ -861,7 +861,7 @@
       <div class="footer-content">
         <!-- Company Info -->
         <div class="footer-section">
-          <h3>Midwest Underground of Minnesota Inc</h3>
+          <img src="images/logo_primary.png" alt="Midwest Underground of Minnesota" style="height: 60px; width: auto; margin-bottom: var(--space-md);">
           <p>Serving central Minnesota with precision underground utilities installation since 1991.</p>
           <p><strong>Licensed Technology Systems Contractor</strong></p>
         </div>
@@ -972,7 +972,7 @@
         const emailInput = document.getElementById('email');
         emailInput.addEventListener('blur', function() {
           if (this.value && !this.validity.valid) {
-            this.style.borderColor = 'var(--secondary-orange)';
+            this.style.borderColor = 'var(--safety-orange)';
           } else {
             this.style.borderColor = 'var(--neutral-light)';
           }
