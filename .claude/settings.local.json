@@ -18,7 +18,9 @@
       "Bash(for file in dashboard/projects.html dashboard/financials.html dashboard/customers.html dashboard/equipment.html dashboard/reports.html)",
       "Bash(do grep -q \"⚙️\" \"$file\")",
       "Bash(echo:*)",
-      "Bash(powershell -ExecutionPolicy Bypass -File update-logos.ps1:*)"
+      "Bash(powershell -ExecutionPolicy Bypass -File update-logos.ps1:*)",
+      "Read(//c/Users/Owner/Desktop/MU_Logo/**)",
+      "Bash(find:*)"
     ],
     "deny": [],
     "ask": []

@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', function() {
   };
 
   // Chart defaults
-  Chart.defaults.font.family = "'Roboto', sans-serif";
+  Chart.defaults.font.family = "'Inter', sans-serif";
   Chart.defaults.color = colors.text;
   Chart.defaults.borderColor = colors.grid;
 
