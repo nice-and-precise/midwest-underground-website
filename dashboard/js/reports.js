@@ -396,7 +396,7 @@ function showNotification(message, type = 'info') {
     top: 80px;
     right: 20px;
     padding: 16px 24px;
-    background-color: ${type === 'success' ? '#28A745' : type === 'error' ? '#DC3545' : '#2EA3F2'};
+    background-color: ${type === 'success' ? '#28A745' : type === 'error' ? '#DC3545' : '#4F5B66'};
     color: white;
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);

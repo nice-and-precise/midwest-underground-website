@@ -226,12 +226,13 @@ function initializeCharts() {
   const isDarkMode = document.documentElement.getAttribute('data-theme') === 'dark';
 
   const colors = {
-    primary: isDarkMode ? '#3a7ca5' : '#003B5C',
-    accent: isDarkMode ? '#5fb3d6' : '#2EA3F2',
-    success: isDarkMode ? '#81c3a3' : '#28A745',
-    warning: isDarkMode ? '#f4c542' : '#FFC107',
-    text: isDarkMode ? '#e5e5e5' : '#333333',
-    grid: isDarkMode ? '#404040' : '#E0E0E0'
+    primary: isDarkMode ? '#F2EDE5' : '#23272A',
+    accent: '#FFC400',
+    secondary: '#FF5A1F',
+    success: '#28A745',
+    warning: '#FFC400',
+    text: isDarkMode ? '#F2EDE5' : '#23272A',
+    grid: isDarkMode ? '#4F5B66' : '#D1CCC3'
   };
 
   // Utilization Chart (Bar)
@@ -445,7 +446,7 @@ function showNotification(message, type = 'info') {
     top: 80px;
     right: 20px;
     padding: 16px 24px;
-    background-color: ${type === 'success' ? '#28A745' : type === 'error' ? '#DC3545' : '#2EA3F2'};
+    background-color: ${type === 'success' ? '#28A745' : type === 'error' ? '#DC3545' : '#4F5B66'};
     color: white;
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);

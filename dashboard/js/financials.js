@@ -98,12 +98,13 @@ function initializeCharts() {
   const isDarkMode = document.documentElement.getAttribute('data-theme') === 'dark';
 
   const colors = {
-    primary: isDarkMode ? '#3a7ca5' : '#003B5C',
-    accent: isDarkMode ? '#5fb3d6' : '#2EA3F2',
-    secondary: isDarkMode ? '#d9822b' : '#F26419',
-    text: isDarkMode ? '#e5e5e5' : '#333333',
-    grid: isDarkMode ? '#404040' : '#E0E0E0',
-    background: isDarkMode ? 'rgba(58, 124, 165, 0.1)' : 'rgba(0, 59, 92, 0.1)'
+    primary: isDarkMode ? '#F2EDE5' : '#23272A',
+    accent: '#FFC400',
+    secondary: '#FF5A1F',
+    success: '#28A745',
+    text: isDarkMode ? '#F2EDE5' : '#23272A',
+    grid: isDarkMode ? '#4F5B66' : '#D1CCC3',
+    background: isDarkMode ? 'rgba(242, 237, 229, 0.1)' : 'rgba(35, 39, 42, 0.1)'
   };
 
   // Revenue & Profit Chart
@@ -190,11 +191,11 @@ function initializeCharts() {
   const expenseLabels = Object.values(expenses).map(e => e.name);
   const expenseValues = Object.values(expenses).map(e => e.percentage);
   const expenseColors = [
-    isDarkMode ? '#3a7ca5' : '#003B5C',
-    isDarkMode ? '#5fb3d6' : '#2EA3F2',
-    isDarkMode ? '#d9822b' : '#F26419',
-    isDarkMode ? '#81c3a3' : '#28A745',
-    isDarkMode ? '#c77c8c' : '#DC3545'
+    colors.primary,
+    colors.accent,
+    colors.secondary,
+    colors.success,
+    '#DC3545'
   ];
 
   expenseChart = new Chart(expenseCtx, {
@@ -205,7 +206,7 @@ function initializeCharts() {
         data: expenseValues,
         backgroundColor: expenseColors,
         borderWidth: 2,
-        borderColor: isDarkMode ? '#1a1a1a' : '#FFFFFF'
+        borderColor: isDarkMode ? '#1E2226' : '#FFFFFF'
       }]
     },
     options: {
@@ -473,7 +474,7 @@ function showNotification(message, type = 'info') {
     top: 80px;
     right: 20px;
     padding: 16px 24px;
-    background-color: ${type === 'success' ? '#28A745' : type === 'error' ? '#DC3545' : '#2EA3F2'};
+    background-color: ${type === 'success' ? '#28A745' : type === 'error' ? '#DC3545' : '#4F5B66'};
     color: white;
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);

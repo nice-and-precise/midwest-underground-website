@@ -7,40 +7,42 @@
    ========================================================================== */
 
 :root {
-  /* Brand Colors (static) */
-  --primary-blue: #003B5C;
-  --secondary-orange: #FF6B35;
-  --accent-blue: #2EA3F2;
-
-  /* Neutral Palette (static) */
-  --neutral-dark: #333333;
-  --neutral-medium: #666666;
-  --neutral-light: #F5F5F5;
+  /* Official Brand Colors (from brand guide) */
+  --primary-charcoal: #23272A;
+  --charcoal-900: #1E2226;
+  --charcoal-800: #23272A;
+  --steel: #4F5B66;
+  --safety-orange: #FF5A1F;
+  --utility-yellow: #FFC400;
+  --sand: #F2EDE5;
   --white: #FFFFFF;
+
+  /* Legacy color aliases (for backward compatibility during transition) */
+  --neutral-dark: var(--primary-charcoal);
+  --neutral-medium: var(--steel);
+  --neutral-light: var(--sand);
 
   /* Semantic Colors (theme-aware) - Light Mode Default */
   --bg-primary: #FFFFFF;
-  --bg-secondary: #F5F5F5;
-  --bg-accent: #FAFAFA;
-  --text-primary: #333333;
-  --text-secondary: #666666;
-  --text-muted: #999999;
-  --color-primary: #003B5C;
-  --color-secondary: #FF6B35;
-  --color-accent: #2EA3F2;
-  --color-primary-dark: #002840;
-  --color-secondary: #FF6B35;
-  --color-secondary-dark: var(--color-secondary);
-  --color-accent: #2EA3F2;
-  --color-accent-dark: #2685C7;
-  --border-color: #E0E0E0;
-  --shadow-color: rgba(0, 0, 0, 0.1);
+  --bg-secondary: #F2EDE5;
+  --bg-accent: #F9F7F4;
+  --text-primary: #23272A;
+  --text-secondary: #4F5B66;
+  --text-muted: #8A9099;
+  --color-primary: #23272A;
+  --color-secondary: #FF5A1F;
+  --color-accent: #FFC400;
+  --color-primary-dark: #1E2226;
+  --color-secondary-dark: #E64F18;
+  --color-accent-dark: #E6B100;
+  --border-color: #D1CCC3;
+  --shadow-color: rgba(35, 39, 42, 0.1);
 
   /* Functional Colors */
   --success: #28A745;
-  --warning: #FFC107;
+  --warning: #FFC400;
   --error: #DC3545;
-  --info: #17A2B8;
+  --info: #4F5B66;
 
   /* Typography */
   --font-heading: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -105,17 +107,20 @@
 /* Dark Mode Theme */
 [data-theme="dark"] {
   /* Semantic Colors - Dark Mode */
-  --bg-primary: #1a1a1a;
-  --bg-secondary: #2d2d2d;
-  --bg-accent: #242424;
-  --text-primary: #e5e5e5;
-  --text-secondary: #b0b0b0;
-  --text-muted: #808080;
-  --color-primary: #3a7ca5;
-  --color-secondary: #ff8c61;
-  --color-accent: #5eb8e5;
-  --border-color: #404040;
-  --shadow-color: rgba(0, 0, 0, 0.3);
+  --bg-primary: #1E2226;
+  --bg-secondary: #23272A;
+  --bg-accent: #2A2E32;
+  --text-primary: #F2EDE5;
+  --text-secondary: #D1CCC3;
+  --text-muted: #8A9099;
+  --color-primary: #F2EDE5;
+  --color-secondary: #FF5A1F;
+  --color-accent: #FFC400;
+  --color-primary-dark: #FFFFFF;
+  --color-secondary-dark: #FF7042;
+  --color-accent-dark: #FFD133;
+  --border-color: #4F5B66;
+  --shadow-color: rgba(0, 0, 0, 0.4);
 }
 
 /* ==========================================================================

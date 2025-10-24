@@ -15,15 +15,17 @@ document.addEventListener('DOMContentLoaded', function() {
   // Get current theme
   const isDarkMode = document.documentElement.getAttribute('data-theme') === 'dark';
 
-  // Theme-aware colors
+  // Theme-aware colors (Official Brand Standards)
   const colors = {
-    primary: isDarkMode ? '#3a7ca5' : '#003B5C',
-    secondary: isDarkMode ? '#ff8c61' : '#FF6B35',
-    accent: isDarkMode ? '#5eb8e5' : '#2EA3F2',
+    primary: isDarkMode ? '#F2EDE5' : '#23272A',
+    secondary: '#FF5A1F',
+    accent: '#FFC400',
     success: '#28A745',
-    warning: '#FFC107',
-    text: isDarkMode ? '#e5e5e5' : '#333333',
-    grid: isDarkMode ? '#404040' : '#E0E0E0'
+    warning: '#FFC400',
+    text: isDarkMode ? '#F2EDE5' : '#23272A',
+    grid: isDarkMode ? '#4F5B66' : '#D1CCC3',
+    steel: '#4F5B66',
+    sand: '#F2EDE5'
   };
 
   // Chart defaults
@@ -42,7 +44,7 @@ document.addEventListener('DOMContentLoaded', function() {
           label: 'Monthly Revenue',
           data: [325000, 265000, 225000, 285000, 365000, 425000, 485000, 515000, 525000, 505000, 475000, 445000],
           borderColor: colors.primary,
-          backgroundColor: isDarkMode ? 'rgba(58, 124, 165, 0.1)' : 'rgba(0, 59, 92, 0.1)',
+          backgroundColor: isDarkMode ? 'rgba(242, 237, 229, 0.1)' : 'rgba(35, 39, 42, 0.1)',
           tension: 0.4,
           fill: true,
           pointRadius: 4,
