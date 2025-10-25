@@ -44,7 +44,12 @@
       "Bash(do sed -i 's|style=\"\"background: linear-gradient(135deg, #E8EAED 0%, #D1D5DB 100%);\"\"|class=\"\"gradient-bg-light\"\"|g' \"$file\")",
       "Bash(do sed -i 's|class=\"\"section\"\" class=\"\"gradient-bg-light\"\"|class=\"\"section gradient-bg-light\"\"|g' \"$file\")",
       "Bash(do sed -i 's|style=\"\"background: linear-gradient(135deg, #E2E8F0 0%, #CBD5E1 100%); color: var(--white);\"\"|class=\"\"gradient-bg-light\"\" style=\"\"color: var(--white);\"\"|g' \"$file\")",
-      "Bash(do grep -l 'class=\"\"section\"\" class=\"\"gradient-bg-light\"\"' \"$file\")"
+      "Bash(do grep -l 'class=\"\"section\"\" class=\"\"gradient-bg-light\"\"' \"$file\")",
+      "Bash(start http://127.0.0.1:8000/dashboard/projects.html)",
+      "Bash(start http://127.0.0.1:8000/dashboard/customers.html)",
+      "Bash(start:*)",
+      "Bash(start http://127.0.0.1:8000/dashboard/equipment.html)",
+      "Bash(start http://127.0.0.1:8000/dashboard/reports.html)"
     ],
     "deny": [],
     "ask": []

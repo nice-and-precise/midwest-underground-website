@@ -83,15 +83,16 @@
 }
 
 .dashboard-logo .logo-image {
-  height: 48px;
+  height: 60px; /* Larger logo for dashboard */
   width: auto;
   display: block;
   transition: transform var(--transition-base);
+  filter: brightness(0) saturate(100%); /* Black in light mode */
 }
 
 /* Dark mode logo - invert to white */
-[data-theme="dark"] .dashboard-logo .logo-image[src*="logo_horizontal_transparent.png"] {
-  filter: brightness(0) invert(1);
+[data-theme="dark"] .dashboard-logo .logo-image {
+  filter: brightness(0) saturate(100%) invert(1); /* White in dark mode */
 }
 
 .dashboard-header-right {
