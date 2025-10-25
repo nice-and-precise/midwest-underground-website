@@ -19,6 +19,9 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: 'Midwest Underground of Minnesota | HDD Field Operations',
   description: 'Professional HDD bore tracking, field reports, and project management for Midwest Underground of Minnesota Inc.',
+}
+
+export const viewport = {
   themeColor: [
     { media: '(prefers-color-scheme: light)', color: '#FFFFFF' },
     { media: '(prefers-color-scheme: dark)', color: '#343D46' }
