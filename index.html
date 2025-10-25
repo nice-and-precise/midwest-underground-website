@@ -54,6 +54,9 @@
   <!-- Tailwind CSS CDN (for utility classes) -->
   <script src="https://cdn.tailwindcss.com"></script>
 
+  <!-- Leaflet CSS for Interactive Maps -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+
   <!-- Custom Styles -->
   <link rel="stylesheet" href="css/styles.css">
 
@@ -296,6 +299,56 @@
       </div>
     </section>
 
+    <!-- Service Area Map Section -->
+    <section class="section">
+      <div class="container">
+        <div class="text-center" style="margin-bottom: var(--space-2xl);">
+          <h2 style="color: var(--text-primary);">Our Service Area</h2>
+          <p style="font-size: var(--text-lg); color: var(--text-secondary); max-width: 700px; margin: 0 auto;">
+            Proudly serving Kandiyohi County and surrounding Central Minnesota regions with 24/7 emergency response available throughout our coverage area.
+          </p>
+        </div>
+
+        <!-- Interactive Map -->
+        <div id="service-area-map" style="height: 500px; border-radius: var(--radius-lg); overflow: hidden; margin-bottom: var(--space-2xl); border: 2px solid var(--border-color); box-shadow: var(--shadow-lg);"></div>
+
+        <!-- Service Area Details -->
+        <div class="service-area-details" style="margin-top: var(--space-2xl);">
+          <h3 style="text-align: center; color: var(--text-primary); margin-bottom: var(--space-lg);">Counties We Serve</h3>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: var(--space-md);">
+            <div style="background: var(--bg-accent); padding: var(--space-lg); border-radius: var(--radius-md); border-left: 4px solid var(--brand-accent);">
+              <strong style="color: var(--brand-accent); font-size: var(--text-lg);">Kandiyohi County</strong>
+              <div style="color: var(--text-secondary); font-size: var(--text-sm); margin-top: var(--space-xs);">Primary Service Area</div>
+              <div style="color: var(--text-muted); font-size: var(--text-sm); margin-top: var(--space-xs);">Willmar, New London, Spicer, Atwater</div>
+            </div>
+            <div style="background: var(--bg-accent); padding: var(--space-lg); border-radius: var(--radius-md); border-left: 4px solid var(--brand-slate);">
+              <strong style="color: var(--text-primary);">Meeker County</strong>
+              <div style="color: var(--text-muted); font-size: var(--text-sm); margin-top: var(--space-xs);">Litchfield, Dassel, Watkins</div>
+            </div>
+            <div style="background: var(--bg-accent); padding: var(--space-lg); border-radius: var(--radius-md); border-left: 4px solid var(--brand-slate);">
+              <strong style="color: var(--text-primary);">Renville County</strong>
+              <div style="color: var(--text-muted); font-size: var(--text-sm); margin-top: var(--space-xs);">Olivia, Bird Island, Hector</div>
+            </div>
+            <div style="background: var(--bg-accent); padding: var(--space-lg); border-radius: var(--radius-md); border-left: 4px solid var(--brand-slate);">
+              <strong style="color: var(--text-primary);">Swift County</strong>
+              <div style="color: var(--text-muted); font-size: var(--text-sm); margin-top: var(--space-xs);">Benson, Appleton, Kerkhoven</div>
+            </div>
+            <div style="background: var(--bg-accent); padding: var(--space-lg); border-radius: var(--radius-md); border-left: 4px solid var(--brand-slate);">
+              <strong style="color: var(--text-primary);">Chippewa County</strong>
+              <div style="color: var(--text-muted); font-size: var(--text-sm); margin-top: var(--space-xs);">Montevideo, Clara City</div>
+            </div>
+            <div style="background: var(--bg-accent); padding: var(--space-lg); border-radius: var(--radius-md); border-left: 4px solid var(--brand-slate);">
+              <strong style="color: var(--text-primary);">McLeod County</strong>
+              <div style="color: var(--text-muted); font-size: var(--space-xs); margin-top: var(--space-xs);">Hutchinson, Glencoe, Silver Lake</div>
+            </div>
+          </div>
+          <div style="text-align: center; margin-top: var(--space-2xl); padding: var(--space-xl); background: linear-gradient(135deg, var(--brand-accent) 0%, #FF9A1F 100%); color: var(--brand-black); border-radius: var(--radius-lg); font-weight: 600;">
+            <span style="font-size: var(--text-xl);">⚡</span> Emergency Service Available 24/7 Throughout Service Area
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- Testimonials Section -->
     <section class="section gradient-bg-light">
       <div class="container">
@@ -433,6 +486,8 @@
   <button class="back-to-top" aria-label="Back to top">↑</button>
 
   <!-- JavaScript -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
   <script src="js/main.js"></script>
+  <script src="js/service-area-map.js"></script>
 </body>
 </html>

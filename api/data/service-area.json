@@ -1,0 +1,54 @@
+{
+  "name": "Midwest Underground Service Area",
+  "primary_area": "Kandiyohi County, Minnesota",
+  "office_location": {
+    "lat": 45.1219,
+    "lon": -95.0436,
+    "address": "4320 County Rd 8 SE, Willmar, MN 56201",
+    "phone": "(320) 382-6636",
+    "email": "info@midwestundergroundmn.com"
+  },
+  "service_area_coordinates": [
+    [45.35, -95.35],
+    [45.35, -94.65],
+    [44.85, -94.65],
+    [44.85, -95.35],
+    [45.35, -95.35]
+  ],
+  "counties_served": [
+    {
+      "name": "Kandiyohi County",
+      "primary": true,
+      "cities": ["Willmar", "New London", "Spicer", "Atwater", "Pennock"]
+    },
+    {
+      "name": "Meeker County",
+      "primary": false,
+      "cities": ["Litchfield", "Dassel", "Watkins"]
+    },
+    {
+      "name": "Renville County",
+      "primary": false,
+      "cities": ["Olivia", "Bird Island", "Hector"]
+    },
+    {
+      "name": "Swift County",
+      "primary": false,
+      "cities": ["Benson", "Appleton", "Kerkhoven"]
+    },
+    {
+      "name": "Chippewa County",
+      "primary": false,
+      "cities": ["Montevideo", "Clara City"]
+    },
+    {
+      "name": "McLeod County",
+      "primary": false,
+      "cities": ["Hutchinson", "Glencoe", "Silver Lake"]
+    }
+  ],
+  "service_radius_miles": 50,
+  "emergency_service_available": true,
+  "last_updated": "2025-10-25T14:30:00Z",
+  "updated_by": "admin"
+}
