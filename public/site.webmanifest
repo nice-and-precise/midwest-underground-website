@@ -1,0 +1,28 @@
+{
+  "name": "Midwest Underground of Minnesota Inc",
+  "short_name": "Midwest Underground",
+  "description": "Directional drilling, fiber optic installation, and underground utilities contractor serving central Minnesota since 1991",
+  "icons": [
+    {
+      "src": "/public/apple-touch-icon.png",
+      "sizes": "1024x1024",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/public/brand/logo-mark-512w.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/public/favicon-32.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    }
+  ],
+  "start_url": "/",
+  "display": "standalone",
+  "theme_color": "#343D46",
+  "background_color": "#FFFFFF"
+}

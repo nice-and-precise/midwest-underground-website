@@ -20,7 +20,8 @@
       "Bash(echo:*)",
       "Bash(powershell -ExecutionPolicy Bypass -File update-logos.ps1:*)",
       "Read(//c/Users/Owner/Desktop/MU_Logo/**)",
-      "Bash(find:*)"
+      "Bash(find:*)",
+      "Bash(git checkout:*)"
     ],
     "deny": [],
     "ask": []

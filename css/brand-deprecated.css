@@ -1,0 +1,138 @@
+/* ==========================================================================
+   Midwest Underground - Deprecated Brand Mappings
+   For Backward Compatibility During Migration
+   ========================================================================== */
+
+/*
+ * This file maps OLD brand colors to NEW brand colors.
+ * Load this file AFTER brand.css to enable gradual migration.
+ *
+ * Migration Strategy:
+ * 1. Replace usage of old colors with new semantic tokens
+ * 2. Once all occurrences are replaced, remove this file
+ * 3. Keep this file as reference during transition period
+ */
+
+:root {
+  /* OLD → NEW Primary Colors */
+
+  /* OLD: --primary-charcoal: #23272A → NEW: --brand-slate-dark: #343D46 */
+  --primary-charcoal: var(--brand-slate-dark);
+  --charcoal-900: var(--brand-slate-dark); /* #1E2226 → #343D46 */
+  --charcoal-800: var(--brand-slate-dark); /* #23272A → #343D46 */
+
+  /* OLD: --steel: #4F5B66 → NEW: --brand-slate: #4F5B66 (SAME) */
+  --steel: var(--brand-slate);
+
+  /* OLD: --safety-orange: #FF5A1F → NEW: --brand-accent: #FF8800 */
+  --safety-orange: var(--brand-accent);
+
+  /* OLD: --utility-yellow: #FFC400 → REMOVED (use --brand-accent instead) */
+  --utility-yellow: var(--brand-accent);
+
+  /* OLD: --sand: #F2EDE5 → NEW: --brand-gray: #C0C5CE */
+  --sand: var(--brand-gray);
+
+  /* OLD: --white/#FFFFFF → NEW: --brand-white */
+  --white: var(--brand-white);
+
+  /* Legacy color aliases */
+  --neutral-dark: var(--brand-slate-dark);
+  --neutral-medium: var(--brand-slate);
+  --neutral-light: var(--brand-gray);
+
+  /* OLD → NEW Semantic Colors */
+
+  /* Background colors */
+  --bg-primary: var(--bg); /* #FFFFFF → uses brand.css --bg */
+  --bg-secondary: var(--bg-muted); /* #F2EDE5 → uses brand.css --bg-muted */
+  --bg-accent: var(--bg-muted); /* #F9F7F4 → consolidated to --bg-muted */
+
+  /* Text colors */
+  --text-primary: var(--ink); /* #23272A → uses brand.css --ink */
+  --text-secondary: var(--ink-secondary); /* #4F5B66 → uses brand.css --ink-secondary */
+  --text-muted: var(--ink-subtle); /* #8A9099 → #65737E */
+
+  /* Theme colors */
+  --color-primary: var(--ink); /* #23272A → uses brand.css --ink */
+  --color-secondary: var(--accent); /* #FF5A1F → #FF8800 */
+  --color-accent: var(--accent); /* #FFC400 → #FF8800 */
+  --color-primary-dark: var(--brand-slate-dark);
+  --color-secondary-dark: var(--btn-hover); /* #E64F18 → #E67900 */
+  --color-accent-dark: var(--btn-hover); /* #E6B100 → #E67900 */
+
+  /* Borders */
+  --border-color: var(--border); /* #D1CCC3 → #C0C5CE */
+
+  /* Shadows */
+  --shadow-color: rgba(52, 61, 70, 0.1); /* rgba(35, 39, 42, 0.1) → updated base color */
+
+  /* Functional colors (kept same) */
+  --success: #28A745;
+  --warning: var(--brand-accent); /* #FFC400 → #FF8800 */
+  --error: #DC3545;
+  --info: var(--brand-slate); /* #4F5B66 → stays same */
+}
+
+/* Dark Mode Mappings */
+:root.theme-dark,
+[data-theme="dark"] {
+  /* OLD → NEW for Dark Mode */
+
+  --bg-primary: var(--bg); /* #1E2226 → #343D46 */
+  --bg-secondary: var(--bg-muted); /* #23272A → #4F5B66 */
+  --bg-accent: var(--bg-muted); /* #2A2E32 → #4F5B66 */
+
+  --text-primary: var(--ink); /* #F2EDE5 → #FFFFFF */
+  --text-secondary: var(--ink-secondary); /* #D1CCC3 → #C0C5CE */
+  --text-muted: var(--ink-subtle); /* #8A9099 → #C0C5CE */
+
+  --color-primary: var(--ink); /* #F2EDE5 → #FFFFFF */
+  --color-secondary: var(--accent); /* #FF5A1F → #FF8800 */
+  --color-accent: var(--accent); /* #FFC400 → #FF8800 */
+
+  --border-color: var(--border); /* #4F5B66 → #65737E */
+
+  --shadow-color: rgba(0, 0, 0, 0.4);
+}
+
+/* ==========================================================================
+   MIGRATION NOTES
+   ========================================================================== */
+
+/*
+ * COLOR CHANGES SUMMARY:
+ *
+ * PRIMARY CHANGES:
+ * - Charcoal (#23272A) → Slate Dark (#343D46) - Slightly lighter, more neutral
+ * - Safety Orange (#FF5A1F) → Brand Accent (#FF8800) - More vibrant, better contrast
+ * - Utility Yellow (#FFC400) → Consolidated to Brand Accent (#FF8800)
+ * - Sand (#F2EDE5) → Brand Gray (#C0C5CE) - More neutral, better contrast
+ *
+ * NEW ADDITIONS:
+ * - Slate Light (#65737E) - For subtle text and borders
+ *
+ * SIMPLIFIED SEMANTIC STRUCTURE:
+ * Instead of multiple variations (bg-primary, bg-secondary, bg-accent),
+ * new system uses just --bg and --bg-muted with clear semantic meaning.
+ *
+ * WCAG COMPLIANCE:
+ * All text/background combinations in new system meet WCAG AA (4.5:1).
+ * On-accent text uses black (#000000) for proper contrast with orange.
+ *
+ * RECOMMENDED MIGRATION PATH:
+ * 1. Search for uses of old color variables in all HTML/CSS files
+ * 2. Replace with new semantic tokens from brand.css
+ * 3. Test in both light and dark modes
+ * 4. Remove this file once migration is complete
+ *
+ * EXAMPLES:
+ * OLD: background: var(--primary-charcoal);
+ * NEW: background: var(--bg); or var(--brand-slate-dark);
+ *
+ * OLD: color: var(--safety-orange);
+ * NEW: color: var(--accent);
+ *
+ * OLD: background: var(--sand);
+ * NEW: background: var(--bg-muted);
+ */
