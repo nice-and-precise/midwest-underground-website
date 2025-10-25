@@ -49,7 +49,11 @@
       "Bash(start http://127.0.0.1:8000/dashboard/customers.html)",
       "Bash(start:*)",
       "Bash(start http://127.0.0.1:8000/dashboard/equipment.html)",
-      "Bash(start http://127.0.0.1:8000/dashboard/reports.html)"
+      "Bash(start http://127.0.0.1:8000/dashboard/reports.html)",
+      "Bash(npm install:*)",
+      "Bash(psql:*)",
+      "Bash(pg_isready:*)",
+      "Bash(npm run dev:*)"
     ],
     "deny": [],
     "ask": []

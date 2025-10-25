@@ -1,0 +1,310 @@
+/* ==========================================================================
+   Midwest Underground - Brand System
+   New Brand Refresh: October 2025
+   ========================================================================== */
+
+/* ==========================================================================
+   COLOR PALETTE
+   ========================================================================== */
+
+:root {
+  /* Base Palette */
+  --brand-slate-dark: #343D46;
+  --brand-slate: #4F5B66;
+  --brand-slate-light: #65737E;
+  --brand-gray: #C0C5CE;
+  --brand-accent: #FF8800;
+  --brand-white: #FFFFFF;
+  --brand-black: #000000;
+
+  /* Semantic Tokens - Light Mode */
+  --bg: var(--brand-white);
+  --bg-muted: var(--brand-gray);
+  --ink: var(--brand-slate-dark);
+  --ink-secondary: var(--brand-slate);
+  --ink-subtle: var(--brand-slate-light);
+  --border: var(--brand-gray);
+
+  --accent: var(--brand-accent);
+  --on-accent: var(--brand-black); /* WCAG AA+ on #FF8800 */
+
+  /* Component Tokens */
+  --btn-bg: var(--accent);
+  --btn-fg: var(--on-accent);
+  --btn-hover: #E67900; /* Darker shade of orange */
+
+  --link: var(--accent);
+  --link-hover: #E67900;
+  --link-visited: #CC6F00;
+
+  --input-bg: var(--bg);
+  --input-border: var(--border);
+  --input-border-focus: var(--accent);
+  --input-fg: var(--ink);
+
+  --card-bg: var(--bg);
+  --card-border: var(--border);
+
+  /* Effects */
+  --focus-ring: 2px solid var(--accent);
+  --focus-offset: 2px;
+
+  --shadow-sm: 0 1px 2px 0 rgba(52, 61, 70, 0.05);
+  --shadow-base: 0 1px 3px 0 rgba(52, 61, 70, 0.1), 0 1px 2px 0 rgba(52, 61, 70, 0.06);
+  --shadow-md: 0 4px 6px -1px rgba(52, 61, 70, 0.1), 0 2px 4px -1px rgba(52, 61, 70, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(52, 61, 70, 0.1), 0 4px 6px -2px rgba(52, 61, 70, 0.05);
+
+  /* Transitions */
+  --transition-fast: 150ms ease-in-out;
+  --transition-base: 300ms ease-in-out;
+  --transition-slow: 500ms ease-in-out;
+
+  color-scheme: light;
+}
+
+/* ==========================================================================
+   DARK MODE
+   ========================================================================== */
+
+:root.theme-dark,
+[data-theme="dark"] {
+  /* Semantic Tokens - Dark Mode */
+  --bg: var(--brand-slate-dark);
+  --bg-muted: var(--brand-slate);
+  --ink: var(--brand-white);
+  --ink-secondary: var(--brand-gray);
+  --ink-subtle: var(--brand-gray);
+  --border: var(--brand-slate-light);
+
+  --accent: var(--brand-accent);
+  --on-accent: var(--brand-black); /* Still AA+ on orange */
+
+  /* Component Tokens */
+  --btn-bg: var(--accent);
+  --btn-fg: var(--on-accent);
+  --btn-hover: #E67900;
+
+  --link: var(--accent);
+  --link-hover: #FFA033;
+  --link-visited: #CC6F00;
+
+  --input-bg: var(--brand-slate);
+  --input-border: var(--brand-slate-light);
+  --input-border-focus: var(--accent);
+  --input-fg: var(--ink);
+
+  --card-bg: var(--brand-slate);
+  --card-border: var(--brand-slate-light);
+
+  /* Effects */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+  --shadow-base: 0 1px 3px 0 rgba(0, 0, 0, 0.4), 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -2px rgba(0, 0, 0, 0.3);
+
+  color-scheme: dark;
+}
+
+/* ==========================================================================
+   UTILITY CLASSES
+   ========================================================================== */
+
+/* Text Colors */
+.text-ink { color: var(--ink) !important; }
+.text-ink-secondary { color: var(--ink-secondary) !important; }
+.text-ink-subtle { color: var(--ink-subtle) !important; }
+.text-accent { color: var(--accent) !important; }
+.text-on-accent { color: var(--on-accent) !important; }
+
+/* Background Colors */
+.bg-surface { background-color: var(--bg) !important; }
+.bg-surface-muted { background-color: var(--bg-muted) !important; }
+.bg-accent { background-color: var(--accent) !important; }
+
+/* Borders */
+.border-default { border-color: var(--border) !important; }
+.border-accent { border-color: var(--accent) !important; }
+
+/* ==========================================================================
+   COMPONENT STYLES
+   ========================================================================== */
+
+/* Buttons */
+.btn {
+  background: var(--btn-bg);
+  color: var(--btn-fg);
+  border-radius: 6px;
+  padding: 0.625rem 1rem;
+  border: 1px solid transparent;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  display: inline-block;
+  text-decoration: none;
+  text-align: center;
+}
+
+.btn:hover {
+  background: var(--btn-hover);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+.btn:active {
+  transform: translateY(0);
+}
+
+.btn:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-offset);
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Button Variants */
+.btn-outline {
+  background: transparent;
+  color: var(--ink);
+  border: 2px solid var(--border);
+}
+
+.btn-outline:hover {
+  background: var(--bg-muted);
+  border-color: var(--accent);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--ink);
+  border: none;
+}
+
+.btn-ghost:hover {
+  background: var(--bg-muted);
+}
+
+/* Links */
+a {
+  color: var(--link);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+a:hover {
+  color: var(--link-hover);
+  text-decoration: underline;
+}
+
+a:visited {
+  color: var(--link-visited);
+}
+
+a:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-offset);
+  border-radius: 2px;
+}
+
+/* Inputs */
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+input[type="url"],
+input[type="password"],
+input[type="number"],
+input[type="search"],
+select,
+textarea {
+  background: var(--input-bg);
+  color: var(--input-fg);
+  border: 2px solid var(--input-border);
+  border-radius: 6px;
+  padding: 0.625rem 0.875rem;
+  font-size: 1rem;
+  font-family: inherit;
+  transition: border-color var(--transition-fast);
+  width: 100%;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: var(--input-border-focus);
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--ink-subtle);
+  opacity: 0.7;
+}
+
+/* Cards */
+.card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow var(--transition-base);
+}
+
+.card:hover {
+  box-shadow: var(--shadow-md);
+}
+
+/* Focus Visible for Accessibility */
+*:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-offset);
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ==========================================================================
+   LOGO HELPERS
+   ========================================================================== */
+
+.logo-mark {
+  width: auto;
+  height: 48px;
+}
+
+.logo-horizontal {
+  width: auto;
+  height: 40px;
+}
+
+.logo-stacked {
+  width: auto;
+  height: 120px;
+}
+
+/* Responsive logo sizing */
+@media (max-width: 768px) {
+  .logo-mark {
+    height: 36px;
+  }
+
+  .logo-horizontal {
+    height: 32px;
+  }
+
+  .logo-stacked {
+    height: 100px;
+  }
+}
