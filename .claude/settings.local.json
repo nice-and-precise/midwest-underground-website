@@ -53,7 +53,8 @@
       "Bash(npm install:*)",
       "Bash(psql:*)",
       "Bash(pg_isready:*)",
-      "Bash(npm run dev:*)"
+      "Bash(npm run dev:*)",
+      "Bash(git reset:*)"
     ],
     "deny": [],
     "ask": []

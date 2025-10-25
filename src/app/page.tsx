@@ -16,6 +16,7 @@ export default function HomePage() {
               height={160}
               className="logo-image"
               priority
+              style={{ width: 'auto', height: 'auto' }}
             />
           </Link>
 
