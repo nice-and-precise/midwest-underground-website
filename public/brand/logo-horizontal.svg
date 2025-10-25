@@ -1,28 +1,33 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 380" role="img" aria-labelledby="logo-horizontal-title logo-horizontal-desc">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 320" role="img" aria-labelledby="logo-horizontal-title logo-horizontal-desc">
   <title id="logo-horizontal-title">Midwest Underground Logo</title>
   <desc id="logo-horizontal-desc">Midwest Underground of Minnesota Inc. logo featuring the MU monogram with company name</desc>
 
   <defs>
     <style>
-      @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@700&amp;display=swap');
-      .company-name { font-family: 'Oswald', sans-serif; font-weight: 700; fill: #343D46; }
+      .logo-text {
+        font-family: 'Oswald', 'Arial Black', sans-serif;
+        font-weight: 700;
+        fill: #343D46;
+        letter-spacing: -2px;
+      }
     </style>
   </defs>
 
+  <!-- All elements in brand Slate Dark #343D46 on transparent background -->
   <g fill="#343D46">
-    <!-- MU Mark (scaled down to fit) -->
-    <g transform="translate(0, 40) scale(0.75)">
+    <!-- MU Mark (scaled and positioned left) -->
+    <g transform="translate(0, 40) scale(0.45)">
       <!-- M top part -->
-      <path d="M 60 120 L 140 120 L 200 220 L 260 120 L 340 120 L 340 320 L 280 320 L 280 240 L 240 320 L 160 320 L 120 240 L 120 320 L 60 320 Z"/>
+      <path d="M 32 120 L 95 120 L 95 180 L 112 180 L 168 285 L 224 180 L 241 180 L 241 120 L 304 120 L 304 380 L 241 380 L 241 285 L 210 350 L 126 350 L 95 285 L 95 380 L 32 380 Z"/>
 
       <!-- U bottom part -->
-      <path d="M 60 340 L 120 340 L 120 480 Q 120 540 200 540 Q 280 540 280 480 L 280 340 L 340 340 L 340 480 Q 340 600 200 600 Q 60 600 60 480 Z"/>
+      <path d="M 32 410 L 95 410 L 95 510 C 95 525 100 540 115 550 C 130 560 150 565 168 565 C 186 565 206 560 221 550 C 236 540 241 525 241 510 L 241 410 L 304 410 L 304 510 C 304 545 290 575 265 590 C 240 605 210 615 168 615 C 126 615 96 605 71 590 C 46 575 32 545 32 510 Z" transform="translate(0, -15)"/>
     </g>
 
     <!-- MIDWEST text -->
-    <text x="340" y="180" class="company-name" font-size="130" letter-spacing="3">MIDWEST</text>
+    <text x="185" y="135" class="logo-text" font-size="95" font-family="Oswald, Arial Black, sans-serif" font-weight="700" letter-spacing="-1">MIDWEST</text>
 
     <!-- UNDERGROUND text -->
-    <text x="340" y="310" class="company-name" font-size="130" letter-spacing="3">UNDERGROUND</text>
+    <text x="185" y="235" class="logo-text" font-size="95" font-family="Oswald, Arial Black, sans-serif" font-weight="700" letter-spacing="-1">UNDERGROUND</text>
   </g>
 </svg>
