@@ -588,3 +588,42 @@ style.textContent = `
   }
 `;
 document.head.appendChild(style);
+
+/**
+ * Parallax Scroll Effect
+ */
+function initParallax() {
+  const parallaxBg = document.querySelector('.parallax-bg');
+
+  if (!parallaxBg) return;
+
+  function updateParallax() {
+    const scrolled = window.pageYOffset;
+    const parallaxSpeed = 0.5;
+
+    // Only apply parallax on desktop for better performance
+    if (window.innerWidth > 768) {
+      parallaxBg.style.transform = `translateY(${scrolled * parallaxSpeed}px)`;
+    }
+  }
+
+  // Use requestAnimationFrame for smooth animation
+  let ticking = false;
+  window.addEventListener('scroll', function() {
+    if (!ticking) {
+      window.requestAnimationFrame(function() {
+        updateParallax();
+        ticking = false;
+      });
+      ticking = true;
+    }
+  });
+
+  // Initial call
+  updateParallax();
+}
+
+// Initialize parallax when DOM is loaded
+document.addEventListener('DOMContentLoaded', function() {
+  initParallax();
+});

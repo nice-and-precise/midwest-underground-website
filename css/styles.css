@@ -1065,3 +1065,103 @@ ul, ol {
     display: none;
   }
 }
+
+/* ==========================================================================
+   PARALLAX HERO SECTION
+   ========================================================================== */
+
+.parallax-hero {
+  position: relative;
+  height: 600px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.parallax-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 120%;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+.parallax-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(52, 61, 70, 0.85) 0%, rgba(79, 91, 102, 0.75) 100%);
+  z-index: 1;
+}
+
+[data-theme="dark"] .parallax-overlay {
+  background: linear-gradient(135deg, rgba(43, 49, 57, 0.9) 0%, rgba(52, 61, 70, 0.85) 100%);
+}
+
+.parallax-content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  color: var(--brand-white);
+  max-width: 900px;
+  padding: var(--space-2xl);
+}
+
+.parallax-content h1 {
+  font-size: var(--text-5xl);
+  font-weight: 700;
+  margin-bottom: var(--space-lg);
+  text-shadow: 2px 4px 8px rgba(0, 0, 0, 0.5);
+  line-height: 1.2;
+}
+
+.parallax-content p {
+  font-size: var(--text-xl);
+  margin-bottom: var(--space-2xl);
+  text-shadow: 1px 2px 4px rgba(0, 0, 0, 0.5);
+  line-height: 1.6;
+}
+
+.parallax-cta {
+  display: flex;
+  gap: var(--space-md);
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* Responsive parallax */
+@media (max-width: 768px) {
+  .parallax-hero {
+    height: 500px;
+  }
+
+  .parallax-content h1 {
+    font-size: var(--text-3xl);
+  }
+
+  .parallax-content p {
+    font-size: var(--text-lg);
+  }
+}
+
+@media (max-width: 480px) {
+  .parallax-hero {
+    height: 400px;
+  }
+
+  .parallax-content h1 {
+    font-size: var(--text-2xl);
+  }
+
+  .parallax-content p {
+    font-size: var(--text-base);
+  }
+}
