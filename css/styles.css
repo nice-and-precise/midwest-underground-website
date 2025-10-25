@@ -128,6 +128,12 @@
   --color-accent-dark: #FF9A1F;
   --border-color: var(--brand-slate-light);
   --shadow-color: rgba(0, 0, 0, 0.4);
+
+  /* Override legacy colors for dark mode */
+  --steel: var(--brand-gray); /* Change from #4F5B66 to #C0C5CE for readability */
+  --primary-charcoal: var(--brand-white);
+  --neutral-light: var(--brand-gray);
+  --sand: var(--brand-slate-light);
 }
 
 /* ==========================================================================
