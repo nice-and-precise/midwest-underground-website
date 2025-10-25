@@ -16,17 +16,17 @@
   --brand-white: #FFFFFF;
   --brand-black: #000000;
 
-  /* Legacy Aliases (map old colors to new brand) */
+  /* Legacy Aliases (map old colors to new brand) - LIGHT MODE */
   --primary-charcoal: var(--brand-slate-dark);
   --charcoal-900: var(--brand-slate-dark);
   --charcoal-800: var(--brand-slate-dark);
-  --steel: var(--brand-slate);
+  --steel: var(--brand-slate-dark); /* FIX: Changed from slate (#4F5B66) to slate-dark (#343D46) for 9.28:1 contrast on light backgrounds */
   --safety-orange: var(--brand-accent);
   --utility-yellow: var(--brand-accent);
   --sand: var(--brand-gray);
   --white: var(--brand-white);
   --neutral-dark: var(--brand-slate-dark);
-  --neutral-medium: var(--brand-slate);
+  --neutral-medium: var(--brand-slate-dark); /* FIX: Changed for better light mode contrast (9.28:1 AAA) */
   --neutral-light: var(--brand-gray);
 
   /* Semantic Colors (theme-aware) - Light Mode Default */
@@ -34,8 +34,8 @@
   --bg-secondary: var(--brand-gray);
   --bg-accent: #F5F6F7;
   --text-primary: var(--brand-slate-dark);
-  --text-secondary: var(--brand-slate);
-  --text-muted: var(--brand-slate-light);
+  --text-secondary: var(--brand-slate-dark); /* FIX: Changed from slate for better contrast (9.28:1 AAA) */
+  --text-muted: var(--brand-slate); /* Muted text can be slightly lighter */
   --color-primary: var(--brand-slate-dark);
   --color-secondary: var(--brand-accent);
   --color-accent: var(--brand-accent);
