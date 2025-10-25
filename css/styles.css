@@ -7,42 +7,49 @@
    ========================================================================== */
 
 :root {
-  /* Official Brand Colors (from brand guide) */
-  --primary-charcoal: #23272A;
-  --charcoal-900: #1E2226;
-  --charcoal-800: #23272A;
-  --steel: #4F5B66;
-  --safety-orange: #FF5A1F;
-  --utility-yellow: #FFC400;
-  --sand: #F2EDE5;
-  --white: #FFFFFF;
+  /* NEW BRAND COLORS (October 2025 Brand Refresh) */
+  --brand-slate-dark: #343D46;
+  --brand-slate: #4F5B66;
+  --brand-slate-light: #65737E;
+  --brand-gray: #C0C5CE;
+  --brand-accent: #FF8800;
+  --brand-white: #FFFFFF;
+  --brand-black: #000000;
 
-  /* Legacy color aliases (for backward compatibility during transition) */
-  --neutral-dark: var(--primary-charcoal);
-  --neutral-medium: var(--steel);
-  --neutral-light: var(--sand);
+  /* Legacy Aliases (map old colors to new brand) */
+  --primary-charcoal: var(--brand-slate-dark);
+  --charcoal-900: var(--brand-slate-dark);
+  --charcoal-800: var(--brand-slate-dark);
+  --steel: var(--brand-slate);
+  --safety-orange: var(--brand-accent);
+  --utility-yellow: var(--brand-accent);
+  --sand: var(--brand-gray);
+  --white: var(--brand-white);
+  --neutral-dark: var(--brand-slate-dark);
+  --neutral-medium: var(--brand-slate);
+  --neutral-light: var(--brand-gray);
 
   /* Semantic Colors (theme-aware) - Light Mode Default */
-  --bg-primary: #FFFFFF;
-  --bg-secondary: #F2EDE5;
-  --bg-accent: #F9F7F4;
-  --text-primary: #23272A;
-  --text-secondary: #4F5B66;
-  --text-muted: #8A9099;
-  --color-primary: #23272A;
-  --color-secondary: #FF5A1F;
-  --color-accent: #FFC400;
-  --color-primary-dark: #1E2226;
-  --color-secondary-dark: #E64F18;
-  --color-accent-dark: #E6B100;
-  --border-color: #D1CCC3;
-  --shadow-color: rgba(35, 39, 42, 0.1);
+  --bg-primary: var(--brand-white);
+  --bg-secondary: var(--brand-gray);
+  --bg-accent: #F5F6F7;
+  --text-primary: var(--brand-slate-dark);
+  --text-secondary: var(--brand-slate);
+  --text-muted: var(--brand-slate-light);
+  --color-primary: var(--brand-slate-dark);
+  --color-secondary: var(--brand-accent);
+  --color-accent: var(--brand-accent);
+  --color-primary-dark: var(--brand-slate-dark);
+  --color-secondary-dark: #E67900;
+  --color-accent-dark: #E67900;
+  --border-color: var(--brand-gray);
+  --shadow-color: rgba(52, 61, 70, 0.1);
 
   /* Functional Colors */
   --success: #28A745;
-  --warning: #FFC400;
+  --warning: var(--brand-accent);
   --error: #DC3545;
-  --info: #4F5B66;
+  --info: var(--brand-slate);
 
   /* Typography (Official Brand Standards) */
   --font-heading: 'Oswald', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -106,20 +113,20 @@
 
 /* Dark Mode Theme */
 [data-theme="dark"] {
-  /* Semantic Colors - Dark Mode */
-  --bg-primary: #1E2226;
-  --bg-secondary: #23272A;
-  --bg-accent: #2A2E32;
-  --text-primary: #F2EDE5;
-  --text-secondary: #D1CCC3;
-  --text-muted: #8A9099;
-  --color-primary: #F2EDE5;
-  --color-secondary: #FF5A1F;
-  --color-accent: #FFC400;
-  --color-primary-dark: #FFFFFF;
-  --color-secondary-dark: #FF7042;
-  --color-accent-dark: #FFD133;
-  --border-color: #4F5B66;
+  /* Semantic Colors - Dark Mode (NEW BRAND) */
+  --bg-primary: var(--brand-slate-dark);
+  --bg-secondary: var(--brand-slate);
+  --bg-accent: #404852;
+  --text-primary: var(--brand-white);
+  --text-secondary: var(--brand-gray);
+  --text-muted: var(--brand-slate-light);
+  --color-primary: var(--brand-white);
+  --color-secondary: var(--brand-accent);
+  --color-accent: var(--brand-accent);
+  --color-primary-dark: var(--brand-white);
+  --color-secondary-dark: #FF9A1F;
+  --color-accent-dark: #FF9A1F;
+  --border-color: var(--brand-slate-light);
   --shadow-color: rgba(0, 0, 0, 0.4);
 }
 
