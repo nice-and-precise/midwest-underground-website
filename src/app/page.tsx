@@ -1,5 +1,6 @@
 import Image from 'next/image'
 import Link from 'next/link'
+import DarkModeToggle from '@/components/DarkModeToggle'
 
 export default function HomePage() {
   return (
@@ -30,6 +31,9 @@ export default function HomePage() {
             <a href="tel:3203826636" className="nav-phone" aria-label="Call us at 320-382-6636">
               📞 (320) 382-6636
             </a>
+
+            {/* Dark Mode Toggle */}
+            <DarkModeToggle />
           </nav>
 
           {/* Mobile Menu Toggle */}
