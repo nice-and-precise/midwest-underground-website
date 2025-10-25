@@ -613,12 +613,14 @@
 }
 
 .btn-primary {
-  background-color: var(--color-primary);
-  color: white;
+  background-color: var(--brand-accent); /* Brand orange #FF8800 */
+  color: var(--brand-black); /* Black text on orange */
+  border: 2px solid var(--brand-accent);
 }
 
 .btn-primary:hover {
-  background-color: var(--color-accent);
+  background-color: #FF9A1F; /* Slightly lighter orange on hover */
+  border-color: #FF9A1F;
 }
 
 .btn-secondary {
@@ -873,7 +875,7 @@
 }
 
 .report-type-card:hover {
-  border-color: var(--color-primary);
+  border-color: var(--brand-accent); /* Brand orange on hover */
   transform: translateY(-2px);
   box-shadow: var(--shadow-md);
 }
@@ -885,8 +887,9 @@
 }
 
 .report-type-card input[type="radio"]:checked + .report-type-content {
-  background-color: var(--color-primary);
-  color: var(--white);
+  background-color: var(--brand-accent); /* Brand orange #FF8800 */
+  color: var(--brand-black); /* Black text on orange per brand guide */
+  border-radius: var(--radius-lg);
 }
 
 .report-type-content {
