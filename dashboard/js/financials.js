@@ -685,3 +685,34 @@ function showNotification(message, type = 'info') {
     }, 300);
   }, 3000);
 }
+
+/**
+ * Initialize accordion functionality
+ */
+function initAccordions() {
+  const accordionHeaders = document.querySelectorAll('.accordion-header');
+
+  accordionHeaders.forEach(header => {
+    header.addEventListener('click', function() {
+      const targetId = this.getAttribute('data-accordion');
+      const content = document.getElementById(targetId);
+      const toggleText = this.querySelector('.accordion-toggle span:first-child');
+
+      // Toggle active class
+      this.classList.toggle('active');
+      content.classList.toggle('active');
+
+      // Update toggle text
+      if (this.classList.contains('active')) {
+        toggleText.textContent = 'Collapse';
+      } else {
+        toggleText.textContent = 'Expand';
+      }
+    });
+  });
+}
+
+// Initialize accordions when DOM is ready
+document.addEventListener('DOMContentLoaded', function() {
+  initAccordions();
+});

@@ -208,13 +208,29 @@
           </div>
         </div>
 
-        <!-- Revenue & Profit Chart -->
-        <div class="chart-card">
-          <div class="chart-header">
-            <h3>Revenue & Profit Trend</h3>
-            <div class="chart-legend">
-              <span class="legend-item"><span class="legend-color" style="background: var(--color-primary);"></span> Revenue</span>
-              <span class="legend-item"><span class="legend-color" style="background: var(--color-accent);"></span> Profit</span>
+        <!-- Charts Accordion Section -->
+        <div class="accordion-section">
+          <div class="accordion-header active" data-accordion="financial-charts">
+            <div class="accordion-title">
+              <span class="accordion-icon">📊</span>
+              <h2>Financial Charts & Analytics</h2>
+            </div>
+            <div class="accordion-toggle">
+              <span>Collapse</span>
+              <span class="accordion-toggle-icon">▼</span>
+            </div>
+          </div>
+          <div class="accordion-content active" id="financial-charts">
+            <div class="accordion-content-inner">
+              <div class="accordion-charts-grid">
+
+                <!-- Revenue & Profit Chart -->
+                <div class="chart-card accordion-chart-full">
+                  <div class="chart-header">
+                    <h3>Revenue & Profit Trend</h3>
+                    <div class="chart-legend">
+                      <span class="legend-item"><span class="legend-color" style="background: var(--color-primary);"></span> Revenue</span>
+                      <span class="legend-item"><span class="legend-color" style="background: var(--color-accent);"></span> Profit</span>
             </div>
           </div>
           <div class="chart-container">
@@ -317,6 +333,12 @@
           </div>
         </div>
 
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Accounts Receivable Aging (Outside Accordion) -->
         <div class="chart-card">
           <div class="chart-header">
             <h3>Accounts Receivable Aging</h3>
