@@ -61,18 +61,28 @@ vercel --prod
 **Current Phase:** Phase 2 (60% complete) - Production Ready 🚀
 **Total Completion:** 70-75% (Phase 1: 100%, Phase 2: 60%)
 **Deployment Ready:** ✅ Yes (after high-priority placeholders replaced)
-**Last Updated:** October 24, 2025
+**Last Updated:** October 25, 2025
 
 ### Quick Stats
 - **13,000+ lines of code** (HTML, CSS, JS, PHP, JSON)
-- **9,000+ lines of documentation** (16 comprehensive guides)
+- **9,000+ lines of documentation** (17 comprehensive guides)
 - **11 pages total** (5 public + 6 dashboard pages)
-- **17 professional git commits** with detailed messages
+- **22+ professional git commits** with detailed messages
 - **Production-ready** with comprehensive CMS capabilities
+- **Brand refresh complete** - New design system deployed
 
-### What's New (October 24, 2025)
+### What's New (October 25, 2025 - Brand Refresh)
+- ✅ **New Brand System** - Complete redesign with professional color palette
+- ✅ **Updated Color Palette** - Slate Dark (#343D46), Slate (#4F5B66), Slate Light (#65737E), Gray (#C0C5CE), Accent Orange (#FF8800)
+- ✅ **Official Logos** - High-resolution logo deployed across all 11 pages (public + dashboard)
+- ✅ **Semantic Design Tokens** - CSS variables for light/dark modes with WCAG AA compliance
+- ✅ **SVG Logo System** - Transparent backgrounds, proper brand colors, multiple variants
+- ✅ **Brand Documentation** - Comprehensive 500+ line brand guide with usage examples
+- ✅ **Interactive Demo** - Live brand demo page showcasing all components and colors
+- ✅ **Tailwind Integration** - Extended Tailwind config with brand color palette
+
+### Previous Updates (October 24, 2025)
 - ✅ **Complete Dark Theme** - Full dark mode implementation across all pages
-- ✅ **Brand Color Consistency** - All pages use official brand colors (Charcoal, Steel, Safety Orange, Utility Yellow, Sand)
 - ✅ **Enhanced Logo** - Larger header logo (120px desktop, 70px mobile) with footer logos
 - ✅ **Gradient Project Cards** - CSS gradients replace image placeholders for performance
 - ✅ **Form Accessibility** - Dark-themed forms with high contrast for readability
@@ -84,6 +94,137 @@ vercel --prod
 - ✅ **CMS Editing** - Full CRUD operations for Customers & Equipment
 - ✅ **Modal Forms** - Professional editing interface
 - ✅ **Comprehensive Documentation** - NEXT-STEPS.md, PRE-LAUNCH-CHECKLIST.md
+
+## 📸 Screenshots & Brand Showcase
+
+### Homepage - Light & Dark Mode
+![Homepage Light Mode](docs/screenshots/homepage-light.png)
+*Clean, professional homepage with new Slate Dark branding and prominent service CTAs*
+
+![Homepage Dark Mode](docs/screenshots/homepage-dark.png)
+*Dark mode with optimized contrast ratios (WCAG AA compliant)*
+
+### Logo Implementation
+![Logo in Header](docs/screenshots/logo-header.png)
+*High-resolution Midwest Underground logo in navigation header - deployed across all 11 pages*
+
+![Logo Variants](docs/screenshots/logo-variants.png)
+*SVG logo system with transparent backgrounds and brand color (#343D46)*
+
+### Dashboard Pages - Business Intelligence
+![Dashboard Home](docs/screenshots/dashboard-home.png)
+*Main dashboard with KPIs, charts, and real-time analytics*
+
+![Projects Management](docs/screenshots/dashboard-projects.png)
+*Project tracking with filtering, sorting, and progress visualization*
+
+![Customer Management](docs/screenshots/dashboard-customers.png)
+*Customer CMS with full CRUD operations and detailed analytics*
+
+![Equipment Tracking](docs/screenshots/dashboard-equipment.png)
+*Equipment management with utilization rates and maintenance tracking*
+
+![Financial Reports](docs/screenshots/dashboard-financials.png)
+*Financial analytics with P&L, cash flow, and A/R aging*
+
+![Reports & Analytics](docs/screenshots/dashboard-reports.png)
+*Custom report builder with PDF export and pre-built templates*
+
+### Brand System
+![Color Palette](docs/screenshots/brand-colors.png)
+*Professional color palette with semantic tokens for light/dark themes*
+
+![Brand Demo Page](docs/screenshots/brand-demo.png)
+*Interactive brand showcase: [/src/pages/brand-demo.html](src/pages/brand-demo.html)*
+
+### Responsive Design
+![Mobile Navigation](docs/screenshots/mobile-nav.png)
+*Mobile-first design with hamburger menu and touch-optimized controls*
+
+![Tablet View](docs/screenshots/tablet-view.png)
+*Responsive layout adapts seamlessly from 375px mobile to 4K displays*
+
+### How to Update Screenshots
+
+Screenshots should be captured at the following resolutions and saved to `docs/screenshots/`:
+
+**Required Screenshots (11 total):**
+
+1. **homepage-light.png** (1920x1080)
+   - Navigate to: http://localhost:8000/
+   - Ensure light mode is active
+   - Capture full homepage from hero to footer
+
+2. **homepage-dark.png** (1920x1080)
+   - Same as above but with dark mode enabled
+   - Click moon icon to toggle theme
+
+3. **logo-header.png** (800x200)
+   - Crop just the header section showing logo
+   - Should show: logo, navigation, dark mode toggle
+
+4. **logo-variants.png** (1200x600)
+   - Navigate to: http://localhost:8000/src/pages/brand-demo.html
+   - Capture logo showcase section
+
+5. **dashboard-home.png** (1920x1080)
+   - Navigate to: http://localhost:8000/dashboard/
+   - Capture full dashboard with KPIs and charts
+
+6. **dashboard-projects.png** (1920x1080)
+   - Navigate to: http://localhost:8000/dashboard/projects.html
+   - Capture project grid with filters active
+
+7. **dashboard-customers.png** (1920x1080)
+   - Navigate to: http://localhost:8000/dashboard/customers.html
+   - Capture customer list with charts
+
+8. **dashboard-equipment.png** (1920x1080)
+   - Navigate to: http://localhost:8000/dashboard/equipment.html
+   - Capture equipment tracking page
+
+9. **dashboard-financials.png** (1920x1080)
+   - Navigate to: http://localhost:8000/dashboard/financials.html
+   - Capture financial overview
+
+10. **dashboard-reports.png** (1920x1080)
+    - Navigate to: http://localhost:8000/dashboard/reports.html
+    - Capture report builder interface
+
+11. **brand-colors.png** (1200x800)
+    - Navigate to: http://localhost:8000/src/pages/brand-demo.html
+    - Capture color palette section
+
+12. **brand-demo.png** (1920x1080)
+    - Full page capture of brand-demo.html
+
+13. **mobile-nav.png** (375x812)
+    - Set browser to mobile viewport (iPhone X size)
+    - Capture with hamburger menu open
+
+14. **tablet-view.png** (768x1024)
+    - Set browser to tablet viewport (iPad size)
+    - Capture homepage
+
+**Screenshot Tool Recommendations:**
+- **Windows:** Snipping Tool, Greenshot, ShareX
+- **macOS:** Cmd+Shift+4, CleanShot X
+- **Browser DevTools:** Chrome/Edge DevTools (Cmd/Ctrl+Shift+M for responsive mode)
+- **Browser Extensions:** Full Page Screen Capture, Fireshot
+
+**Image Optimization:**
+- Compress images to < 500KB each using: https://tinypng.com/
+- Save as PNG for UI screenshots
+- Use WebP for smaller file sizes if supported
+
+**Commit Screenshots:**
+```bash
+git add docs/screenshots/*.png
+git commit -m "docs: Add website and dashboard screenshots for README"
+git push origin feat/brand-refresh
+```
+
+---
 
 ## Project Overview
 
