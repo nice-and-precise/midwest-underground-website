@@ -422,9 +422,6 @@ ul, ol {
   width: auto;
   display: block;
   transition: transform var(--transition-base);
-  /* Remove beige background from logo */
-  mix-blend-mode: multiply;
-  filter: contrast(1.1) brightness(1.05);
 }
 
 .site-logo:hover .logo-image {
