@@ -74,6 +74,18 @@
           <span class="nav-icon">🚧</span>
           <span class="nav-label">Projects</span>
         </a>
+        <a href="bore-logs.html" class="nav-item">
+          <span class="nav-icon">🎯</span>
+          <span class="nav-label">Bore Logs</span>
+        </a>
+        <a href="field-reports.html" class="nav-item">
+          <span class="nav-icon">📝</span>
+          <span class="nav-label">Field Reports</span>
+        </a>
+        <a href="equipment.html" class="nav-item">
+          <span class="nav-icon">🚜</span>
+          <span class="nav-label">Equipment</span>
+        </a>
         <a href="financials.html" class="nav-item">
           <span class="nav-icon">💰</span>
           <span class="nav-label">Financials</span>
@@ -81,10 +93,6 @@
         <a href="customers.html" class="nav-item">
           <span class="nav-icon">👥</span>
           <span class="nav-label">Customers</span>
-        </a>
-        <a href="equipment.html" class="nav-item">
-          <span class="nav-icon">🔧</span>
-          <span class="nav-label">Equipment</span>
         </a>
         <a href="reports.html" class="nav-item">
           <span class="nav-icon">📈</span>
@@ -168,6 +176,123 @@
               <span class="kpi-period">from last month</span>
             </div>
           </div>
+        </div>
+
+        <!-- HDD Operations Quick Access -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: var(--space-lg); margin: var(--space-2xl) 0;">
+
+          <!-- Active Bores Widget -->
+          <div class="content-card">
+            <div class="card-header">
+              <h2>🎯 Active Bore Operations</h2>
+              <a href="bore-logs.html" class="btn btn-secondary btn-sm">View All</a>
+            </div>
+            <div class="card-body">
+              <div style="display: flex; flex-direction: column; gap: var(--space-md);">
+                <div style="border-left: 3px solid var(--brand-accent); padding: var(--space-sm) var(--space-md); background: var(--bg-secondary); border-radius: var(--radius-sm);">
+                  <div style="font-size: var(--text-xs); color: var(--text-muted); margin-bottom: var(--space-xs);">WFN-B-002 • Willmar Fiber Network</div>
+                  <div style="font-weight: 600; color: var(--text-primary); margin-bottom: var(--space-xs);">3rd St & Litchfield Ave</div>
+                  <div style="display: flex; justify-content: space-between; align-items: center; font-size: var(--text-sm);">
+                    <span style="color: var(--text-secondary);">280 / 380 ft (74%)</span>
+                    <span class="status-badge in-progress">In Progress</span>
+                  </div>
+                </div>
+                <div style="border-left: 3px solid var(--brand-accent); padding: var(--space-sm) var(--space-md); background: var(--bg-secondary); border-radius: var(--radius-sm);">
+                  <div style="font-size: var(--text-xs); color: var(--text-muted); margin-bottom: var(--space-xs);">KPL-B-005 • Kandiyohi Power Lines</div>
+                  <div style="font-weight: 600; color: var(--text-primary); margin-bottom: var(--space-xs);">County Rd 5 & Hwy 12</div>
+                  <div style="display: flex; justify-content: space-between; align-items: center; font-size: var(--text-sm);">
+                    <span style="color: var(--text-secondary);">180 / 620 ft (29%)</span>
+                    <span class="status-badge issues">Issue Reported</span>
+                  </div>
+                </div>
+                <div style="border-left: 3px solid var(--brand-slate); padding: var(--space-sm) var(--space-md); background: var(--bg-secondary); border-radius: var(--radius-sm);">
+                  <div style="font-size: var(--text-xs); color: var(--text-muted); margin-bottom: var(--space-xs);">WFN-B-003 • Willmar Fiber Network</div>
+                  <div style="font-weight: 600; color: var(--text-primary); margin-bottom: var(--space-xs);">5th St SW & Trott Ave</div>
+                  <div style="display: flex; justify-content: space-between; align-items: center; font-size: var(--text-sm);">
+                    <span style="color: var(--text-secondary);">Utility locate pending</span>
+                    <span class="status-badge planning">Planning</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Recent Field Reports Widget -->
+          <div class="content-card">
+            <div class="card-header">
+              <h2>📝 Today's Field Reports</h2>
+              <a href="field-reports.html" class="btn btn-secondary btn-sm">View All</a>
+            </div>
+            <div class="card-body">
+              <div style="display: flex; flex-direction: column; gap: var(--space-md);">
+                <div style="display: flex; gap: var(--space-md); padding: var(--space-sm); background: var(--bg-secondary); border-radius: var(--radius-sm);">
+                  <div style="width: 50px; height: 50px; background: rgba(40, 167, 69, 0.1); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; font-size: var(--text-2xl); flex-shrink: 0;">✓</div>
+                  <div style="flex: 1;">
+                    <div style="font-weight: 600; color: var(--text-primary); margin-bottom: var(--space-xs);">Crew 1 - John Doe</div>
+                    <div style="font-size: var(--text-sm); color: var(--text-secondary);">Completed 450ft bore on 1st St</div>
+                    <div style="font-size: var(--text-xs); color: var(--text-muted); margin-top: var(--space-xs);">8.5 hrs • No safety incidents</div>
+                  </div>
+                </div>
+                <div style="display: flex; gap: var(--space-md); padding: var(--space-sm); background: var(--bg-secondary); border-radius: var(--radius-sm);">
+                  <div style="width: 50px; height: 50px; background: rgba(220, 53, 69, 0.1); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; font-size: var(--text-2xl); flex-shrink: 0;">⚠</div>
+                  <div style="flex: 1;">
+                    <div style="font-weight: 600; color: var(--text-primary); margin-bottom: var(--space-xs);">Crew 3 - Dave Johnson</div>
+                    <div style="font-size: var(--text-sm); color: var(--text-secondary);">Rock formation at 180ft, re-routing</div>
+                    <div style="font-size: var(--text-xs); color: var(--text-muted); margin-top: var(--space-xs);">9 hrs • Near-miss incident logged</div>
+                  </div>
+                </div>
+                <div style="display: flex; gap: var(--space-md); padding: var(--space-sm); background: var(--bg-secondary); border-radius: var(--radius-sm);">
+                  <div style="width: 50px; height: 50px; background: rgba(255, 136, 0, 0.1); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; font-size: var(--text-2xl); flex-shrink: 0;">🚜</div>
+                  <div style="flex: 1;">
+                    <div style="font-weight: 600; color: var(--text-primary); margin-bottom: var(--space-xs);">Crew 2 - Mike Smith</div>
+                    <div style="font-size: var(--text-sm); color: var(--text-secondary);">Reaming in progress, 74% complete</div>
+                    <div style="font-size: var(--text-xs); color: var(--text-muted); margin-top: var(--space-xs);">7.5 hrs • On schedule</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Equipment Status Widget -->
+          <div class="content-card">
+            <div class="card-header">
+              <h2>🚜 Equipment Status</h2>
+              <a href="equipment.html" class="btn btn-secondary btn-sm">View All</a>
+            </div>
+            <div class="card-body">
+              <div style="display: flex; flex-direction: column; gap: var(--space-md);">
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: var(--space-sm); background: var(--bg-secondary); border-radius: var(--radius-sm);">
+                  <div>
+                    <div style="font-weight: 600; color: var(--text-primary);">Vermeer D24x40 #1</div>
+                    <div style="font-size: var(--text-sm); color: var(--text-secondary);">WFN-B-002 • 1,245 hrs</div>
+                  </div>
+                  <span class="status-badge in-progress">Active</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: var(--space-sm); background: var(--bg-secondary); border-radius: var(--radius-sm);">
+                  <div>
+                    <div style="font-weight: 600; color: var(--text-primary);">Vermeer D36x50 #2</div>
+                    <div style="font-size: var(--text-sm); color: var(--text-secondary);">KPL-B-005 • 2,103 hrs</div>
+                  </div>
+                  <span class="status-badge issues">Hydraulic Leak</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: var(--space-sm); background: var(--bg-secondary); border-radius: var(--radius-sm);">
+                  <div>
+                    <div style="font-weight: 600; color: var(--text-primary);">Ditch Witch JT20 #3</div>
+                    <div style="font-size: var(--text-sm); color: var(--text-secondary);">Available • 3,892 hrs</div>
+                  </div>
+                  <span class="status-badge completed">Ready</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: var(--space-sm); background: var(--bg-secondary); border-radius: var(--radius-sm);">
+                  <div>
+                    <div style="font-weight: 600; color: var(--text-primary);">Locator System #4</div>
+                    <div style="font-size: var(--text-sm); color: #DC3545;">Maintenance Due: Oct 28</div>
+                  </div>
+                  <span class="status-badge planning">Scheduled</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
         </div>
 
         <!-- Charts Row 1 -->

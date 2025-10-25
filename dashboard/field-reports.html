@@ -12,7 +12,7 @@
   </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Projects Management | Midwest Underground Dashboard</title>
+  <title>Daily Field Reports | Midwest Underground Dashboard</title>
   
   <!-- Favicon -->
   <link rel="icon" type="image/png" href="images/mu_icon.png">
@@ -58,7 +58,7 @@
           <span class="nav-icon">📊</span>
           <span class="nav-label">Dashboard</span>
         </a>
-        <a href="projects.html" class="nav-item active">
+        <a href="projects.html" class="nav-item">
           <span class="nav-icon">🚧</span>
           <span class="nav-label">Projects</span>
         </a>
@@ -66,7 +66,7 @@
           <span class="nav-icon">🎯</span>
           <span class="nav-label">Bore Logs</span>
         </a>
-        <a href="field-reports.html" class="nav-item">
+        <a href="field-reports.html" class="nav-item active">
           <span class="nav-icon">📝</span>
           <span class="nav-label">Field Reports</span>
         </a>
@@ -100,18 +100,15 @@
         <!-- Page Header -->
         <div class="page-header">
           <div>
-            <h1>Projects Management</h1>
-            <p class="page-subtitle">Track and manage all active, completed, and planned projects</p>
+            <h1>📝 Daily Field Reports</h1>
+            <p class="page-subtitle">Document daily operations, crew activities, weather conditions, and project progress</p>
           </div>
           <div class="page-actions">
             <button class="btn btn-secondary" id="export-csv-btn">
-              <span>📄</span> Export CSV
-            </button>
-            <button class="btn btn-secondary" id="export-pdf-btn">
-              <span>📑</span> Export PDF
+              <span>📄</span> Export Reports
             </button>
             <button class="btn btn-success" id="add-project-btn">
-              <span>➕</span> Add New Project
+              <span>➕</span> New Field Report
             </button>
             <button class="btn btn-primary" id="refresh-projects-btn">
               <span>🔄</span> Refresh
@@ -123,62 +120,51 @@
         <div class="kpi-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
           <div class="kpi-card">
             <div class="kpi-header">
-              <span class="kpi-label">Total Projects</span>
-              <span class="kpi-icon">📋</span>
+              <span class="kpi-label">Reports This Week</span>
+              <span class="kpi-icon">📝</span>
             </div>
-            <div class="kpi-value" id="total-projects">15</div>
-            <div class="kpi-footer">
-              <span class="kpi-period">All time</span>
-            </div>
-          </div>
-
-          <div class="kpi-card">
-            <div class="kpi-header">
-              <span class="kpi-label">In Progress</span>
-              <span class="kpi-icon">🚧</span>
-            </div>
-            <div class="kpi-value" id="in-progress-projects">7</div>
+            <div class="kpi-value" id="total-projects">18</div>
             <div class="kpi-footer">
               <span class="kpi-change positive">
-                <span>↑</span> 2
+                <span>↑</span> 6
               </span>
-              <span class="kpi-period">from last month</span>
+              <span class="kpi-period">crews active</span>
             </div>
           </div>
 
           <div class="kpi-card">
             <div class="kpi-header">
-              <span class="kpi-label">Completed</span>
-              <span class="kpi-icon">✓</span>
+              <span class="kpi-label">Total Crew Hours</span>
+              <span class="kpi-icon">👷</span>
             </div>
-            <div class="kpi-value" id="completed-projects">6</div>
+            <div class="kpi-value" id="in-progress-projects">432 hrs</div>
             <div class="kpi-footer">
-              <span class="kpi-period">This month</span>
+              <span class="kpi-period">54 hrs/day avg</span>
             </div>
           </div>
 
           <div class="kpi-card">
             <div class="kpi-header">
-              <span class="kpi-label">Planning</span>
-              <span class="kpi-icon">📅</span>
+              <span class="kpi-label">Weather Impact Days</span>
+              <span class="kpi-icon">☀️</span>
             </div>
-            <div class="kpi-value" id="planning-projects">2</div>
+            <div class="kpi-value" id="completed-projects">2</div>
             <div class="kpi-footer">
-              <span class="kpi-period">Upcoming</span>
+              <span class="kpi-period">Delays this month</span>
             </div>
           </div>
 
           <div class="kpi-card">
             <div class="kpi-header">
-              <span class="kpi-label">Total Value</span>
-              <span class="kpi-icon">💵</span>
+              <span class="kpi-label">Safety Incidents</span>
+              <span class="kpi-icon">⚠️</span>
             </div>
-            <div class="kpi-value" id="total-value">$4.25M</div>
+            <div class="kpi-value" id="planning-projects" style="color: #28A745;">0</div>
             <div class="kpi-footer">
               <span class="kpi-change positive">
-                <span>↑</span> 18.5%
+                <span>✓</span> 30 days
               </span>
-              <span class="kpi-period">YoY growth</span>
+              <span class="kpi-period">incident-free</span>
             </div>
           </div>
         </div>
@@ -191,42 +177,33 @@
           </div>
           <div class="filters-grid">
             <div class="filter-group">
-              <label for="filter-status">Status</label>
+              <label for="filter-status">Crew</label>
               <select id="filter-status" class="filter-select">
-                <option value="">All Statuses</option>
-                <option value="In Progress">In Progress</option>
-                <option value="Completed">Completed</option>
-                <option value="Planning">Planning</option>
+                <option value="">All Crews</option>
+                <option value="Crew 1">Crew 1 - John Doe</option>
+                <option value="Crew 2">Crew 2 - Mike Smith</option>
+                <option value="Crew 3">Crew 3 - Dave Johnson</option>
               </select>
             </div>
 
             <div class="filter-group">
-              <label for="filter-service">Service Type</label>
+              <label for="filter-service">Project</label>
               <select id="filter-service" class="filter-select">
-                <option value="">All Services</option>
-                <option value="Fiber Optic Installation">Fiber Optic</option>
-                <option value="Directional Drilling">Directional Drilling</option>
-                <option value="Underground Utilities">Underground Utilities</option>
-                <option value="Geothermal Systems">Geothermal</option>
-                <option value="Emergency Services">Emergency Services</option>
+                <option value="">All Projects</option>
+                <option value="Willmar Fiber Network">Willmar Fiber Network</option>
+                <option value="Kandiyohi Power Lines">Kandiyohi Power Lines</option>
+                <option value="Litchfield Water Main">Litchfield Water Main</option>
               </select>
             </div>
 
             <div class="filter-group">
-              <label for="filter-customer-type">Customer Type</label>
-              <select id="filter-customer-type" class="filter-select">
-                <option value="">All Types</option>
-                <option value="Municipal">Municipal</option>
-                <option value="Commercial">Commercial</option>
-                <option value="Telecommunications">Telecommunications</option>
-                <option value="Residential">Residential</option>
-                <option value="Emergency">Emergency</option>
-              </select>
+              <label for="filter-customer-type">Date</label>
+              <input type="date" id="filter-customer-type" class="filter-input">
             </div>
 
             <div class="filter-group">
               <label for="filter-search">Search</label>
-              <input type="text" id="filter-search" class="filter-input" placeholder="Search projects...">
+              <input type="text" id="filter-search" class="filter-input" placeholder="Search field reports...">
             </div>
 
             <div class="filter-group">
@@ -243,32 +220,103 @@
           </div>
         </div>
 
-        <!-- Projects Table -->
+        <!-- Bore Logs Table -->
         <div class="chart-card">
           <div class="chart-header">
-            <h3>All Projects</h3>
+            <h3>Bore Logs</h3>
             <div class="results-count">
-              Showing <strong id="results-count">15</strong> of <strong id="total-count">15</strong> projects
+              Showing <strong id="results-count">6</strong> of <strong id="total-count">6</strong> bore logs
             </div>
           </div>
           <div class="table-container">
             <table class="data-table" id="projects-table">
               <thead>
                 <tr>
-                  <th>Project ID</th>
-                  <th>Project Name</th>
-                  <th>Customer</th>
-                  <th>Type</th>
-                  <th>Service</th>
+                  <th>Bore ID</th>
+                  <th>Project</th>
+                  <th>Location</th>
+                  <th>Date</th>
+                  <th>Length (ft)</th>
+                  <th>Depth (ft)</th>
+                  <th>Product</th>
                   <th>Status</th>
-                  <th>Progress</th>
-                  <th>Budget</th>
-                  <th>Start Date</th>
+                  <th>Crew</th>
                   <th>Actions</th>
                 </tr>
               </thead>
               <tbody id="projects-table-body">
-                <!-- Dynamically populated -->
+                <tr>
+                  <td><strong>WFN-B-001</strong></td>
+                  <td>Willmar Fiber Network</td>
+                  <td>1st St & Becker Ave</td>
+                  <td>Oct 20, 2025</td>
+                  <td>450</td>
+                  <td>8.5</td>
+                  <td>Fiber Optic</td>
+                  <td><span class="badge badge-success">Completed</span></td>
+                  <td>John Doe</td>
+                  <td><button class="btn-icon" title="View">👁️</button></td>
+                </tr>
+                <tr>
+                  <td><strong>WFN-B-002</strong></td>
+                  <td>Willmar Fiber Network</td>
+                  <td>3rd St & Litchfield Ave</td>
+                  <td>Oct 21, 2025</td>
+                  <td>380</td>
+                  <td>7.0</td>
+                  <td>Fiber Optic</td>
+                  <td><span class="badge badge-warning">In Progress</span></td>
+                  <td>Mike Smith</td>
+                  <td><button class="btn-icon" title="View">👁️</button></td>
+                </tr>
+                <tr>
+                  <td><strong>KPL-B-005</strong></td>
+                  <td>Kandiyohi Power Lines</td>
+                  <td>County Rd 5 & Hwy 12</td>
+                  <td>Oct 22, 2025</td>
+                  <td>620</td>
+                  <td>12.0</td>
+                  <td>Power Cable</td>
+                  <td><span class="badge badge-warning">In Progress</span></td>
+                  <td>Dave Johnson</td>
+                  <td><button class="btn-icon" title="View">👁️</button></td>
+                </tr>
+                <tr>
+                  <td><strong>LWM-B-001</strong></td>
+                  <td>Litchfield Water Main</td>
+                  <td>Main St & Depot St</td>
+                  <td>Oct 23, 2025</td>
+                  <td>520</td>
+                  <td>10.5</td>
+                  <td>Water Line</td>
+                  <td><span class="badge badge-success">Completed</span></td>
+                  <td>John Doe</td>
+                  <td><button class="btn-icon" title="View">👁️</button></td>
+                </tr>
+                <tr>
+                  <td><strong>WFN-B-003</strong></td>
+                  <td>Willmar Fiber Network</td>
+                  <td>5th St SW & Trott Ave</td>
+                  <td>Oct 24, 2025</td>
+                  <td>N/A</td>
+                  <td>N/A</td>
+                  <td>Fiber Optic</td>
+                  <td><span class="badge badge-secondary">Planning</span></td>
+                  <td>Mike Smith</td>
+                  <td><button class="btn-icon" title="View">👁️</button></td>
+                </tr>
+                <tr>
+                  <td><strong>KPL-B-006</strong></td>
+                  <td>Kandiyohi Power Lines</td>
+                  <td>County Rd 8 & Industrial Dr</td>
+                  <td>Oct 19, 2025</td>
+                  <td>420</td>
+                  <td>9.0</td>
+                  <td>HDPE Pipe</td>
+                  <td><span class="badge badge-danger">Issues</span></td>
+                  <td>Dave Johnson</td>
+                  <td><button class="btn-icon" title="View">👁️</button></td>
+                </tr>
               </tbody>
             </table>
           </div>
@@ -281,7 +329,6 @@
   <script src="../js/main.js"></script>
   <script src="js/dashboard.js"></script>
   <script src="js/modal.js"></script>
-  <script src="js/projects.js"></script>
 
 </body>
 </html>
