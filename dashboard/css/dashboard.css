@@ -82,6 +82,18 @@
   font-size: var(--text-2xl);
 }
 
+.dashboard-logo .logo-image {
+  height: 48px;
+  width: auto;
+  display: block;
+  transition: transform var(--transition-base);
+}
+
+/* Dark mode logo - invert to white */
+[data-theme="dark"] .dashboard-logo .logo-image[src*="logo_horizontal_transparent.png"] {
+  filter: brightness(0) invert(1);
+}
+
 .dashboard-header-right {
   display: flex;
   align-items: center;

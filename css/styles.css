@@ -109,6 +109,10 @@
   --z-modal: 1050;
   --z-popover: 1060;
   --z-tooltip: 1070;
+
+  /* Logo Variants (for theme-aware display) */
+  --logo-horizontal: url('../images/logo_horizontal_transparent.png');
+  --logo-horizontal-svg: url('../images/logo_horizontal_slate_dark.svg');
 }
 
 /* Dark Mode Theme */
@@ -134,6 +138,10 @@
   --primary-charcoal: var(--brand-white);
   --neutral-light: var(--brand-gray);
   --sand: var(--brand-slate-light);
+
+  /* Logo Variants - White logo for dark backgrounds */
+  --logo-horizontal: url('../images/logo_horizontal_white.svg');
+  --logo-horizontal-svg: url('../images/logo_horizontal_white.svg');
 }
 
 /* ==========================================================================
@@ -422,6 +430,16 @@ ul, ol {
   width: auto;
   display: block;
   transition: transform var(--transition-base);
+}
+
+/* Theme-aware logo switching */
+[data-theme="dark"] .logo-image[src*="logo_horizontal_transparent.png"] {
+  content: var(--logo-horizontal);
+}
+
+/* For SVG logos - use filter to invert colors in dark mode */
+[data-theme="dark"] .logo-image[src*="slate_dark.svg"] {
+  filter: brightness(0) invert(1); /* Convert dark logo to white */
 }
 
 .site-logo:hover .logo-image {
