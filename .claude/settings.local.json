@@ -23,7 +23,16 @@
       "Bash(find:*)",
       "Bash(git checkout:*)",
       "Bash(gh pr create:*)",
-      "Bash(start http://127.0.0.1:8000/src/pages/brand-demo.html)"
+      "Bash(start http://127.0.0.1:8000/src/pages/brand-demo.html)",
+      "Bash(start http://127.0.0.1:8000/index.html)",
+      "Bash(start http://127.0.0.1:8000/services.html)",
+      "Bash(start http://127.0.0.1:8000/about.html)",
+      "Bash(start http://127.0.0.1:8000/projects.html)",
+      "Bash(start http://127.0.0.1:8000/contact.html)",
+      "Bash(start http://127.0.0.1:8000/dashboard/)",
+      "Bash(curl:*)",
+      "Bash(for file in index.html services.html about.html contact.html projects.html dashboard/index.html dashboard/projects.html dashboard/financials.html dashboard/customers.html dashboard/equipment.html dashboard/reports.html)",
+      "Bash(do)"
     ],
     "deny": [],
     "ask": []

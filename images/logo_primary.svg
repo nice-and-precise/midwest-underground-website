@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 280" role="img" aria-labelledby="logo-title">
+  <title id="logo-title">Midwest Underground</title>
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@700&amp;display=swap');
+      .logo-text {
+        font-family: 'Oswald', 'Arial Black', sans-serif;
+        font-weight: 700;
+        fill: #343D46;
+      }
+      .logo-mark {
+        fill: #343D46;
+      }
+    </style>
+  </defs>
+
+  <!-- MU Mark -->
+  <g class="logo-mark">
+    <!-- M part -->
+    <path d="M 15 50 L 45 50 L 45 80 L 55 80 L 75 115 L 95 80 L 105 80 L 105 50 L 135 50 L 135 165 L 105 165 L 105 115 L 90 145 L 60 145 L 45 115 L 45 165 L 15 165 Z"/>
+    <!-- U part -->
+    <path d="M 15 180 L 45 180 L 45 230 C 45 238 48 245 55 250 C 62 255 70 258 75 258 C 80 258 88 255 95 250 C 102 245 105 238 105 230 L 105 180 L 135 180 L 135 230 C 135 245 128 258 118 265 C 108 272 95 278 75 278 C 55 278 42 272 32 265 C 22 258 15 245 15 230 Z"/>
+  </g>
+
+  <!-- Text: MIDWEST -->
+  <text x="160" y="120" class="logo-text" font-size="95" letter-spacing="2">MIDWEST</text>
+
+  <!-- Text: UNDERGROUND -->
+  <text x="160" y="210" class="logo-text" font-size="95" letter-spacing="2">UNDERGROUND</text>
+</svg>
