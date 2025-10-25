@@ -154,8 +154,16 @@
   background: linear-gradient(135deg, #C0C5CE 0%, #E8EAED 100%); /* Gray to lighter gray */
 }
 
+/* Dark mode: darken gradient background and ensure white text */
 [data-theme="dark"] .gradient-bg-light {
   background: linear-gradient(135deg, #4F5B66 0%, #343D46 100%); /* Slate to Slate Dark for dark mode */
+}
+
+/* Force proper text colors in gradient sections */
+[data-theme="dark"] .gradient-bg-light h2,
+[data-theme="dark"] .gradient-bg-light h3,
+[data-theme="dark"] .gradient-bg-light p {
+  color: var(--brand-white) !important;
 }
 
 /* ==========================================================================

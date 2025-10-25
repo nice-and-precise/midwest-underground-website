@@ -1,105 +1,42 @@
-# Logo Files - Official Reference
+# Logo Implementation Guide
 
-## Current Implementation (As of Oct 25, 2025)
+## Current Logo Setup
 
-### Active Logo Files
+**File:** `images/logo_horizontal_official.png`
+- Full horizontal logo with "MIDWEST UNDERGROUND" text
+- Transparent PNG (1.5MB)
+- Used on all 11 website pages
 
-**Primary Header Logo:**
-- **File:** `images/logo_horizontal_official.png`
-- **Source:** `/c/Users/Owner/Desktop/MU_Logo/updated_logo/MidwestUnderground_Logo (1).png`
-- **Description:** Full horizontal logo with MU icon + "MIDWEST UNDERGROUND" text
-- **Usage:** All website headers (11 pages total)
-- **Background:** Transparent PNG - works on both light and dark backgrounds
-- **Size:** Height 80px in CSS
+## How the Logo Works
 
-**Icon/Favicon:**
-- **File:** `images/mu_icon_official.png`
-- **Source:** `/c/Users/Owner/Desktop/MU_Logo/updated_logo/MU_Logo (1).png`
-- **Description:** MU icon only (lettermark)
-- **Usage:** Favicon, footer, possibly future use
-- **Background:** Transparent PNG
+The logo automatically changes color based on the background:
+- **Light backgrounds:** Logo appears BLACK via CSS filter
+- **Dark backgrounds:** Logo appears WHITE via CSS filter
 
-## File Naming Convention
+**CSS Implementation:**
+```css
+.logo-image {
+  filter: brightness(0) saturate(100%); /* Black in light mode */
+}
 
-### Official Files (USE THESE)
-- `logo_horizontal_official.png` - Full logo with text (ACTIVE IN USE)
-- `mu_icon_official.png` - Icon only (ACTIVE IN USE)
+[data-theme="dark"] .logo-image {
+  filter: brightness(0) saturate(100%) invert(1); /* White in dark mode */
+}
+```
 
-### Legacy/Experimental Files (DO NOT USE)
-- `mu_icon_slate_dark.svg` - Custom SVG that only shows "M" letter (BROKEN)
-- `mu_icon_white.svg` - Custom SVG that only shows "M" letter (BROKEN)
-- `logo_horizontal_slate_dark.svg` - Custom SVG (NOT OFFICIAL)
-- `logo_horizontal_white.svg` - Custom SVG (NOT OFFICIAL)
-- `logo_primary.svg` - Old version
-- `logo_icon_clean.svg` - Experimental
+## Logo Sizes
 
-## How to Update Logo
+- **Desktop (769px+):** 160px height
+- **Tablet:** 80px height
+- **Mobile:** 60px height
 
-If you need to change the logo in the future:
+## How to Update the Logo
 
-1. Get official PNG files from client
-2. Copy to `images/` folder with `_official` suffix
-3. Update HTML files:
-   ```html
-   <img src="images/logo_horizontal_official.png?v=7" alt="Midwest Underground of Minnesota" class="logo-image">
-   ```
-4. Increment version number (?v=7) to bust browser cache
-5. Update CSS if size needs adjustment:
-   ```css
-   .logo-image {
-     height: 80px; /* Adjust as needed */
-     width: auto;
-   }
-   ```
+1. Get new PNG file from client
+2. Replace `images/logo_horizontal_official.png`
+3. Increment version in HTML: `?v=7` → `?v=8`
+4. Hard refresh browser (Ctrl+Shift+R)
 
-## Logo Switching (Dark Mode)
+## Source File
 
-**CURRENT STATUS:** Disabled
-
-The transparent PNG logo works on both light and dark backgrounds, so no JavaScript switching is needed.
-
-If future requirements need different logos for light/dark mode:
-- Light mode logo: Name it `logo_horizontal_light.png`
-- Dark mode logo: Name it `logo_horizontal_dark.png`
-- Update `js/main.js` `updateLogos()` function to switch between them
-
-## Pages Using Logo
-
-### Public Pages (5)
-1. index.html
-2. services.html
-3. about.html
-4. projects.html
-5. contact.html
-
-### Dashboard Pages (6)
-1. dashboard/index.html
-2. dashboard/customers.html
-3. dashboard/equipment.html
-4. dashboard/financials.html
-5. dashboard/projects.html
-6. dashboard/reports.html
-
-## Common Issues
-
-### Problem: Logo showing just "M" letter
-**Cause:** Using custom SVG files (`mu_icon_slate_dark.svg`) instead of official PNG
-**Fix:** Use `logo_horizontal_official.png` instead
-
-### Problem: Logo not updating in browser
-**Cause:** Browser cache
-**Fix:** Increment version number in URL (?v=6 → ?v=7) and hard refresh (Ctrl+Shift+R)
-
-### Problem: Logo too small/large
-**Cause:** CSS height setting
-**Fix:** Update `.logo-image { height: 80px; }` in css/styles.css
-
-## Official Source Files
-
-**Location:** `/c/Users/Owner/Desktop/MU_Logo/updated_logo/`
-
-Files:
-- `MidwestUnderground_Logo (1).png` - Full horizontal logo (1.5MB transparent PNG)
-- `MU_Logo (1).png` - MU icon only (1.5MB transparent PNG)
-
-These are the OFFICIAL files provided by the client. Always reference these as the source of truth.
+**Location:** `C:\Users\Owner\Desktop\MU_Logo\updated_logo\MidwestUnderground_Logo (1).png`
