@@ -208,6 +208,7 @@ body {
   color: var(--text-primary);
   background-color: var(--bg-primary);
   overflow-x: hidden;
+  min-height: 100vh;
 }
 
 /* Typography */
