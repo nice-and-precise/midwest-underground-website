@@ -86,12 +86,31 @@ class DarkMode {
     }
 
     this.updateToggleButtons(theme === 'dark');
+    this.updateLogos(theme === 'dark');
 
     if (announce) {
       this.announceThemeChange(theme);
     }
 
     console.log('[DarkMode] Theme applied. Current data-theme:', this.html.getAttribute('data-theme'));
+  }
+
+  updateLogos(isDark) {
+    // Find all logo images
+    const logos = document.querySelectorAll('.logo-image, .dashboard-logo img');
+
+    logos.forEach(logo => {
+      if (isDark) {
+        // Switch to white logo for dark mode
+        logo.src = logo.src.replace('logo_horizontal_transparent.png', 'logo_horizontal_white.svg');
+        logo.src = logo.src.replace('logo_horizontal_slate_dark.svg', 'logo_horizontal_white.svg');
+      } else {
+        // Switch to slate dark logo for light mode
+        logo.src = logo.src.replace('logo_horizontal_white.svg', 'logo_horizontal_slate_dark.svg');
+      }
+    });
+
+    console.log('[DarkMode] Updated', logos.length, 'logo(s) for', isDark ? 'dark' : 'light', 'mode');
   }
 
   toggleTheme() {
