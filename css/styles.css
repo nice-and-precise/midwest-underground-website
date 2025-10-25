@@ -426,14 +426,14 @@ ul, ol {
 }
 
 .logo-image {
-  height: 50px; /* Horizontal logo with text */
+  height: 50px; /* MU icon mark */
   width: auto;
   display: block;
   transition: transform var(--transition-base);
 }
 
 .site-logo:hover .logo-image {
-  transform: scale(1.02);
+  transform: scale(1.05);
 }
 
 /* Responsive logo sizing */
