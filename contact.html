@@ -139,10 +139,12 @@
     .form-group textarea {
       width: 100%;
       padding: 0.75rem;
-      border: 2px solid var(--neutral-light);
+      border: 2px solid var(--steel);
       border-radius: var(--radius-md);
       font-size: 1rem;
       font-family: var(--font-body);
+      background: var(--primary-charcoal);
+      color: var(--sand);
       transition: border-color 0.3s ease;
     }
 
@@ -150,7 +152,7 @@
     .form-group select:focus,
     .form-group textarea:focus {
       outline: none;
-      border-color: var(--primary-charcoal);
+      border-color: var(--safety-orange);
     }
 
     .form-group textarea {
@@ -158,21 +160,28 @@
       min-height: 150px;
     }
 
+    .form-group input::placeholder,
+    .form-group textarea::placeholder {
+      color: var(--steel);
+      opacity: 0.7;
+    }
+
     .form-submit {
       width: 100%;
       padding: 1rem;
-      background: var(--primary-charcoal);
+      background: var(--safety-orange);
       color: var(--white);
       border: none;
       border-radius: var(--radius-md);
       font-size: 1.125rem;
       font-weight: 600;
       cursor: pointer;
-      transition: background-color 0.3s ease;
+      transition: background-color 0.3s ease, transform 0.2s ease;
     }
 
     .form-submit:hover {
-      background: var(--accent-blue);
+      background: var(--utility-yellow);
+      transform: translateY(-2px);
     }
 
     /* Contact Sidebar Styles */
