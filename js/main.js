@@ -101,12 +101,12 @@ class DarkMode {
 
     logos.forEach(logo => {
       if (isDark) {
-        // Switch to white logo for dark mode
-        logo.src = logo.src.replace('logo_horizontal_transparent.png', 'logo_horizontal_white.svg');
-        logo.src = logo.src.replace('logo_horizontal_slate_dark.svg', 'logo_horizontal_white.svg');
+        // Switch to white MU icon for dark mode
+        logo.src = logo.src.replace(/mu_icon_slate_dark\.svg(\?v=\d+)?/, 'mu_icon_white.svg?v=3');
+        logo.src = logo.src.replace(/logo_horizontal_slate_dark\.svg(\?v=\d+)?/, 'mu_icon_white.svg?v=3');
       } else {
-        // Switch to slate dark logo for light mode
-        logo.src = logo.src.replace('logo_horizontal_white.svg', 'logo_horizontal_slate_dark.svg');
+        // Switch to slate dark MU icon for light mode
+        logo.src = logo.src.replace(/mu_icon_white\.svg(\?v=\d+)?/, 'mu_icon_slate_dark.svg?v=3');
       }
     });
 
