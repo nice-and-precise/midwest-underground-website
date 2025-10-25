@@ -118,9 +118,9 @@
 /* Dark Mode Theme */
 [data-theme="dark"] {
   /* Semantic Colors - Dark Mode (NEW BRAND) */
-  --bg-primary: var(--brand-slate-dark);
-  --bg-secondary: var(--brand-slate);
-  --bg-accent: #404852;
+  --bg-primary: #2B3139; /* Darker than slate-dark for better contrast */
+  --bg-secondary: var(--brand-slate-dark); /* Use slate-dark instead of slate */
+  --bg-accent: #3A424C; /* Darker accent background */
   --text-primary: var(--brand-white);
   --text-secondary: var(--brand-gray);
   --text-muted: var(--brand-slate-light);
@@ -142,6 +142,20 @@
   /* Logo Variants - White logo for dark backgrounds */
   --logo-horizontal: url('../images/logo_horizontal_white.svg');
   --logo-horizontal-svg: url('../images/logo_horizontal_white.svg');
+}
+
+/* Dark mode logo - invert to white */
+[data-theme="dark"] .logo-image {
+  filter: brightness(0) saturate(100%) invert(1); /* Convert to white for dark backgrounds */
+}
+
+/* Gradient background classes with dark mode support */
+.gradient-bg-light {
+  background: linear-gradient(135deg, #C0C5CE 0%, #E8EAED 100%); /* Gray to lighter gray */
+}
+
+[data-theme="dark"] .gradient-bg-light {
+  background: linear-gradient(135deg, #4F5B66 0%, #343D46 100%); /* Slate to Slate Dark for dark mode */
 }
 
 /* ==========================================================================
@@ -426,10 +440,11 @@ ul, ol {
 }
 
 .logo-image {
-  height: 80px; /* Horizontal logo with text */
+  height: 120px; /* Horizontal logo with text - increased for better visibility */
   width: auto;
   display: block;
   transition: transform var(--transition-base);
+  filter: brightness(0) saturate(100%); /* Convert to black for light backgrounds */
 }
 
 .site-logo:hover .logo-image {
