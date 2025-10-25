@@ -15,7 +15,7 @@
   <title>Financial Management | Midwest Underground Dashboard</title>
   
   <!-- Favicon -->
-  <link rel="icon" type="image/png" href="../images/favicon.png">
+  <link rel="icon" type="image/png" href="images/mu_icon.png">
 
   <link rel="stylesheet" href="../css/styles.css">
   <link rel="stylesheet" href="css/dashboard.css">
@@ -30,7 +30,7 @@
         <span class="hamburger"></span>
       </button>
       <a href="../index.html" class="dashboard-logo">
-        <img src="../images/logo_primary.png" alt="Midwest Underground of Minnesota" class="logo-image">
+        <img src="../images/logo_horizontal_official.png?v=6" alt="Midwest Underground of Minnesota" class="logo-image">
       </a>
     </div>
 
@@ -208,13 +208,29 @@
           </div>
         </div>
 
-        <!-- Revenue & Profit Chart -->
-        <div class="chart-card">
-          <div class="chart-header">
-            <h3>Revenue & Profit Trend</h3>
-            <div class="chart-legend">
-              <span class="legend-item"><span class="legend-color" style="background: var(--color-primary);"></span> Revenue</span>
-              <span class="legend-item"><span class="legend-color" style="background: var(--color-accent);"></span> Profit</span>
+        <!-- Charts Accordion Section -->
+        <div class="accordion-section">
+          <div class="accordion-header active" data-accordion="financial-charts">
+            <div class="accordion-title">
+              <span class="accordion-icon">📊</span>
+              <h2>Financial Charts & Analytics</h2>
+            </div>
+            <div class="accordion-toggle">
+              <span>Collapse</span>
+              <span class="accordion-toggle-icon">▼</span>
+            </div>
+          </div>
+          <div class="accordion-content active" id="financial-charts">
+            <div class="accordion-content-inner">
+              <div class="accordion-charts-grid">
+
+                <!-- Revenue & Profit Chart -->
+                <div class="chart-card accordion-chart-full">
+                  <div class="chart-header">
+                    <h3>Revenue & Profit Trend</h3>
+                    <div class="chart-legend">
+                      <span class="legend-item"><span class="legend-color" style="background: var(--color-primary);"></span> Revenue</span>
+                      <span class="legend-item"><span class="legend-color" style="background: var(--color-accent);"></span> Profit</span>
             </div>
           </div>
           <div class="chart-container">
@@ -284,6 +300,45 @@
         </div>
 
         <!-- Accounts Receivable Aging -->
+        <!-- Profit Margin Trend Chart -->
+        <div class="chart-card">
+          <div class="chart-header">
+            <h3>Profit Margin Trend</h3>
+            <span class="chart-subtitle">Monthly Profitability %</span>
+          </div>
+          <div class="chart-container" style="height: 300px;">
+            <canvas id="profit-margin-chart"></canvas>
+          </div>
+        </div>
+
+        <!-- Revenue by Service Type -->
+        <div class="chart-card">
+          <div class="chart-header">
+            <h3>Revenue by Service Type</h3>
+            <span class="chart-subtitle">Year to Date Breakdown</span>
+          </div>
+          <div class="chart-container" style="height: 400px;">
+            <canvas id="revenue-by-service-chart"></canvas>
+          </div>
+        </div>
+
+        <!-- Cash Flow Forecast -->
+        <div class="chart-card">
+          <div class="chart-header">
+            <h3>Cash Flow Forecast</h3>
+            <span class="chart-subtitle">Next 6 Months Projection</span>
+          </div>
+          <div class="chart-container" style="height: 300px;">
+            <canvas id="cash-flow-forecast-chart"></canvas>
+          </div>
+        </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Accounts Receivable Aging (Outside Accordion) -->
         <div class="chart-card">
           <div class="chart-header">
             <h3>Accounts Receivable Aging</h3>

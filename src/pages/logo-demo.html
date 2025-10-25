@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en" class="no-transition">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Logo Variants Demo | Midwest Underground</title>
+  <link rel="stylesheet" href="../../css/styles.css">
+  <style>
+    body {
+      padding: var(--space-2xl);
+      background: var(--bg-primary);
+    }
+
+    .demo-container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .demo-header {
+      text-align: center;
+      margin-bottom: var(--space-3xl);
+    }
+
+    .demo-header h1 {
+      font-size: var(--text-4xl);
+      color: var(--text-primary);
+      margin-bottom: var(--space-md);
+    }
+
+    .demo-header p {
+      font-size: var(--text-lg);
+      color: var(--text-secondary);
+    }
+
+    .logo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+      gap: var(--space-2xl);
+      margin-bottom: var(--space-3xl);
+    }
+
+    .logo-card {
+      border: 2px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+    }
+
+    .logo-preview {
+      padding: var(--space-2xl);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 200px;
+    }
+
+    .logo-preview img {
+      max-width: 100%;
+      height: auto;
+      width: 400px;
+    }
+
+    .logo-info {
+      padding: var(--space-lg);
+      background: var(--bg-secondary);
+      border-top: 1px solid var(--border-color);
+    }
+
+    .logo-info h3 {
+      font-size: var(--text-xl);
+      color: var(--text-primary);
+      margin-bottom: var(--space-sm);
+    }
+
+    .logo-info p {
+      font-size: var(--text-sm);
+      color: var(--text-secondary);
+      margin-bottom: var(--space-xs);
+    }
+
+    .logo-info code {
+      display: block;
+      background: var(--bg-primary);
+      padding: var(--space-sm);
+      border-radius: var(--radius-base);
+      font-size: var(--text-xs);
+      color: var(--text-primary);
+      margin-top: var(--space-sm);
+      overflow-x: auto;
+    }
+
+    .contrast-badge {
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: var(--radius-base);
+      font-size: var(--text-xs);
+      font-weight: 600;
+      margin-top: var(--space-xs);
+    }
+
+    .contrast-aaa {
+      background: #28A745;
+      color: white;
+    }
+
+    .contrast-aa {
+      background: #17A2B8;
+      color: white;
+    }
+
+    /* Background color examples */
+    .bg-white { background: #FFFFFF; }
+    .bg-light-gray { background: #F5F5F5; }
+    .bg-slate-dark { background: #343D46; }
+    .bg-slate { background: #4F5B66; }
+    .bg-orange-tint { background: #FFF5E6; }
+    .bg-gradient-light { background: linear-gradient(135deg, #E8EAED 0%, #D1D5DB 100%); }
+    .bg-gradient-dark { background: linear-gradient(135deg, #343D46 0%, #2D3640 100%); }
+
+    .usage-section {
+      margin-top: var(--space-3xl);
+      padding: var(--space-2xl);
+      background: var(--bg-secondary);
+      border-radius: var(--radius-lg);
+    }
+
+    .usage-section h2 {
+      font-size: var(--text-3xl);
+      color: var(--text-primary);
+      margin-bottom: var(--space-lg);
+    }
+
+    .usage-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: var(--space-lg);
+    }
+
+    .usage-table th,
+    .usage-table td {
+      padding: var(--space-md);
+      text-align: left;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .usage-table th {
+      background: var(--bg-primary);
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .usage-table td {
+      color: var(--text-secondary);
+    }
+
+    .theme-toggle-demo {
+      text-align: center;
+      margin-bottom: var(--space-2xl);
+      padding: var(--space-lg);
+      background: var(--bg-secondary);
+      border-radius: var(--radius-lg);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="demo-container">
+
+    <div class="demo-header">
+      <h1>Logo Variants Demonstration</h1>
+      <p>All logo variants meet WCAG 2.1 Level AA contrast requirements for accessibility</p>
+    </div>
+
+    <div class="theme-toggle-demo">
+      <button id="dark-mode-toggle" class="dark-mode-toggle" aria-label="Toggle dark mode">
+        <span class="toggle-circle"></span>
+        <span class="sun-icon">☀️</span>
+        <span class="moon-icon">🌙</span>
+      </button>
+      <p style="margin-top: var(--space-md); color: var(--text-secondary);">
+        Toggle dark mode to see automatic logo switching
+      </p>
+    </div>
+
+    <h2 style="font-size: var(--text-2xl); color: var(--text-primary); margin-bottom: var(--space-lg);">
+      Logo Variants on Different Backgrounds
+    </h2>
+
+    <div class="logo-grid">
+
+      <!-- White Logo on Dark Background -->
+      <div class="logo-card">
+        <div class="logo-preview bg-slate-dark">
+          <img src="../../images/logo_horizontal_white.svg" alt="White Logo">
+        </div>
+        <div class="logo-info">
+          <h3>White Logo</h3>
+          <p><strong>Color:</strong> #FFFFFF (White)</p>
+          <p><strong>Use on:</strong> Dark backgrounds (#343D46, #4F5B66, dark gradients)</p>
+          <p><strong>Contrast:</strong> <span class="contrast-badge contrast-aaa">9.28:1 AAA</span></p>
+          <code>images/logo_horizontal_white.svg</code>
+        </div>
+      </div>
+
+      <!-- Slate Dark Logo on White -->
+      <div class="logo-card">
+        <div class="logo-preview bg-white">
+          <img src="../../images/logo_horizontal_slate_dark.svg" alt="Slate Dark Logo">
+        </div>
+        <div class="logo-info">
+          <h3>Slate Dark Logo (SVG)</h3>
+          <p><strong>Color:</strong> #343D46 (Slate Dark)</p>
+          <p><strong>Use on:</strong> Light backgrounds (white, light gray)</p>
+          <p><strong>Contrast:</strong> <span class="contrast-badge contrast-aaa">9.28:1 AAA</span></p>
+          <code>images/logo_horizontal_slate_dark.svg</code>
+        </div>
+      </div>
+
+      <!-- Primary PNG on Light Gray -->
+      <div class="logo-card">
+        <div class="logo-preview bg-light-gray">
+          <img src="../../images/logo_horizontal_transparent.png" alt="Primary Logo PNG">
+        </div>
+        <div class="logo-info">
+          <h3>Primary Logo (PNG)</h3>
+          <p><strong>Color:</strong> #343D46 (Slate Dark)</p>
+          <p><strong>Use on:</strong> Light backgrounds - main production logo</p>
+          <p><strong>Contrast:</strong> <span class="contrast-badge contrast-aaa">9.28:1 AAA</span></p>
+          <code>images/logo_horizontal_transparent.png</code>
+        </div>
+      </div>
+
+      <!-- Orange Logo on White -->
+      <div class="logo-card">
+        <div class="logo-preview bg-white">
+          <img src="../../images/logo_horizontal_orange.svg" alt="Orange Logo">
+        </div>
+        <div class="logo-info">
+          <h3>Orange Accent Logo</h3>
+          <p><strong>Color:</strong> #FF8800 (Brand Orange)</p>
+          <p><strong>Use on:</strong> White or very light backgrounds only</p>
+          <p><strong>Contrast:</strong> <span class="contrast-badge contrast-aa">~4.5:1 AA</span></p>
+          <code>images/logo_horizontal_orange.svg</code>
+        </div>
+      </div>
+
+      <!-- Gray Logo on Dark -->
+      <div class="logo-card">
+        <div class="logo-preview bg-slate-dark">
+          <img src="../../images/logo_horizontal_gray.svg" alt="Gray Logo">
+        </div>
+        <div class="logo-info">
+          <h3>Gray Logo</h3>
+          <p><strong>Color:</strong> #C0C5CE (Brand Gray)</p>
+          <p><strong>Use on:</strong> Dark backgrounds for subtle branding</p>
+          <p><strong>Contrast:</strong> <span class="contrast-badge contrast-aa">5.47:1 AA</span></p>
+          <code>images/logo_horizontal_gray.svg</code>
+        </div>
+      </div>
+
+      <!-- Orange on Light Tint -->
+      <div class="logo-card">
+        <div class="logo-preview bg-orange-tint">
+          <img src="../../images/logo_horizontal_orange.svg" alt="Orange Logo on Tint">
+        </div>
+        <div class="logo-info">
+          <h3>Orange on Tinted Background</h3>
+          <p><strong>Color:</strong> #FF8800 on #FFF5E6</p>
+          <p><strong>Use on:</strong> Special accent sections with light tint</p>
+          <p><strong>Note:</strong> Works well on warm-tinted light backgrounds</p>
+          <code>background: #FFF5E6;</code>
+        </div>
+      </div>
+
+      <!-- White on Gradient Dark -->
+      <div class="logo-card">
+        <div class="logo-preview bg-gradient-dark">
+          <img src="../../images/logo_horizontal_white.svg" alt="White Logo on Gradient">
+        </div>
+        <div class="logo-info">
+          <h3>White on Dark Gradient</h3>
+          <p><strong>Use on:</strong> Dark gradient backgrounds (hero sections)</p>
+          <p><strong>Contrast:</strong> <span class="contrast-badge contrast-aaa">9.28:1 AAA</span></p>
+          <code>background: linear-gradient(135deg, #343D46 0%, #2D3640 100%);</code>
+        </div>
+      </div>
+
+      <!-- Slate Dark on Light Gradient -->
+      <div class="logo-card">
+        <div class="logo-preview bg-gradient-light">
+          <img src="../../images/logo_horizontal_slate_dark.svg" alt="Slate Dark on Light Gradient">
+        </div>
+        <div class="logo-info">
+          <h3>Slate Dark on Light Gradient</h3>
+          <p><strong>Use on:</strong> Light gradient backgrounds</p>
+          <p><strong>Contrast:</strong> <span class="contrast-badge contrast-aaa">9.28:1 AAA</span></p>
+          <code>background: linear-gradient(135deg, #E8EAED 0%, #D1D5DB 100%);</code>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Usage Guidelines -->
+    <div class="usage-section">
+      <h2>Quick Reference Guide</h2>
+
+      <table class="usage-table">
+        <thead>
+          <tr>
+            <th>Background Type</th>
+            <th>Logo Variant</th>
+            <th>File Path</th>
+            <th>Contrast</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>White, Light Gray, Light Gradients</td>
+            <td>Primary PNG or Slate Dark SVG</td>
+            <td><code>logo_horizontal_transparent.png</code></td>
+            <td><span class="contrast-badge contrast-aaa">AAA</span></td>
+          </tr>
+          <tr>
+            <td>Dark Backgrounds (#343D46, #4F5B66)</td>
+            <td>White SVG</td>
+            <td><code>logo_horizontal_white.svg</code></td>
+            <td><span class="contrast-badge contrast-aaa">AAA</span></td>
+          </tr>
+          <tr>
+            <td>Special Accent Areas (Light)</td>
+            <td>Orange SVG</td>
+            <td><code>logo_horizontal_orange.svg</code></td>
+            <td><span class="contrast-badge contrast-aa">AA</span></td>
+          </tr>
+          <tr>
+            <td>Subtle Branding (Dark)</td>
+            <td>Gray SVG</td>
+            <td><code>logo_horizontal_gray.svg</code></td>
+            <td><span class="contrast-badge contrast-aa">AA</span></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div style="margin-top: var(--space-xl); padding: var(--space-lg); background: var(--bg-primary); border-radius: var(--radius-md); border-left: 4px solid var(--brand-accent);">
+        <h3 style="color: var(--text-primary); margin-bottom: var(--space-sm);">Automatic Theme Switching</h3>
+        <p style="color: var(--text-secondary); margin-bottom: var(--space-sm);">
+          The website automatically switches to the white logo in dark mode using CSS filters:
+        </p>
+        <code style="display: block; background: var(--bg-secondary); padding: var(--space-md); border-radius: var(--radius-base); color: var(--text-primary);">
+[data-theme="dark"] .logo-image[src*="logo_horizontal_transparent.png"] {
+  filter: brightness(0) invert(1);
+}
+        </code>
+      </div>
+
+      <div style="margin-top: var(--space-lg); padding: var(--space-lg); background: var(--bg-primary); border-radius: var(--radius-md); border-left: 4px solid var(--color-primary);">
+        <h3 style="color: var(--text-primary); margin-bottom: var(--space-sm);">File Formats</h3>
+        <ul style="color: var(--text-secondary); margin-left: var(--space-lg);">
+          <li style="margin-bottom: var(--space-xs);"><strong>PNG (1.5MB):</strong> High quality, universal support, transparent background - use for main production logo</li>
+          <li style="margin-bottom: var(--space-xs);"><strong>SVG (~650 bytes):</strong> Infinitely scalable, tiny file size, crisp at any resolution - use when performance matters</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="../../js/main.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 100" role="img" aria-label="Midwest Underground">
+  <title>Midwest Underground of Minnesota</title>
+
+  <!-- MU Icon -->
+  <g fill="#2C5F6F" transform="translate(0, 10) scale(0.7)">
+    <!-- M shape -->
+    <path d="M 10 10 L 25 10 L 25 30 L 35 30 L 50 55 L 65 30 L 75 30 L 75 10 L 90 10 L 90 75 L 75 75 L 75 50 L 62 68 L 38 68 L 25 50 L 25 75 L 10 75 Z"/>
+    <!-- U shape -->
+    <path d="M 10 85 L 25 85 L 25 105 Q 25 112 32 116 Q 39 120 50 120 Q 61 120 68 116 Q 75 112 75 105 L 75 85 L 90 85 L 90 105 Q 90 118 78 123 Q 66 128 50 128 Q 34 128 22 123 Q 10 118 10 105 Z" transform="translate(0,-15)"/>
+  </g>
+
+  <!-- MIDWEST text -->
+  <text x="95" y="45" font-family="Oswald, Impact, Arial Black, sans-serif" font-size="32" font-weight="700" fill="#2C5F6F" letter-spacing="2">MIDWEST</text>
+
+  <!-- UNDERGROUND text -->
+  <text x="95" y="75" font-family="Oswald, Impact, Arial Black, sans-serif" font-size="32" font-weight="700" fill="#2C5F6F" letter-spacing="2">UNDERGROUND</text>
+</svg>

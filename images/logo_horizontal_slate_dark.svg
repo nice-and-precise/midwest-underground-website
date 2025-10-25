@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 200" fill="none">
+  <!-- Slate Dark (#343D46) version for light backgrounds -->
+  <!-- MU lettermark -->
+  <path d="M20 50 L20 150 L50 150 L50 90 L80 130 L110 90 L110 150 L140 150 L140 50 L110 50 L80 100 L50 50 Z" fill="#343D46"/>
+
+  <!-- MIDWEST text -->
+  <text x="180" y="110" font-family="Oswald, Arial, sans-serif" font-size="60" font-weight="700" fill="#343D46" letter-spacing="2">MIDWEST</text>
+
+  <!-- UNDERGROUND text -->
+  <text x="180" y="160" font-family="Oswald, Arial, sans-serif" font-size="48" font-weight="400" fill="#343D46" letter-spacing="1">UNDERGROUND</text>
+</svg>
