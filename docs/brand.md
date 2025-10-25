@@ -186,22 +186,18 @@ The Midwest Underground brand system emphasizes reliability, safety, and technic
 ### Logo Variants
 
 #### 1. Logo Mark (Icon Only)
-- **File:** `logo-mark.svg`
-- **Dimensions:** 400×600 viewBox
+- **File:** `logo-mark.png`
+- **Format:** PNG (high resolution)
 - **Min Size:** 24px height
 - **Use:** App icons, favicons, small spaces
+- **Note:** Also available as SVG for web use
 
 #### 2. Horizontal Lockup
-- **File:** `logo-horizontal.svg`
-- **Dimensions:** 1400×380 viewBox
+- **File:** `logo-horizontal.png`
+- **Format:** PNG (high resolution)
 - **Min Size:** 120px width
-- **Use:** Headers, footers, wide spaces
-
-#### 3. Stacked Lockup
-- **File:** `logo-stacked.svg`
-- **Dimensions:** 800×850 viewBox
-- **Min Size:** 200px width
-- **Use:** Square spaces, social profiles
+- **Use:** Headers, footers, wide spaces, stacked when needed
+- **Note:** This is the primary logo, can be used in various orientations
 
 ### Clear Space
 
@@ -246,16 +242,16 @@ Maintain clear space around all logos equal to **the width of the inner U-stroke
 
 ### Logo Files & Exports
 
-#### SVG (Vector)
-- `public/brand/logo-mark.svg` - Icon only
-- `public/brand/logo-horizontal.svg` - Horizontal lockup
-- `public/brand/logo-stacked.svg` - Stacked layout
+#### Primary Logos (High Resolution PNG)
+- `public/brand/logo-mark.png` - Icon only (high resolution)
+- `public/brand/logo-horizontal.png` - Full lockup (high resolution)
 
-#### PNG (Raster)
-- `public/brand/logo-mark-256w.png` - 256px wide
-- `public/brand/logo-mark-512w.png` - 512px wide
-- `public/brand/logo-mark-1024w.png` - 1024px wide
-- (Same sizes for horizontal and stacked)
+#### SVG (Vector - Optional)
+- `public/brand/logo-mark.svg` - Icon only (for web use)
+- `public/brand/logo-horizontal.svg` - Horizontal lockup (for web use)
+- `public/brand/logo-stacked.svg` - Stacked layout (for web use)
+
+**Note:** The PNG versions are the official brand logos. SVG versions are provided for web optimization but should match the PNG designs exactly.
 
 #### Favicons
 - `public/favicon.ico` - Multi-size ICO

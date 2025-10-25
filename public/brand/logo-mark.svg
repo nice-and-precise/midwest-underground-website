@@ -1,13 +1,12 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 600" role="img" aria-labelledby="logo-mark-title logo-mark-desc">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" role="img" aria-labelledby="logo-mark-title logo-mark-desc">
   <title id="logo-mark-title">Midwest Underground Logo Mark</title>
   <desc id="logo-mark-desc">The MU monogram combining the letters M and U, representing Midwest Underground of Minnesota Inc.</desc>
 
-  <!-- Logo mark in #343D46 -->
   <g fill="#343D46">
-    <!-- M top part -->
-    <path d="M 60 120 L 140 120 L 200 220 L 260 120 L 340 120 L 340 320 L 280 320 L 280 240 L 240 320 L 160 320 L 120 240 L 120 320 L 60 320 Z"/>
+    <!-- Outer M shape with angled cuts -->
+    <path d="M 118 294 L 260 294 L 260 400 L 260 294 L 382 294 L 512 498 L 642 294 L 764 294 L 764 400 L 764 294 L 906 294 L 906 658 L 764 658 L 764 520 L 664 658 L 360 658 L 260 520 L 260 658 L 118 658 Z"/>
 
-    <!-- U bottom part -->
-    <path d="M 60 340 L 120 340 L 120 480 Q 120 540 200 540 Q 280 540 280 480 L 280 340 L 340 340 L 340 480 Q 340 600 200 600 Q 60 600 60 480 Z"/>
+    <!-- U shape with rounded bottom -->
+    <path d="M 118 708 L 260 708 L 260 850 C 260 880 280 920 340 940 C 400 960 440 960 512 960 C 584 960 624 960 684 940 C 744 920 764 880 764 850 L 764 708 L 906 708 L 906 850 C 906 920 880 980 820 1010 C 760 1040 680 1060 512 1060 C 344 1060 264 1040 204 1010 C 144 980 118 920 118 850 Z" transform="translate(0, -50)"/>
   </g>
 </svg>

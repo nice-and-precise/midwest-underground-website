@@ -21,7 +21,9 @@
       "Bash(powershell -ExecutionPolicy Bypass -File update-logos.ps1:*)",
       "Read(//c/Users/Owner/Desktop/MU_Logo/**)",
       "Bash(find:*)",
-      "Bash(git checkout:*)"
+      "Bash(git checkout:*)",
+      "Bash(gh pr create:*)",
+      "Bash(start http://127.0.0.1:8000/src/pages/brand-demo.html)"
     ],
     "deny": [],
     "ask": []
