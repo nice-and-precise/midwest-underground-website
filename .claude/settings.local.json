@@ -36,7 +36,10 @@
       "Bash(for file in index.html services.html about.html projects.html contact.html)",
       "Bash(start http://127.0.0.1:8000/src/pages/logo-demo.html)",
       "Bash(for file in services.html about.html projects.html contact.html)",
-      "Bash(for:*)"
+      "Bash(for:*)",
+      "Bash(start http://127.0.0.1:8000/)",
+      "Bash(cat:*)",
+      "Bash(do sed -i 's|mu_icon_slate_dark\\.svg?v=5|logo_horizontal_official.png?v=6|g' \"$file\")"
     ],
     "deny": [],
     "ask": []
