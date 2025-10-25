@@ -812,8 +812,8 @@ ul, ol {
    ========================================================================== */
 
 .site-footer {
-  background-color: var(--color-primary);
-  color: var(--white);
+  background-color: var(--charcoal-900);
+  color: var(--sand);
   padding-top: var(--space-3xl);
   padding-bottom: var(--space-lg);
 }
@@ -838,14 +838,14 @@ ul, ol {
 }
 
 .footer-section h3 {
-  color: var(--white);
+  color: var(--sand);
   font-size: var(--text-lg);
   margin-bottom: var(--space-md);
 }
 
 .footer-section p,
 .footer-section a {
-  color: var(--bg-secondary);
+  color: var(--steel);
   font-size: var(--text-sm);
   margin-bottom: var(--space-sm);
 }
@@ -866,10 +866,10 @@ ul, ol {
 
 .footer-bottom {
   padding-top: var(--space-lg);
-  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  border-top: 1px solid var(--steel);
   text-align: center;
   font-size: var(--text-sm);
-  color: var(--bg-secondary);
+  color: var(--steel);
 }
 
 /* ==========================================================================
