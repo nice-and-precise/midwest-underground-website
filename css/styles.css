@@ -440,11 +440,18 @@ ul, ol {
 }
 
 .logo-image {
-  height: 120px; /* Horizontal logo with text - increased for better visibility */
+  height: 80px; /* Base size for tablets */
   width: auto;
   display: block;
   transition: transform var(--transition-base);
   filter: brightness(0) saturate(100%); /* Convert to black for light backgrounds */
+}
+
+/* Larger logo for desktop */
+@media (min-width: 769px) {
+  .logo-image {
+    height: 160px; /* Much larger for desktop viewers */
+  }
 }
 
 .site-logo:hover .logo-image {
@@ -454,7 +461,7 @@ ul, ol {
 /* Responsive logo sizing */
 @media (max-width: 768px) {
   .logo-image {
-    height: 50px;
+    height: 60px; /* Mobile size */
   }
 }
 
