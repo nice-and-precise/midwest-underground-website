@@ -76,7 +76,10 @@
       "Bash(timeout /t 3)",
       "Bash(mkdir:*)",
       "Bash(cp:*)",
-      "Bash(do grep -A 5 \"export async function generateMetadata\" \"$file\")"
+      "Bash(do grep -A 5 \"export async function generateMetadata\" \"$file\")",
+      "Bash(node scripts/optimize-images.js:*)",
+      "Bash(node scripts/replace-optimized-images.js:*)",
+      "Bash(node scripts/create-webp-versions.js:*)"
     ],
     "deny": [],
     "ask": []
