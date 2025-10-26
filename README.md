@@ -61,29 +61,164 @@ vercel --prod
 **Current Phase:** Phase 2 (60% complete) - Production Ready 🚀
 **Total Completion:** 70-75% (Phase 1: 100%, Phase 2: 60%)
 **Deployment Ready:** ✅ Yes (after high-priority placeholders replaced)
-**Last Updated:** October 24, 2025
+**Last Updated:** October 25, 2025
 
 ### Quick Stats
 - **13,000+ lines of code** (HTML, CSS, JS, PHP, JSON)
-- **9,000+ lines of documentation** (16 comprehensive guides)
+- **9,000+ lines of documentation** (17 comprehensive guides)
 - **11 pages total** (5 public + 6 dashboard pages)
-- **17 professional git commits** with detailed messages
+- **22+ professional git commits** with detailed messages
 - **Production-ready** with comprehensive CMS capabilities
+- **Brand refresh complete** - New design system deployed
 
-### What's New (October 24, 2025)
-- ✅ **Complete Dark Theme** - Full dark mode implementation across all pages
-- ✅ **Brand Color Consistency** - All pages use official brand colors (Charcoal, Steel, Safety Orange, Utility Yellow, Sand)
-- ✅ **Enhanced Logo** - Larger header logo (120px desktop, 70px mobile) with footer logos
-- ✅ **Gradient Project Cards** - CSS gradients replace image placeholders for performance
-- ✅ **Form Accessibility** - Dark-themed forms with high contrast for readability
-- ✅ **Footer Dark Theme** - Consistent dark footer across all pages
+### What's New (October 25, 2025 - Brand Refresh)
+- ✅ **New Brand System** - Professional color palette and semantic design tokens
+- ✅ **Updated Color Palette** - Slate Dark (#343D46), Slate (#4F5B66), Slate Light (#65737E), Gray (#C0C5CE), Accent Orange (#FF8800)
+- ✅ **Multi-Color Logo System** - 4 SVG variants (white, slate dark, orange, gray) + high-quality PNG
+- ✅ **Theme-Aware Logo Switching** - Automatic white logo in dark mode, slate dark in light mode
+- ✅ **WCAG AA+ Compliance** - All logo variants meet accessibility standards (AAA contrast ratios)
+- ✅ **Brand Documentation** - Comprehensive guides: [docs/brand.md](docs/brand.md) & [docs/LOGO-USAGE.md](docs/LOGO-USAGE.md)
+- ✅ **Interactive Demos** - [Brand Showcase](http://127.0.0.1:8000/src/pages/brand-demo.html) & [Logo Demo](http://127.0.0.1:8000/src/pages/logo-demo.html)
+- ✅ **Tailwind Integration** - Extended theme colors in tailwind.config.js
 
-### Previous Updates (October 23, 2025)
-- ✅ **Equipment Tracking Page** - Full CMS for equipment management
-- ✅ **Reports & Analytics Page** - Advanced reporting and data export
-- ✅ **CMS Editing** - Full CRUD operations for Customers & Equipment
-- ✅ **Modal Forms** - Professional editing interface
-- ✅ **Comprehensive Documentation** - NEXT-STEPS.md, PRE-LAUNCH-CHECKLIST.md
+## 📸 Screenshots & Brand Showcase
+
+### Homepage - Light & Dark Mode
+![Homepage Light Mode](docs/screenshots/homepage-light.png)
+*Clean, professional homepage with new Slate Dark branding and prominent service CTAs*
+
+![Homepage Dark Mode](docs/screenshots/homepage-dark.png)
+*Dark mode with optimized contrast ratios (WCAG AA compliant)*
+
+### Logo Implementation
+![Logo in Header](docs/screenshots/logo-header.png)
+*High-resolution Midwest Underground logo in navigation header - deployed across all 11 pages*
+
+![Logo Variants](docs/screenshots/logo-variants.png)
+*Multi-color logo system: White (#FFFFFF), Slate Dark (#343D46), Orange (#FF8800), Gray (#C0C5CE)*
+
+**Logo Variants:**
+- 🎨 **4 SVG Variants** - White, Slate Dark, Orange, Gray (~650 bytes each)
+- 📸 **High-Quality PNG** - Primary logo (1.5MB, transparent background)
+- ✨ **Automatic Switching** - Dark mode → white logo, Light mode → slate dark logo
+- ♿ **Accessibility** - All variants meet WCAG 2.1 Level AA+ contrast requirements
+- 📖 **Usage Guide** - Complete documentation: [docs/LOGO-USAGE.md](docs/LOGO-USAGE.md)
+- 🎭 **Live Demo** - Interactive showcase: [Logo Demo Page](http://127.0.0.1:8000/src/pages/logo-demo.html)
+
+### Dashboard Pages - Business Intelligence
+![Dashboard Home](docs/screenshots/dashboard-home.png)
+*Main dashboard with KPIs, charts, and real-time analytics*
+
+![Projects Management](docs/screenshots/dashboard-projects.png)
+*Project tracking with filtering, sorting, and progress visualization*
+
+![Customer Management](docs/screenshots/dashboard-customers.png)
+*Customer CMS with full CRUD operations and detailed analytics*
+
+![Equipment Tracking](docs/screenshots/dashboard-equipment.png)
+*Equipment management with utilization rates and maintenance tracking*
+
+![Financial Reports](docs/screenshots/dashboard-financials.png)
+*Financial analytics with P&L, cash flow, and A/R aging*
+
+![Reports & Analytics](docs/screenshots/dashboard-reports.png)
+*Custom report builder with PDF export and pre-built templates*
+
+### Brand System
+![Color Palette](docs/screenshots/brand-colors.png)
+*Professional color palette with semantic tokens for light/dark themes*
+
+![Brand Demo Page](docs/screenshots/brand-demo.png)
+*Interactive brand showcase: [/src/pages/brand-demo.html](src/pages/brand-demo.html)*
+
+### Responsive Design
+![Mobile Navigation](docs/screenshots/mobile-nav.png)
+*Mobile-first design with hamburger menu and touch-optimized controls*
+
+![Tablet View](docs/screenshots/tablet-view.png)
+*Responsive layout adapts seamlessly from 375px mobile to 4K displays*
+
+### How to Update Screenshots
+
+Screenshots should be captured at the following resolutions and saved to `docs/screenshots/`:
+
+**Required Screenshots (11 total):**
+
+1. **homepage-light.png** (1920x1080)
+   - Navigate to: http://localhost:8000/
+   - Ensure light mode is active
+   - Capture full homepage from hero to footer
+
+2. **homepage-dark.png** (1920x1080)
+   - Same as above but with dark mode enabled
+   - Click moon icon to toggle theme
+
+3. **logo-header.png** (800x200)
+   - Crop just the header section showing logo
+   - Should show: logo, navigation, dark mode toggle
+
+4. **logo-variants.png** (1200x600)
+   - Navigate to: http://localhost:8000/src/pages/brand-demo.html
+   - Capture logo showcase section
+
+5. **dashboard-home.png** (1920x1080)
+   - Navigate to: http://localhost:8000/dashboard/
+   - Capture full dashboard with KPIs and charts
+
+6. **dashboard-projects.png** (1920x1080)
+   - Navigate to: http://localhost:8000/dashboard/projects.html
+   - Capture project grid with filters active
+
+7. **dashboard-customers.png** (1920x1080)
+   - Navigate to: http://localhost:8000/dashboard/customers.html
+   - Capture customer list with charts
+
+8. **dashboard-equipment.png** (1920x1080)
+   - Navigate to: http://localhost:8000/dashboard/equipment.html
+   - Capture equipment tracking page
+
+9. **dashboard-financials.png** (1920x1080)
+   - Navigate to: http://localhost:8000/dashboard/financials.html
+   - Capture financial overview
+
+10. **dashboard-reports.png** (1920x1080)
+    - Navigate to: http://localhost:8000/dashboard/reports.html
+    - Capture report builder interface
+
+11. **brand-colors.png** (1200x800)
+    - Navigate to: http://localhost:8000/src/pages/brand-demo.html
+    - Capture color palette section
+
+12. **brand-demo.png** (1920x1080)
+    - Full page capture of brand-demo.html
+
+13. **mobile-nav.png** (375x812)
+    - Set browser to mobile viewport (iPhone X size)
+    - Capture with hamburger menu open
+
+14. **tablet-view.png** (768x1024)
+    - Set browser to tablet viewport (iPad size)
+    - Capture homepage
+
+**Screenshot Tool Recommendations:**
+- **Windows:** Snipping Tool, Greenshot, ShareX
+- **macOS:** Cmd+Shift+4, CleanShot X
+- **Browser DevTools:** Chrome/Edge DevTools (Cmd/Ctrl+Shift+M for responsive mode)
+- **Browser Extensions:** Full Page Screen Capture, Fireshot
+
+**Image Optimization:**
+- Compress images to < 500KB each using: https://tinypng.com/
+- Save as PNG for UI screenshots
+- Use WebP for smaller file sizes if supported
+
+**Commit Screenshots:**
+```bash
+git add docs/screenshots/*.png
+git commit -m "docs: Add website and dashboard screenshots for README"
+git push origin feat/brand-refresh
+```
+
+---
 
 ## Project Overview
 
@@ -221,184 +356,6 @@ midwest-underground-website/
 - ✅ **24/7 emergency service** prominently displayed
 - ✅ **SEO optimized** with meta tags, Schema.org markup
 - ✅ **Accessibility compliant** (WCAG 2.1 AA)
-
-## 🌙 Dark Mode Implementation
-
-### Overview
-
-The website includes a fully-functional dark mode with automatic theme detection and manual toggle controls.
-
-### Features
-
-- **System Preference Detection** - Automatically detects `prefers-color-scheme: dark`
-- **Manual Toggle** - User can override system preference
-- **Persistent Storage** - Theme choice saved to localStorage
-- **Smooth Transitions** - Animated color changes (0.3s ease-in-out)
-- **FOUC Prevention** - No flash of wrong theme on page load
-- **Accessibility** - Screen reader announcements, ARIA labels
-- **Dual Toggle Support** - Synchronized desktop and mobile toggles
-- **WCAG AA Compliant** - Maintained color contrast in both themes
-
-### Architecture Diagram
-
-```mermaid
-graph TD
-    A[Page Load] --> B{Check localStorage}
-    B -->|Has Saved Theme| C[Apply Saved Theme]
-    B -->|No Saved Theme| D{Check System Preference}
-    D -->|Prefers Dark| E[Apply Dark Theme]
-    D -->|Prefers Light| F[Apply Light Theme]
-
-    C --> G[Initialize DarkMode Class]
-    E --> G
-    F --> G
-
-    G --> H[Attach Toggle Listeners]
-    H --> I[User Clicks Toggle]
-    I --> J[Toggle Theme]
-    J --> K[Save to localStorage]
-    K --> L[Update UI]
-    L --> M[Announce to Screen Readers]
-```
-
-### Theme Switching Flow
-
-```mermaid
-sequenceDiagram
-    participant User
-    participant Toggle
-    participant DarkMode
-    participant DOM
-    participant Storage
-    participant ScreenReader
-
-    User->>Toggle: Click toggle button
-    Toggle->>DarkMode: toggleTheme()
-    DarkMode->>DOM: Get current theme
-    DOM-->>DarkMode: data-theme attribute
-    DarkMode->>DarkMode: Calculate new theme
-    DarkMode->>DOM: Set data-theme="dark/light"
-    DarkMode->>Storage: Save to localStorage
-    DarkMode->>Toggle: Update button state
-    DarkMode->>ScreenReader: Announce theme change
-    Toggle-->>User: Visual feedback
-```
-
-### Color System
-
-```mermaid
-graph LR
-    A[Semantic Colors] --> B[Light Theme]
-    A --> C[Dark Theme]
-
-    B --> D[--bg-primary: #FFFFFF]
-    B --> E[--text-primary: #333333]
-
-    C --> F[--bg-primary: #1a1a1a]
-    C --> G[--text-primary: #e5e5e5]
-
-    style A fill:#2EA3F2,color:#fff
-    style B fill:#FFFFFF,color:#333
-    style C fill:#1a1a1a,color:#e5e5e5
-```
-
-### Implementation Details
-
-#### CSS Variables (Light Mode Default)
-```css
-:root {
-  --bg-primary: #FFFFFF;
-  --bg-secondary: #F5F5F5;
-  --text-primary: #333333;
-  --text-secondary: #666666;
-  --color-primary: #003B5C;
-  --color-secondary: #FF6B35;
-}
-```
-
-#### Dark Mode Override
-```css
-[data-theme="dark"] {
-  --bg-primary: #1a1a1a;
-  --bg-secondary: #2d2d2d;
-  --text-primary: #e5e5e5;
-  --text-secondary: #b0b0b0;
-  --color-primary: #3a7ca5;
-  --color-secondary: #ff8c61;
-}
-```
-
-#### JavaScript Controller
-```javascript
-class DarkMode {
-  constructor() {
-    this.html = document.documentElement;
-    this.storageKey = 'midwest-underground-theme';
-  }
-
-  init() {
-    const savedTheme = localStorage.getItem(this.storageKey);
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-
-    if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
-      this.setTheme('dark');
-    }
-  }
-
-  toggleTheme() {
-    const currentTheme = this.html.getAttribute('data-theme');
-    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-    this.setTheme(newTheme);
-    localStorage.setItem(this.storageKey, newTheme);
-  }
-}
-```
-
-#### FOUC Prevention
-```html
-<html class="no-transition">
-<head>
-  <script>
-    (function() {
-      const savedTheme = localStorage.getItem('midwest-underground-theme');
-      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
-        document.documentElement.setAttribute('data-theme', 'dark');
-      }
-    })();
-  </script>
-</head>
-```
-
-### File Changes
-
-**Modified Files:**
-- `css/styles.css` - Theme variables and dark mode styles
-- `js/main.js` - DarkMode class implementation
-- `index.html` - Toggle buttons and FOUC prevention
-- `services.html` - Toggle buttons and FOUC prevention
-- `about.html` - Toggle buttons and FOUC prevention
-- `contact.html` - Toggle buttons and FOUC prevention
-- `projects.html` - Toggle buttons and FOUC prevention
-
-### Testing Dark Mode
-
-```bash
-# Test system preference detection
-# 1. Set OS to dark mode
-# 2. Open website in incognito/private mode
-# 3. Should automatically load in dark mode
-
-# Test manual toggle
-# 1. Click moon/sun icon in navigation
-# 2. Theme should switch immediately
-# 3. Reload page - theme should persist
-
-# Test across pages
-# 1. Set dark mode on homepage
-# 2. Navigate to other pages
-# 3. All pages should maintain dark mode
-```
 
 ## Local Development
 

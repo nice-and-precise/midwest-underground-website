@@ -7,42 +7,49 @@
    ========================================================================== */
 
 :root {
-  /* Official Brand Colors (from brand guide) */
-  --primary-charcoal: #23272A;
-  --charcoal-900: #1E2226;
-  --charcoal-800: #23272A;
-  --steel: #4F5B66;
-  --safety-orange: #FF5A1F;
-  --utility-yellow: #FFC400;
-  --sand: #F2EDE5;
-  --white: #FFFFFF;
+  /* NEW BRAND COLORS (October 2025 Brand Refresh) */
+  --brand-slate-dark: #343D46;
+  --brand-slate: #4F5B66;
+  --brand-slate-light: #65737E;
+  --brand-gray: #C0C5CE;
+  --brand-accent: #FF8800;
+  --brand-white: #FFFFFF;
+  --brand-black: #000000;
 
-  /* Legacy color aliases (for backward compatibility during transition) */
-  --neutral-dark: var(--primary-charcoal);
-  --neutral-medium: var(--steel);
-  --neutral-light: var(--sand);
+  /* Legacy Aliases (map old colors to new brand) - LIGHT MODE */
+  --primary-charcoal: var(--brand-slate-dark);
+  --charcoal-900: var(--brand-slate-dark);
+  --charcoal-800: var(--brand-slate-dark);
+  --steel: var(--brand-slate-dark); /* FIX: Changed from slate (#4F5B66) to slate-dark (#343D46) for 9.28:1 contrast on light backgrounds */
+  --safety-orange: var(--brand-accent);
+  --utility-yellow: var(--brand-accent);
+  --sand: var(--brand-gray);
+  --white: var(--brand-white);
+  --neutral-dark: var(--brand-slate-dark);
+  --neutral-medium: var(--brand-slate-dark); /* FIX: Changed for better light mode contrast (9.28:1 AAA) */
+  --neutral-light: var(--brand-gray);
 
   /* Semantic Colors (theme-aware) - Light Mode Default */
-  --bg-primary: #FFFFFF;
-  --bg-secondary: #F2EDE5;
-  --bg-accent: #F9F7F4;
-  --text-primary: #23272A;
-  --text-secondary: #4F5B66;
-  --text-muted: #8A9099;
-  --color-primary: #23272A;
-  --color-secondary: #FF5A1F;
-  --color-accent: #FFC400;
-  --color-primary-dark: #1E2226;
-  --color-secondary-dark: #E64F18;
-  --color-accent-dark: #E6B100;
-  --border-color: #D1CCC3;
-  --shadow-color: rgba(35, 39, 42, 0.1);
+  --bg-primary: var(--brand-white);
+  --bg-secondary: var(--brand-gray);
+  --bg-accent: #F5F6F7;
+  --text-primary: var(--brand-slate-dark);
+  --text-secondary: var(--brand-slate-dark); /* FIX: Changed from slate for better contrast (9.28:1 AAA) */
+  --text-muted: var(--brand-slate); /* Muted text can be slightly lighter */
+  --color-primary: var(--brand-slate-dark);
+  --color-secondary: var(--brand-accent);
+  --color-accent: var(--brand-accent);
+  --color-primary-dark: var(--brand-slate-dark);
+  --color-secondary-dark: #E67900;
+  --color-accent-dark: #E67900;
+  --border-color: var(--brand-gray);
+  --shadow-color: rgba(52, 61, 70, 0.1);
 
   /* Functional Colors */
   --success: #28A745;
-  --warning: #FFC400;
+  --warning: var(--brand-accent);
   --error: #DC3545;
-  --info: #4F5B66;
+  --info: var(--brand-slate);
 
   /* Typography (Official Brand Standards) */
   --font-heading: 'Oswald', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -102,25 +109,61 @@
   --z-modal: 1050;
   --z-popover: 1060;
   --z-tooltip: 1070;
+
+  /* Logo Variants (for theme-aware display) */
+  --logo-horizontal: url('../images/logo_horizontal_transparent.png');
+  --logo-horizontal-svg: url('../images/logo_horizontal_slate_dark.svg');
 }
 
 /* Dark Mode Theme */
 [data-theme="dark"] {
-  /* Semantic Colors - Dark Mode */
-  --bg-primary: #1E2226;
-  --bg-secondary: #23272A;
-  --bg-accent: #2A2E32;
-  --text-primary: #F2EDE5;
-  --text-secondary: #D1CCC3;
-  --text-muted: #8A9099;
-  --color-primary: #F2EDE5;
-  --color-secondary: #FF5A1F;
-  --color-accent: #FFC400;
-  --color-primary-dark: #FFFFFF;
-  --color-secondary-dark: #FF7042;
-  --color-accent-dark: #FFD133;
-  --border-color: #4F5B66;
+  /* Semantic Colors - Dark Mode (NEW BRAND) */
+  --bg-primary: #2B3139; /* Darker than slate-dark for better contrast */
+  --bg-secondary: var(--brand-slate-dark); /* Use slate-dark instead of slate */
+  --bg-accent: #3A424C; /* Darker accent background */
+  --text-primary: var(--brand-white);
+  --text-secondary: var(--brand-gray);
+  --text-muted: var(--brand-slate-light);
+  --color-primary: var(--brand-white);
+  --color-secondary: var(--brand-accent);
+  --color-accent: var(--brand-accent);
+  --color-primary-dark: var(--brand-white);
+  --color-secondary-dark: #FF9A1F;
+  --color-accent-dark: #FF9A1F;
+  --border-color: var(--brand-slate-light);
   --shadow-color: rgba(0, 0, 0, 0.4);
+
+  /* Override legacy colors for dark mode */
+  --steel: var(--brand-gray); /* Change from #4F5B66 to #C0C5CE for readability */
+  --primary-charcoal: var(--brand-white);
+  --neutral-light: var(--brand-gray);
+  --sand: var(--brand-slate-light);
+
+  /* Logo Variants - White logo for dark backgrounds */
+  --logo-horizontal: url('../images/logo_horizontal_white.svg');
+  --logo-horizontal-svg: url('../images/logo_horizontal_white.svg');
+}
+
+/* Dark mode logo - invert to white */
+[data-theme="dark"] .logo-image {
+  filter: brightness(0) saturate(100%) invert(1); /* Convert to white for dark backgrounds */
+}
+
+/* Gradient background classes with dark mode support */
+.gradient-bg-light {
+  background: linear-gradient(135deg, #C0C5CE 0%, #E8EAED 100%); /* Gray to lighter gray */
+}
+
+/* Dark mode: darken gradient background and ensure white text */
+[data-theme="dark"] .gradient-bg-light {
+  background: linear-gradient(135deg, #4F5B66 0%, #343D46 100%); /* Slate to Slate Dark for dark mode */
+}
+
+/* Force proper text colors in gradient sections */
+[data-theme="dark"] .gradient-bg-light h2,
+[data-theme="dark"] .gradient-bg-light h3,
+[data-theme="dark"] .gradient-bg-light p {
+  color: var(--brand-white) !important;
 }
 
 /* ==========================================================================
@@ -405,20 +448,28 @@ ul, ol {
 }
 
 .logo-image {
-  height: 120px;
+  height: 80px; /* Base size for tablets */
   width: auto;
   display: block;
   transition: transform var(--transition-base);
+  filter: brightness(0) saturate(100%); /* Convert to black for light backgrounds */
+}
+
+/* Larger logo for desktop */
+@media (min-width: 769px) {
+  .logo-image {
+    height: 160px; /* Much larger for desktop viewers */
+  }
 }
 
 .site-logo:hover .logo-image {
-  transform: scale(1.02);
+  transform: scale(1.05);
 }
 
 /* Responsive logo sizing */
 @media (max-width: 768px) {
   .logo-image {
-    height: 70px;
+    height: 60px; /* Mobile size */
   }
 }
 
@@ -1012,5 +1063,105 @@ ul, ol {
 @media (max-width: 1023px) {
   .header-container .dark-mode-toggle {
     display: none;
+  }
+}
+
+/* ==========================================================================
+   PARALLAX HERO SECTION
+   ========================================================================== */
+
+.parallax-hero {
+  position: relative;
+  height: 600px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.parallax-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 120%;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+.parallax-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(52, 61, 70, 0.85) 0%, rgba(79, 91, 102, 0.75) 100%);
+  z-index: 1;
+}
+
+[data-theme="dark"] .parallax-overlay {
+  background: linear-gradient(135deg, rgba(43, 49, 57, 0.9) 0%, rgba(52, 61, 70, 0.85) 100%);
+}
+
+.parallax-content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  color: var(--brand-white);
+  max-width: 900px;
+  padding: var(--space-2xl);
+}
+
+.parallax-content h1 {
+  font-size: var(--text-5xl);
+  font-weight: 700;
+  margin-bottom: var(--space-lg);
+  text-shadow: 2px 4px 8px rgba(0, 0, 0, 0.5);
+  line-height: 1.2;
+}
+
+.parallax-content p {
+  font-size: var(--text-xl);
+  margin-bottom: var(--space-2xl);
+  text-shadow: 1px 2px 4px rgba(0, 0, 0, 0.5);
+  line-height: 1.6;
+}
+
+.parallax-cta {
+  display: flex;
+  gap: var(--space-md);
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* Responsive parallax */
+@media (max-width: 768px) {
+  .parallax-hero {
+    height: 500px;
+  }
+
+  .parallax-content h1 {
+    font-size: var(--text-3xl);
+  }
+
+  .parallax-content p {
+    font-size: var(--text-lg);
+  }
+}
+
+@media (max-width: 480px) {
+  .parallax-hero {
+    height: 400px;
+  }
+
+  .parallax-content h1 {
+    font-size: var(--text-2xl);
+  }
+
+  .parallax-content p {
+    font-size: var(--text-base);
   }
 }

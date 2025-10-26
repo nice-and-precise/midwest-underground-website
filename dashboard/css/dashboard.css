@@ -82,6 +82,26 @@
   font-size: var(--text-2xl);
 }
 
+.dashboard-logo .logo-image {
+  height: 50px; /* Base size for mobile/tablet */
+  width: auto;
+  display: block;
+  transition: transform var(--transition-base);
+  filter: brightness(0) saturate(100%); /* Black in light mode */
+}
+
+/* Larger logo for desktop */
+@media (min-width: 1024px) {
+  .dashboard-logo .logo-image {
+    height: 80px; /* Much larger for desktop dashboard */
+  }
+}
+
+/* Dark mode logo - invert to white */
+[data-theme="dark"] .dashboard-logo .logo-image {
+  filter: brightness(0) saturate(100%) invert(1); /* White in dark mode */
+}
+
 .dashboard-header-right {
   display: flex;
   align-items: center;
@@ -600,12 +620,14 @@
 }
 
 .btn-primary {
-  background-color: var(--color-primary);
-  color: white;
+  background-color: var(--brand-accent); /* Brand orange #FF8800 */
+  color: var(--brand-black); /* Black text on orange */
+  border: 2px solid var(--brand-accent);
 }
 
 .btn-primary:hover {
-  background-color: var(--color-accent);
+  background-color: #FF9A1F; /* Slightly lighter orange on hover */
+  border-color: #FF9A1F;
 }
 
 .btn-secondary {
@@ -860,7 +882,7 @@
 }
 
 .report-type-card:hover {
-  border-color: var(--color-primary);
+  border-color: var(--brand-accent); /* Brand orange on hover */
   transform: translateY(-2px);
   box-shadow: var(--shadow-md);
 }
@@ -872,8 +894,9 @@
 }
 
 .report-type-card input[type="radio"]:checked + .report-type-content {
-  background-color: var(--color-primary);
-  color: var(--white);
+  background-color: var(--brand-accent); /* Brand orange #FF8800 */
+  color: var(--brand-black); /* Black text on orange per brand guide */
+  border-radius: var(--radius-lg);
 }
 
 .report-type-content {
@@ -1237,4 +1260,112 @@
 
 .btn-success:hover {
   background-color: #218838;
+}
+
+/* ==========================================================================
+   ACCORDION STYLES
+   ========================================================================== */
+
+.accordion-section {
+  margin-bottom: var(--space-lg);
+}
+
+.accordion-header {
+  background-color: var(--bg-primary);
+  border: 2px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: all var(--transition-base);
+  user-select: none;
+}
+
+.accordion-header:hover {
+  border-color: var(--brand-accent);
+  box-shadow: var(--shadow-md);
+}
+
+.accordion-header.active {
+  border-color: var(--brand-accent);
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  border-bottom: none;
+}
+
+.accordion-title {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  flex: 1;
+}
+
+.accordion-title h2 {
+  margin: 0;
+  font-size: var(--text-2xl);
+  color: var(--text-primary);
+}
+
+.accordion-icon {
+  font-size: var(--text-3xl);
+}
+
+.accordion-toggle {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  color: var(--text-secondary);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.accordion-toggle-icon {
+  font-size: var(--text-xl);
+  transition: transform var(--transition-base);
+}
+
+.accordion-header.active .accordion-toggle-icon {
+  transform: rotate(180deg);
+}
+
+.accordion-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.5s ease-out;
+  background-color: var(--bg-primary);
+  border: 2px solid var(--brand-accent);
+  border-top: none;
+  border-bottom-left-radius: var(--radius-lg);
+  border-bottom-right-radius: var(--radius-lg);
+}
+
+.accordion-content.active {
+  max-height: 10000px; /* Large enough for all content */
+  transition: max-height 0.8s ease-in;
+}
+
+.accordion-content-inner {
+  padding: var(--space-lg);
+}
+
+/* Chart grid inside accordion */
+.accordion-charts-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-lg);
+}
+
+@media (min-width: 1024px) {
+  .accordion-charts-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Full-width chart in accordion */
+.accordion-chart-full {
+  grid-column: 1 / -1;
 }

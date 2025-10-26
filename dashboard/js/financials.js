@@ -98,13 +98,13 @@ function initializeCharts() {
   const isDarkMode = document.documentElement.getAttribute('data-theme') === 'dark';
 
   const colors = {
-    primary: isDarkMode ? '#F2EDE5' : '#23272A',
-    accent: '#FFC400',
-    secondary: '#FF5A1F',
-    success: '#28A745',
-    text: isDarkMode ? '#F2EDE5' : '#23272A',
-    grid: isDarkMode ? '#4F5B66' : '#D1CCC3',
-    background: isDarkMode ? 'rgba(242, 237, 229, 0.1)' : 'rgba(35, 39, 42, 0.1)'
+    primary: isDarkMode ? '#FFFFFF' : '#343D46', // Brand slate dark / white
+    accent: '#FF8800', // Brand orange
+    secondary: '#4F5B66', // Brand slate
+    success: '#28A745', // Keep green for success
+    text: isDarkMode ? '#C0C5CE' : '#343D46', // Brand gray / slate dark
+    grid: isDarkMode ? '#4F5B66' : '#C0C5CE', // Brand slate / gray
+    background: isDarkMode ? 'rgba(255, 136, 0, 0.1)' : 'rgba(255, 136, 0, 0.05)' // Brand orange tint
   };
 
   // Revenue & Profit Chart
@@ -233,6 +233,165 @@ function initializeCharts() {
       }
     }
   });
+
+  // Profit Margin Trend Chart
+  const profitMarginCtx = document.getElementById('profit-margin-chart')?.getContext('2d');
+  if (profitMarginCtx) {
+    const marginData = last12Months.map(m => ((m.profit / m.revenue) * 100).toFixed(1));
+
+    new Chart(profitMarginCtx, {
+      type: 'bar',
+      data: {
+        labels: monthLabels,
+        datasets: [{
+          label: 'Profit Margin %',
+          data: marginData,
+          backgroundColor: colors.accent,
+          borderColor: colors.accent,
+          borderWidth: 2
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            callbacks: {
+              label: (context) => 'Margin: ' + context.parsed.y + '%'
+            }
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            max: 50,
+            ticks: {
+              color: colors.text,
+              callback: (value) => value + '%'
+            },
+            grid: { color: colors.grid }
+          },
+          x: {
+            ticks: { color: colors.text },
+            grid: { color: colors.grid }
+          }
+        }
+      }
+    });
+  }
+
+  // Revenue by Service Type Chart
+  const serviceRevenueCtx = document.getElementById('revenue-by-service-chart')?.getContext('2d');
+  if (serviceRevenueCtx) {
+    new Chart(serviceRevenueCtx, {
+      type: 'pie',
+      data: {
+        labels: ['Directional Drilling', 'Fiber Optic Installation', 'Utilities Installation', 'Geothermal Systems', 'Road Crossings'],
+        datasets: [{
+          data: [35, 28, 18, 12, 7],
+          backgroundColor: [
+            colors.accent,       // Brand orange
+            colors.primary,      // Slate dark/white
+            colors.secondary,    // Slate
+            '#65737E',          // Slate light
+            '#C0C5CE'           // Gray
+          ],
+          borderWidth: 2,
+          borderColor: isDarkMode ? '#2B3139' : '#FFFFFF'
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            position: 'right',
+            labels: {
+              color: colors.text,
+              padding: 20,
+              font: { size: 13 }
+            }
+          },
+          tooltip: {
+            callbacks: {
+              label: (context) => context.label + ': ' + context.parsed + '%'
+            }
+          }
+        }
+      }
+    });
+  }
+
+  // Cash Flow Forecast Chart
+  const cashFlowCtx = document.getElementById('cash-flow-forecast-chart')?.getContext('2d');
+  if (cashFlowCtx) {
+    const forecastMonths = ['Nov \'25', 'Dec \'25', 'Jan \'26', 'Feb \'26', 'Mar \'26', 'Apr \'26'];
+    const inflows = [450, 520, 480, 510, 495, 530];
+    const outflows = [380, 410, 395, 420, 405, 435];
+
+    new Chart(cashFlowCtx, {
+      type: 'line',
+      data: {
+        labels: forecastMonths,
+        datasets: [
+          {
+            label: 'Projected Inflows',
+            data: inflows,
+            borderColor: colors.accent,
+            backgroundColor: 'transparent',
+            borderWidth: 3,
+            tension: 0.3,
+            pointRadius: 4,
+            pointBackgroundColor: colors.accent
+          },
+          {
+            label: 'Projected Outflows',
+            data: outflows,
+            borderColor: colors.secondary,
+            backgroundColor: 'transparent',
+            borderWidth: 3,
+            tension: 0.3,
+            pointRadius: 4,
+            pointBackgroundColor: colors.secondary
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            position: 'top',
+            labels: {
+              color: colors.text,
+              padding: 15,
+              usePointStyle: true
+            }
+          },
+          tooltip: {
+            callbacks: {
+              label: (context) => context.dataset.label + ': $' + context.parsed.y + 'K'
+            }
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: {
+              color: colors.text,
+              callback: (value) => '$' + value + 'K'
+            },
+            grid: { color: colors.grid }
+          },
+          x: {
+            ticks: { color: colors.text },
+            grid: { color: colors.grid }
+          }
+        }
+      }
+    });
+  }
 }
 
 /**
@@ -383,6 +542,7 @@ function applyDateFilter(startDate, endDate) {
 function setupExportButtons() {
   const exportCSV = document.getElementById('export-csv-btn');
   const exportPDF = document.getElementById('export-pdf-btn');
+  const refreshBtn = document.getElementById('refresh-financials-btn');
 
   if (exportCSV) {
     exportCSV.addEventListener('click', function() {
@@ -395,6 +555,40 @@ function setupExportButtons() {
     exportPDF.addEventListener('click', function() {
       window.print();
       showNotification('Print dialog opened', 'info');
+    });
+  }
+
+  if (refreshBtn) {
+    refreshBtn.addEventListener('click', async function() {
+      // Add loading state
+      refreshBtn.classList.add('loading');
+      refreshBtn.disabled = true;
+
+      try {
+        // Reload all financial data
+        await loadFinancialData();
+
+        // Refresh charts
+        if (revenueChart) {
+          revenueChart.destroy();
+        }
+        if (expenseChart) {
+          expenseChart.destroy();
+        }
+        initializeCharts();
+
+        // Refresh AR table
+        renderARTable();
+
+        showNotification('Financial data refreshed!', 'success');
+      } catch (error) {
+        console.error('[Financials] Error refreshing data:', error);
+        showNotification('Error refreshing data', 'error');
+      } finally {
+        // Remove loading state
+        refreshBtn.classList.remove('loading');
+        refreshBtn.disabled = false;
+      }
     });
   }
 }
@@ -491,3 +685,34 @@ function showNotification(message, type = 'info') {
     }, 300);
   }, 3000);
 }
+
+/**
+ * Initialize accordion functionality
+ */
+function initAccordions() {
+  const accordionHeaders = document.querySelectorAll('.accordion-header');
+
+  accordionHeaders.forEach(header => {
+    header.addEventListener('click', function() {
+      const targetId = this.getAttribute('data-accordion');
+      const content = document.getElementById(targetId);
+      const toggleText = this.querySelector('.accordion-toggle span:first-child');
+
+      // Toggle active class
+      this.classList.toggle('active');
+      content.classList.toggle('active');
+
+      // Update toggle text
+      if (this.classList.contains('active')) {
+        toggleText.textContent = 'Collapse';
+      } else {
+        toggleText.textContent = 'Expand';
+      }
+    });
+  });
+}
+
+// Initialize accordions when DOM is ready
+document.addEventListener('DOMContentLoaded', function() {
+  initAccordions();
+});
