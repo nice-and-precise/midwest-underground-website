@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import ParallaxHero from '@/components/ParallaxHero'
+import ParallaxSection from '@/components/ParallaxSection'
 
 export default function HomePage() {
   return (
@@ -8,7 +9,7 @@ export default function HomePage() {
       <ParallaxHero />
 
       {/* Features Overview */}
-      <section className="section gradient-bg-light">
+      <ParallaxSection className="section gradient-bg-light" speed={0.15}>
         <div className="container">
           <div className="text-center" style={{marginBottom: 'var(--space-2xl)'}}>
             <h2 style={{color: 'var(--brand-slate-dark)'}}>HDD Management Features</h2>
@@ -79,7 +80,7 @@ export default function HomePage() {
             </div>
           </div>
         </div>
-      </section>
+      </ParallaxSection>
 
       {/* Migration Status */}
       <section className="section">
