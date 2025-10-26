@@ -68,9 +68,10 @@ const mockCustomer = {
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
   return {
-    title: `Customer #${params.id} | Dashboard`,
-    description: `Customer profile and project history for customer ${params.id}`
+    title: `Customer #${id} | Dashboard`,
+    description: `Customer profile and project history for customer ${id}`
   }
 }
 

@@ -30,9 +30,10 @@ const mockBoreLog = {
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
   return {
-    title: `Bore Log #${params.id} | Dashboard`,
-    description: `Detailed bore log information for bore ${params.id}`
+    title: `Bore Log #${id} | Dashboard`,
+    description: `Detailed bore log information for bore ${id}`
   }
 }
 
@@ -62,7 +63,7 @@ export default async function BoreLogDetailPage({ params }: { params: Promise<{ 
           <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 'var(--space-md)'}}>
             <div>
               <h1 style={{fontSize: 'var(--text-3xl)', marginBottom: 'var(--space-xs)'}}>
-                Bore Log #{params.id}
+                Bore Log #{id}
               </h1>
               <p style={{fontSize: 'var(--text-lg)', opacity: 0.9}}>{boreLog.project}</p>
             </div>

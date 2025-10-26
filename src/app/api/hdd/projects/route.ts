@@ -14,10 +14,12 @@ export async function GET(request: NextRequest) {
         id: true,
         name: true,
         status: true,
-        client: true,
+        customerName: true,
+        customerContact: true,
         startDate: true,
         endDate: true,
-        budget: true
+        budget: true,
+        location: true
       },
       orderBy: {
         createdAt: 'desc'
@@ -46,13 +48,14 @@ export async function POST(request: NextRequest) {
     const project = await prisma.project.create({
       data: {
         name: body.name,
-        client: body.client,
-        status: body.status || 'ACTIVE',
-        startDate: new Date(body.startDate),
+        description: body.description || null,
+        customerName: body.customerName || body.client || null,
+        customerContact: body.customerContact || null,
+        status: body.status || 'PLANNING',
+        startDate: body.startDate ? new Date(body.startDate) : null,
         endDate: body.endDate ? new Date(body.endDate) : null,
-        budget: body.budget || 0,
-        location: body.location || {},
-        notes: body.notes || '',
+        budget: body.budget || null,
+        location: body.location || null,
         createdById: session.user.id as string
       }
     })

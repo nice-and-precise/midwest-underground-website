@@ -7,7 +7,6 @@ const mockFieldReport = {
   date: '2025-10-22',
   project: 'Willmar Fiber Network - Phase 2',
   projectId: 1,
-  crew: 'Crew A - John Smith',
   location: 'County Rd 5 & Hwy 12',
   status: 'Submitted',
   submittedBy: 'John Smith',
@@ -203,7 +202,7 @@ export default async function FieldReportDetailPage({ params }: { params: Promis
                   </div>
                   <div>
                     <p style={{fontSize: 'var(--text-sm)', color: 'var(--text-secondary)', marginBottom: '4px'}}>Crew</p>
-                    <p style={{fontWeight: 600}}>{report.crew}</p>
+                    <p style={{fontWeight: 600}}>{report.crew?.map((c: any) => c.name).join(', ') || 'N/A'}</p>
                   </div>
                 </div>
                 <div>

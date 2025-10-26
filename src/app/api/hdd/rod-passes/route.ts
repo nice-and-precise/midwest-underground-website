@@ -15,21 +15,17 @@ export async function POST(request: NextRequest) {
     const bore = await prisma.bore.upsert({
       where: { id: body.boreId },
       update: {
-        totalDepth: body.targetDepth,
-        linearFeet: body.rodPasses.reduce((sum: number, pass: any) => sum + pass.linearFeet, 0)
+        totalLength: body.rodPasses.reduce((sum: number, pass: any) => sum + pass.linearFeet, 0),
+        status: 'COMPLETED'
       },
       create: {
         id: body.boreId,
         projectId: body.projectId,
-        plannedDate: new Date(body.startDate),
-        crew: body.crew,
-        location: body.location || {},
-        totalDepth: body.targetDepth,
-        linearFeet: body.rodPasses.reduce((sum: number, pass: any) => sum + pass.linearFeet, 0),
-        pipeSize: body.pipeSize,
-        pipeType: body.pipeType,
-        status: 'COMPLETED',
-        createdById: session.user.id as string
+        name: body.name || `Bore ${body.boreId}`,
+        totalLength: body.rodPasses.reduce((sum: number, pass: any) => sum + pass.linearFeet, 0),
+        diameterIn: body.pipeSize ? parseFloat(body.pipeSize) : null,
+        productMaterial: body.pipeType || null,
+        status: 'COMPLETED'
       }
     })
 
@@ -38,15 +34,15 @@ export async function POST(request: NextRequest) {
       return prisma.rodPass.create({
         data: {
           boreId: bore.id,
+          sequence: pass.sequence || pass.passNumber,
           passNumber: pass.passNumber,
           linearFeet: pass.linearFeet,
-          startTime: new Date(pass.startTime),
-          endTime: pass.endTime ? new Date(pass.endTime) : null,
-          fluidMix: pass.fluidMix,
-          fluidVolumeGal: pass.fluidVolumeGal,
-          pumpPressure: pass.pumpPressure,
-          notes: pass.notes || '',
-          events: pass.events || []
+          startedAt: pass.startTime ? new Date(pass.startTime) : null,
+          completedAt: pass.endTime ? new Date(pass.endTime) : null,
+          fluidMix: pass.fluidMix || null,
+          fluidVolumeGal: pass.fluidVolumeGal || null,
+          notes: pass.notes || null,
+          loggedById: session.user.id as string
         }
       })
     })

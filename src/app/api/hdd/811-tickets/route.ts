@@ -60,9 +60,8 @@ export async function POST(request: NextRequest) {
         projectId: body.projectId,
         ticketDate: new Date(body.ticketDate),
         expirationDate: new Date(body.expirationDate),
-        location: body.location,
-        type: body.type || 'NORMAL',
-        status: body.status || 'ACTIVE'
+        status: body.status || 'ACTIVE',
+        notes: body.notes || null
       }
     })
 

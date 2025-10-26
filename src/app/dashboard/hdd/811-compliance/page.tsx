@@ -57,7 +57,7 @@ export default function Compliance811Page() {
       ])
 
       if (ticketsRes.ok) {
-        const ticketsData = await ticketsRes.ok()
+        const ticketsData = await ticketsRes.json()
         setTickets(ticketsData)
       }
 

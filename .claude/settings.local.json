@@ -75,7 +75,8 @@
       "Bash(taskkill:*)",
       "Bash(timeout /t 3)",
       "Bash(mkdir:*)",
-      "Bash(cp:*)"
+      "Bash(cp:*)",
+      "Bash(do grep -A 5 \"export async function generateMetadata\" \"$file\")"
     ],
     "deny": [],
     "ask": []

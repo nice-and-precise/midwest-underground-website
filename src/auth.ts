@@ -78,7 +78,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     },
     async session({ session, token }) {
       // Add custom fields to session
-      if (session.user) {
+      if (session.user && token.sub) {
         session.user.id = token.sub
         session.user.role = token.role as string
         session.user.crew = token.crew as string | null

@@ -128,9 +128,10 @@ const mockTicket = {
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
   return {
-    title: `811 Ticket #${params.id} | Dashboard`,
-    description: `Utility locate ticket details for ticket ${params.id}`
+    title: `811 Ticket #${id} | Dashboard`,
+    description: `Utility locate ticket details for ticket ${id}`
   }
 }
 

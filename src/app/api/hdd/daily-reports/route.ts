@@ -25,13 +25,6 @@ export async function GET(request: NextRequest) {
             id: true,
             name: true
           }
-        },
-        submittedBy: {
-          select: {
-            id: true,
-            name: true,
-            email: true
-          }
         }
       },
       orderBy: {
@@ -70,10 +63,8 @@ export async function POST(request: NextRequest) {
         weather: body.weather || {},
         photos: body.photos || [],
         notes: body.notes || '',
-        safetyNotes: body.safetyNotes || '',
         status: body.status || 'DRAFT',
-        submittedById: session.user.id as string,
-        location: body.location || ''
+        createdById: session.user.id as string
       }
     })
 
@@ -81,10 +72,9 @@ export async function POST(request: NextRequest) {
     await prisma.reportAudit.create({
       data: {
         reportId: report.id,
-        action: 'CREATED',
         changes: body,
         snapshot: report,
-        userId: session.user.id as string
+        changedById: session.user.id as string
       }
     })
 

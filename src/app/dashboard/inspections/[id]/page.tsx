@@ -161,9 +161,10 @@ const mockInspection = {
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
   return {
-    title: `Inspection #${params.id} | Dashboard`,
-    description: `Detailed inspection report and results for inspection ${params.id}`
+    title: `Inspection #${id} | Dashboard`,
+    description: `Detailed inspection report and results for inspection ${id}`
   }
 }
 
@@ -490,9 +491,9 @@ export default async function InspectionDetailPage({ params }: { params: Promise
                       </p>
                       <p style={{fontSize: 'var(--text-sm)'}}>{sig.name}</p>
                       <p style={{fontSize: 'var(--text-sm)', color: 'var(--text-secondary)'}}>{sig.title}</p>
-                      {sig.license && (
+                      {(sig as any).license && (
                         <p style={{fontSize: 'var(--text-sm)', color: 'var(--text-secondary)', fontFamily: 'monospace'}}>
-                          {sig.license}
+                          {(sig as any).license}
                         </p>
                       )}
                       {sig.signed ? (
