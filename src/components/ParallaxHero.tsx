@@ -7,15 +7,26 @@ export default function ParallaxHero() {
   const parallaxRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
+    let ticking = false
+
     const handleScroll = () => {
-      if (!parallaxRef.current) return
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          if (!parallaxRef.current) return
 
-      const scrolled = window.scrollY
-      const parallaxBg = parallaxRef.current.querySelector('.parallax-bg') as HTMLElement
+          const scrolled = window.scrollY
+          const parallaxBg = parallaxRef.current.querySelector('.parallax-bg') as HTMLElement
 
-      if (parallaxBg) {
-        // Move background slower than scroll for parallax effect
-        parallaxBg.style.transform = `translateY(${scrolled * 0.5}px)`
+          if (parallaxBg) {
+            // Move background slower than scroll for parallax effect
+            // Adjust the multiplier (0.4) to change parallax speed
+            parallaxBg.style.transform = `translate3d(0, ${scrolled * 0.4}px, 0)`
+          }
+
+          ticking = false
+        })
+
+        ticking = true
       }
     }
 
