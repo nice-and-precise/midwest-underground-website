@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { signIn } from 'next-auth/react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
+import { loginSchema } from '@/lib/validations'
 
 export default function LoginForm() {
   const router = useRouter()
@@ -13,12 +14,27 @@ export default function LoginForm() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
+  const [fieldErrors, setFieldErrors] = useState<{ email?: string; password?: string }>({})
   const [isLoading, setIsLoading] = useState(false)
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setError('')
+    setFieldErrors({})
     setIsLoading(true)
+
+    // Validate with Zod
+    const validation = loginSchema.safeParse({ email, password })
+    if (!validation.success) {
+      const errors: { email?: string; password?: string } = {}
+      validation.error.errors.forEach((err) => {
+        if (err.path[0] === 'email') errors.email = err.message
+        if (err.path[0] === 'password') errors.password = err.message
+      })
+      setFieldErrors(errors)
+      setIsLoading(false)
+      return
+    }
 
     try {
       const result = await signIn('credentials', {
@@ -74,7 +90,7 @@ export default function LoginForm() {
           style={{
             width: '100%',
             padding: 'var(--space-sm)',
-            border: '2px solid var(--bg-secondary)',
+            border: `2px solid ${fieldErrors.email ? '#fcc' : 'var(--bg-secondary)'}`,
             borderRadius: 'var(--radius-md)',
             fontSize: 'var(--text-base)',
             transition: 'border-color var(--transition-base)'
@@ -82,6 +98,11 @@ export default function LoginForm() {
           required
           disabled={isLoading}
         />
+        {fieldErrors.email && (
+          <p style={{color: '#c00', fontSize: 'var(--text-xs)', marginTop: 'var(--space-xs)'}}>
+            {fieldErrors.email}
+          </p>
+        )}
       </div>
 
       <div>
@@ -103,7 +124,7 @@ export default function LoginForm() {
           style={{
             width: '100%',
             padding: 'var(--space-sm)',
-            border: '2px solid var(--bg-secondary)',
+            border: `2px solid ${fieldErrors.password ? '#fcc' : 'var(--bg-secondary)'}`,
             borderRadius: 'var(--radius-md)',
             fontSize: 'var(--text-base)',
             transition: 'border-color var(--transition-base)'
@@ -111,6 +132,11 @@ export default function LoginForm() {
           required
           disabled={isLoading}
         />
+        {fieldErrors.password && (
+          <p style={{color: '#c00', fontSize: 'var(--text-xs)', marginTop: 'var(--space-xs)'}}>
+            {fieldErrors.password}
+          </p>
+        )}
       </div>
 
       <div style={{

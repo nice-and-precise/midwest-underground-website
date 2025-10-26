@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import LoginForm from '@/components/LoginForm'
 
 export const metadata = {
   title: 'Login | Midwest Underground',
@@ -40,83 +41,7 @@ export default function LoginPage() {
               Access your HDD operations dashboard
             </p>
 
-            {/* Login Form Placeholder */}
-            <form style={{display: 'flex', flexDirection: 'column', gap: 'var(--space-lg)'}}>
-              <div>
-                <label htmlFor="email" style={{
-                  display: 'block',
-                  marginBottom: 'var(--space-xs)',
-                  fontWeight: 600,
-                  color: 'var(--text-primary)'
-                }}>
-                  Email Address
-                </label>
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  placeholder="your.email@example.com"
-                  style={{
-                    width: '100%',
-                    padding: 'var(--space-sm)',
-                    border: '2px solid var(--bg-secondary)',
-                    borderRadius: 'var(--radius-md)',
-                    fontSize: 'var(--text-base)',
-                    transition: 'border-color var(--transition-base)'
-                  }}
-                  required
-                />
-              </div>
-
-              <div>
-                <label htmlFor="password" style={{
-                  display: 'block',
-                  marginBottom: 'var(--space-xs)',
-                  fontWeight: 600,
-                  color: 'var(--text-primary)'
-                }}>
-                  Password
-                </label>
-                <input
-                  type="password"
-                  id="password"
-                  name="password"
-                  placeholder="••••••••"
-                  style={{
-                    width: '100%',
-                    padding: 'var(--space-sm)',
-                    border: '2px solid var(--bg-secondary)',
-                    borderRadius: 'var(--radius-md)',
-                    fontSize: 'var(--text-base)',
-                    transition: 'border-color var(--transition-base)'
-                  }}
-                  required
-                />
-              </div>
-
-              <div style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                fontSize: 'var(--text-sm)'
-              }}>
-                <label style={{display: 'flex', alignItems: 'center', gap: 'var(--space-xs)'}}>
-                  <input type="checkbox" name="remember" />
-                  <span>Remember me</span>
-                </label>
-                <Link href="/auth/forgot-password" style={{color: 'var(--color-primary)'}}>
-                  Forgot password?
-                </Link>
-              </div>
-
-              <button
-                type="submit"
-                className="btn btn-primary btn-lg"
-                style={{width: '100%'}}
-              >
-                Sign In
-              </button>
-            </form>
+            <LoginForm />
 
             {/* Divider */}
             <div style={{
@@ -142,7 +67,7 @@ export default function LoginPage() {
               </p>
             </div>
 
-            {/* Info Box */}
+            {/* Demo Credentials */}
             <div style={{
               marginTop: 'var(--space-xl)',
               padding: 'var(--space-md)',
@@ -150,9 +75,13 @@ export default function LoginPage() {
               borderRadius: 'var(--radius-md)',
               border: '2px solid var(--color-secondary)'
             }}>
-              <p style={{fontSize: 'var(--text-sm)', color: 'var(--text-secondary)', margin: 0}}>
-                <strong style={{color: 'var(--color-primary)'}}>Note:</strong> This is a placeholder login page.
-                NextAuth integration is pending implementation.
+              <p style={{fontSize: 'var(--text-sm)', color: 'var(--text-secondary)', margin: 0, marginBottom: 'var(--space-xs)'}}>
+                <strong style={{color: 'var(--color-primary)'}}>Demo Credentials:</strong>
+              </p>
+              <p style={{fontSize: 'var(--text-xs)', color: 'var(--text-secondary)', margin: 0, fontFamily: 'monospace'}}>
+                Admin: jsmith@midwestunderground.com / admin123<br/>
+                Operator: mjohnson@midwestunderground.com / operator123<br/>
+                Client: tanderson@willmarmu.gov / client123
               </p>
             </div>
           </div>
