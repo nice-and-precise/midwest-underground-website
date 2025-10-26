@@ -3,6 +3,7 @@ import { Oswald, Inter } from 'next/font/google'
 import Image from 'next/image'
 import Link from 'next/link'
 import DarkModeToggle from '@/components/DarkModeToggle'
+import MobileMenu from '@/components/MobileMenu'
 import './globals.css'
 
 const oswald = Oswald({
@@ -71,10 +72,8 @@ export default function RootLayout({
               <DarkModeToggle />
             </nav>
 
-            {/* Mobile Menu Toggle */}
-            <button className="mobile-menu-toggle" aria-label="Toggle mobile menu" aria-expanded="false">
-              <span className="hamburger"></span>
-            </button>
+            {/* Mobile Menu */}
+            <MobileMenu />
           </div>
         </header>
 
