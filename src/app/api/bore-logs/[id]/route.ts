@@ -3,10 +3,11 @@ import { NextRequest, NextResponse } from 'next/server'
 // GET /api/bore-logs/[id] - Get single bore log
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const id = parseInt(params.id)
+    const { id: paramId } = await params
+    const id = parseInt(paramId)
 
     // In production:
     // const boreLog = await prisma.boreLog.findUnique({ where: { id } })
@@ -50,10 +51,11 @@ export async function GET(
 // PUT /api/bore-logs/[id] - Update bore log
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const id = parseInt(params.id)
+    const { id: paramId } = await params
+    const id = parseInt(paramId)
     const body = await request.json()
 
     // In production:
@@ -80,10 +82,11 @@ export async function PUT(
 // DELETE /api/bore-logs/[id] - Delete bore log
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const id = parseInt(params.id)
+    const { id: paramId } = await params
+    const id = parseInt(paramId)
 
     // In production:
     // await prisma.boreLog.delete({ where: { id } })

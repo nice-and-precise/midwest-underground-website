@@ -3,10 +3,11 @@ import { NextRequest, NextResponse } from 'next/server'
 // GET /api/inspections/[id] - Get single inspection
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const id = parseInt(params.id)
+    const { id: paramId } = await params
+    const id = parseInt(paramId)
 
     // In production:
     // const inspection = await prisma.inspection.findUnique({
@@ -165,10 +166,11 @@ export async function GET(
 // PUT /api/inspections/[id] - Update inspection
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const id = parseInt(params.id)
+    const { id: paramId } = await params
+    const id = parseInt(paramId)
     const body = await request.json()
 
     // In production:
@@ -195,10 +197,11 @@ export async function PUT(
 // DELETE /api/inspections/[id] - Delete inspection
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const id = parseInt(params.id)
+    const { id: paramId } = await params
+    const id = parseInt(paramId)
 
     // In production:
     // await prisma.inspection.delete({ where: { id } })

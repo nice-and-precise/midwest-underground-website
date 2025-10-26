@@ -81,7 +81,7 @@ export default function CustomersPage() {
           <div className="services-grid">
             {mockCustomers.map(customer => (
               <div key={customer.id} style={{
-                backgroundColor: 'var(--white)',
+                backgroundColor: 'var(--bg-card)',
                 borderRadius: 'var(--radius-lg)',
                 boxShadow: 'var(--shadow-md)',
                 padding: 'var(--space-lg)',

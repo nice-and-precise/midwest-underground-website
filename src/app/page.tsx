@@ -82,43 +82,20 @@ export default function HomePage() {
         </div>
       </ParallaxSection>
 
-      {/* Migration Status */}
-      <section className="section">
-        <div className="container">
-          <div style={{maxWidth: '800px', margin: '0 auto'}}>
-            <h2 className="text-center" style={{marginBottom: 'var(--space-lg)'}}>Next.js Migration Status</h2>
-
-            <div style={{
-              backgroundColor: 'var(--bg-accent)',
-              border: '2px solid var(--color-secondary)',
-              borderRadius: 'var(--radius-lg)',
-              padding: 'var(--space-xl)'
-            }}>
-              <div style={{marginBottom: 'var(--space-md)'}}>
-                <h3 style={{fontSize: 'var(--text-lg)', marginBottom: 'var(--space-sm)', color: 'var(--success)'}}>
-                  ✅ Infrastructure Complete
-                </h3>
-                <ul style={{listStyle: 'none', padding: 0, marginLeft: 'var(--space-md)'}}>
-                  <li style={{marginBottom: 'var(--space-xs)'}}>✅ Next.js 15.0.3 running successfully</li>
-                  <li style={{marginBottom: 'var(--space-xs)'}}>✅ Prisma database with 17+ HDD operational models</li>
-                  <li style={{marginBottom: 'var(--space-xs)'}}>✅ NextAuth authentication (OWNER, SUPER, CREW roles)</li>
-                  <li style={{marginBottom: 'var(--space-xs)'}}>✅ Brand standards and CSS migrated</li>
-                  <li style={{marginBottom: 'var(--space-xs)'}}>✅ Static assets preserved in /public</li>
-                </ul>
-              </div>
-
-              <div>
-                <h3 style={{fontSize: 'var(--text-lg)', marginBottom: 'var(--space-sm)', color: 'var(--color-secondary)'}}>
-                  🔄 Next Steps
-                </h3>
-                <ul style={{listStyle: 'none', padding: 0, marginLeft: 'var(--space-md)'}}>
-                  <li style={{marginBottom: 'var(--space-xs)'}}>⏳ Build authentication pages</li>
-                  <li style={{marginBottom: 'var(--space-xs)'}}>⏳ Create HDD API routes</li>
-                  <li style={{marginBottom: 'var(--space-xs)'}}>⏳ Build dashboard pages</li>
-                  <li style={{marginBottom: 'var(--space-xs)'}}>⏳ Implement rod-by-rod logging</li>
-                </ul>
-              </div>
-            </div>
+      {/* Call to Action */}
+      <section className="section" style={{backgroundColor: 'var(--color-primary)', color: 'var(--white)'}}>
+        <div className="container text-center">
+          <h2 style={{marginBottom: 'var(--space-md)', color: 'var(--white)'}}>Ready to Get Started?</h2>
+          <p style={{fontSize: 'var(--text-lg)', marginBottom: 'var(--space-xl)', maxWidth: '700px', margin: '0 auto var(--space-xl)'}}>
+            Access your HDD operations dashboard to start tracking bore logs, managing field reports, and maintaining compliance.
+          </p>
+          <div style={{display: 'flex', gap: 'var(--space-md)', justifyContent: 'center', flexWrap: 'wrap'}}>
+            <Link href="/dashboard" className="btn btn-secondary btn-lg">
+              Go to Dashboard
+            </Link>
+            <Link href="/auth/login" className="btn" style={{backgroundColor: 'var(--bg-card)', color: 'var(--color-primary)'}}>
+              Sign In
+            </Link>
           </div>
         </div>
       </section>

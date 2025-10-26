@@ -29,14 +29,15 @@ const mockBoreLog = {
   ]
 }
 
-export async function generateMetadata({ params }: { params: { id: string } }) {
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
   return {
     title: `Bore Log #${params.id} | Dashboard`,
     description: `Detailed bore log information for bore ${params.id}`
   }
 }
 
-export default function BoreLogDetailPage({ params }: { params: { id: string } }) {
+export default async function BoreLogDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
   // In real app, fetch data based on params.id
   // const boreLog = await fetchBoreLog(params.id)
   // if (!boreLog) notFound()
@@ -84,26 +85,26 @@ export default function BoreLogDetailPage({ params }: { params: { id: string } }
             gap: 'var(--space-lg)',
             marginBottom: 'var(--space-2xl)'
           }}>
-            <div style={{backgroundColor: 'var(--white)', padding: 'var(--space-lg)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)'}}>
+            <div style={{backgroundColor: 'var(--bg-card)', padding: 'var(--space-lg)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)'}}>
               <p style={{fontSize: 'var(--text-sm)', color: 'var(--text-secondary)', marginBottom: 'var(--space-xs)'}}>Date</p>
               <p style={{fontSize: 'var(--text-xl)', fontWeight: 600}}>{boreLog.date}</p>
             </div>
-            <div style={{backgroundColor: 'var(--white)', padding: 'var(--space-lg)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)'}}>
+            <div style={{backgroundColor: 'var(--bg-card)', padding: 'var(--space-lg)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)'}}>
               <p style={{fontSize: 'var(--text-sm)', color: 'var(--text-secondary)', marginBottom: 'var(--space-xs)'}}>Location</p>
               <p style={{fontSize: 'var(--text-xl)', fontWeight: 600}}>{boreLog.location}</p>
             </div>
-            <div style={{backgroundColor: 'var(--white)', padding: 'var(--space-lg)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)'}}>
+            <div style={{backgroundColor: 'var(--bg-card)', padding: 'var(--space-lg)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)'}}>
               <p style={{fontSize: 'var(--text-sm)', color: 'var(--text-secondary)', marginBottom: 'var(--space-xs)'}}>Total Depth</p>
               <p style={{fontSize: 'var(--text-xl)', fontWeight: 600, color: 'var(--color-primary)'}}>{boreLog.totalDepth}</p>
             </div>
-            <div style={{backgroundColor: 'var(--white)', padding: 'var(--space-lg)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)'}}>
+            <div style={{backgroundColor: 'var(--bg-card)', padding: 'var(--space-lg)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)'}}>
               <p style={{fontSize: 'var(--text-sm)', color: 'var(--text-secondary)', marginBottom: 'var(--space-xs)'}}>Rod Count</p>
               <p style={{fontSize: 'var(--text-xl)', fontWeight: 600, color: 'var(--color-secondary)'}}>{boreLog.rodCount}</p>
             </div>
           </div>
 
           {/* Details Card */}
-          <div style={{backgroundColor: 'var(--white)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)', padding: 'var(--space-xl)', marginBottom: 'var(--space-2xl)'}}>
+          <div style={{backgroundColor: 'var(--bg-card)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)', padding: 'var(--space-xl)', marginBottom: 'var(--space-2xl)'}}>
             <h2 style={{marginBottom: 'var(--space-lg)'}}>Operation Details</h2>
             <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 'var(--space-lg)'}}>
               <div>
@@ -152,7 +153,7 @@ export default function BoreLogDetailPage({ params }: { params: { id: string } }
           </div>
 
           {/* Rod-by-Rod Data */}
-          <div style={{backgroundColor: 'var(--white)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)', overflow: 'hidden'}}>
+          <div style={{backgroundColor: 'var(--bg-card)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)', overflow: 'hidden'}}>
             <div style={{padding: 'var(--space-xl)', borderBottom: '2px solid var(--bg-secondary)'}}>
               <h2>Rod-by-Rod Log</h2>
               <p style={{color: 'var(--text-secondary)', fontSize: 'var(--text-sm)', marginTop: 'var(--space-xs)'}}>

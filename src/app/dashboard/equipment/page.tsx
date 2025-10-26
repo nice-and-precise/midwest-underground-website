@@ -86,7 +86,7 @@ export default function EquipmentPage() {
             marginBottom: 'var(--space-2xl)'
           }}>
             <div style={{
-              backgroundColor: 'var(--white)',
+              backgroundColor: 'var(--bg-card)',
               padding: 'var(--space-lg)',
               borderRadius: 'var(--radius-lg)',
               boxShadow: 'var(--shadow-md)',
@@ -96,7 +96,7 @@ export default function EquipmentPage() {
               <div style={{fontSize: 'var(--text-sm)', color: 'var(--text-secondary)', marginTop: 'var(--space-xs)'}}>In Use</div>
             </div>
             <div style={{
-              backgroundColor: 'var(--white)',
+              backgroundColor: 'var(--bg-card)',
               padding: 'var(--space-lg)',
               borderRadius: 'var(--radius-lg)',
               boxShadow: 'var(--shadow-md)',
@@ -106,7 +106,7 @@ export default function EquipmentPage() {
               <div style={{fontSize: 'var(--text-sm)', color: 'var(--text-secondary)', marginTop: 'var(--space-xs)'}}>Available</div>
             </div>
             <div style={{
-              backgroundColor: 'var(--white)',
+              backgroundColor: 'var(--bg-card)',
               padding: 'var(--space-lg)',
               borderRadius: 'var(--radius-lg)',
               boxShadow: 'var(--shadow-md)',
@@ -121,7 +121,7 @@ export default function EquipmentPage() {
           <div className="services-grid">
             {mockEquipment.map(equip => (
               <div key={equip.id} style={{
-                backgroundColor: 'var(--white)',
+                backgroundColor: 'var(--bg-card)',
                 borderRadius: 'var(--radius-lg)',
                 boxShadow: 'var(--shadow-md)',
                 padding: 'var(--space-lg)',

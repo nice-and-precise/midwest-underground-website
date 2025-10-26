@@ -95,7 +95,7 @@ export default function FinancialsPage() {
             marginBottom: 'var(--space-2xl)'
           }}>
             <div style={{
-              backgroundColor: 'var(--white)',
+              backgroundColor: 'var(--bg-card)',
               padding: 'var(--space-lg)',
               borderRadius: 'var(--radius-lg)',
               boxShadow: 'var(--shadow-md)'
@@ -104,7 +104,7 @@ export default function FinancialsPage() {
               <div style={{fontSize: 'var(--text-2xl)', fontWeight: 'bold', color: 'var(--color-primary)'}}>{formatCurrency(totalBudgeted)}</div>
             </div>
             <div style={{
-              backgroundColor: 'var(--white)',
+              backgroundColor: 'var(--bg-card)',
               padding: 'var(--space-lg)',
               borderRadius: 'var(--radius-lg)',
               boxShadow: 'var(--shadow-md)'
@@ -113,7 +113,7 @@ export default function FinancialsPage() {
               <div style={{fontSize: 'var(--text-2xl)', fontWeight: 'bold', color: 'var(--color-secondary)'}}>{formatCurrency(totalActual)}</div>
             </div>
             <div style={{
-              backgroundColor: 'var(--white)',
+              backgroundColor: 'var(--bg-card)',
               padding: 'var(--space-lg)',
               borderRadius: 'var(--radius-lg)',
               boxShadow: 'var(--shadow-md)'
@@ -122,7 +122,7 @@ export default function FinancialsPage() {
               <div style={{fontSize: 'var(--text-2xl)', fontWeight: 'bold', color: 'var(--success)'}}>{formatCurrency(totalInvoiced)}</div>
             </div>
             <div style={{
-              backgroundColor: 'var(--white)',
+              backgroundColor: 'var(--bg-card)',
               padding: 'var(--space-lg)',
               borderRadius: 'var(--radius-lg)',
               boxShadow: 'var(--shadow-md)'
@@ -133,7 +133,7 @@ export default function FinancialsPage() {
           </div>
 
           {/* Financial Table */}
-          <div style={{backgroundColor: 'var(--white)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)', overflow: 'hidden'}}>
+          <div style={{backgroundColor: 'var(--bg-card)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)', overflow: 'hidden'}}>
             <div style={{overflowX: 'auto'}}>
               <table style={{width: '100%', borderCollapse: 'collapse', fontSize: 'var(--text-sm)'}}>
                 <thead>

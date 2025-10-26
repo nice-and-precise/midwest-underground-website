@@ -127,14 +127,15 @@ const mockTicket = {
   }
 }
 
-export async function generateMetadata({ params }: { params: { id: string } }) {
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
   return {
     title: `811 Ticket #${params.id} | Dashboard`,
     description: `Utility locate ticket details for ticket ${params.id}`
   }
 }
 
-export default function Ticket811DetailPage({ params }: { params: { id: string } }) {
+export default async function Ticket811DetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
   const ticket = mockTicket
 
   const getStatusColor = (status: string) => {
@@ -203,24 +204,24 @@ export default function Ticket811DetailPage({ params }: { params: { id: string }
             gap: 'var(--space-lg)',
             marginBottom: 'var(--space-2xl)'
           }}>
-            <div style={{backgroundColor: 'var(--white)', padding: 'var(--space-lg)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)'}}>
+            <div style={{backgroundColor: 'var(--bg-card)', padding: 'var(--space-lg)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)'}}>
               <p style={{fontSize: 'var(--text-sm)', color: 'var(--text-secondary)', marginBottom: 'var(--space-xs)'}}>Dig Date</p>
               <p style={{fontSize: 'var(--text-xl)', fontWeight: 600}}>{ticket.digDate}</p>
             </div>
-            <div style={{backgroundColor: 'var(--white)', padding: 'var(--space-lg)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)'}}>
+            <div style={{backgroundColor: 'var(--bg-card)', padding: 'var(--space-lg)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)'}}>
               <p style={{fontSize: 'var(--text-sm)', color: 'var(--text-secondary)', marginBottom: 'var(--space-xs)'}}>Expiration</p>
               <p style={{fontSize: 'var(--text-xl)', fontWeight: 600}}>{ticket.expirationDate}</p>
               <p style={{fontSize: 'var(--text-sm)', color: ticket.daysRemaining <= 3 ? 'var(--warning)' : 'var(--success)', marginTop: 'var(--space-xs)'}}>
                 {ticket.daysRemaining} days remaining
               </p>
             </div>
-            <div style={{backgroundColor: 'var(--white)', padding: 'var(--space-lg)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)'}}>
+            <div style={{backgroundColor: 'var(--bg-card)', padding: 'var(--space-lg)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)'}}>
               <p style={{fontSize: 'var(--text-sm)', color: 'var(--text-secondary)', marginBottom: 'var(--space-xs)'}}>Utilities Marked</p>
               <p style={{fontSize: 'var(--text-3xl)', fontWeight: 'bold', color: 'var(--success)'}}>
                 {ticket.utilities.filter(u => u.marked).length}/{ticket.utilities.length}
               </p>
             </div>
-            <div style={{backgroundColor: 'var(--white)', padding: 'var(--space-lg)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)'}}>
+            <div style={{backgroundColor: 'var(--bg-card)', padding: 'var(--space-lg)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)'}}>
               <p style={{fontSize: 'var(--text-sm)', color: 'var(--text-secondary)', marginBottom: 'var(--space-xs)'}}>Work Status</p>
               <p style={{fontSize: 'var(--text-lg)', fontWeight: 600, color: ticket.workStatus.started ? 'var(--color-secondary)' : 'var(--text-secondary)'}}>
                 {ticket.workStatus.started ? 'In Progress' : 'Not Started'}
@@ -232,7 +233,7 @@ export default function Ticket811DetailPage({ params }: { params: { id: string }
             {/* Left Column */}
             <div>
               {/* Location Information */}
-              <div style={{backgroundColor: 'var(--white)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)', padding: 'var(--space-xl)', marginBottom: 'var(--space-xl)'}}>
+              <div style={{backgroundColor: 'var(--bg-card)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)', padding: 'var(--space-xl)', marginBottom: 'var(--space-xl)'}}>
                 <h2 style={{marginBottom: 'var(--space-lg)'}}>Location Information</h2>
                 <div style={{display: 'flex', flexDirection: 'column', gap: 'var(--space-md)'}}>
                   <div>
@@ -259,7 +260,7 @@ export default function Ticket811DetailPage({ params }: { params: { id: string }
               </div>
 
               {/* Requestor Information */}
-              <div style={{backgroundColor: 'var(--white)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)', padding: 'var(--space-xl)', marginBottom: 'var(--space-xl)'}}>
+              <div style={{backgroundColor: 'var(--bg-card)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)', padding: 'var(--space-xl)', marginBottom: 'var(--space-xl)'}}>
                 <h2 style={{marginBottom: 'var(--space-lg)'}}>Requestor Information</h2>
                 <div style={{display: 'flex', flexDirection: 'column', gap: 'var(--space-md)'}}>
                   <div>
@@ -290,7 +291,7 @@ export default function Ticket811DetailPage({ params }: { params: { id: string }
               </div>
 
               {/* Project Information */}
-              <div style={{backgroundColor: 'var(--white)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)', padding: 'var(--space-xl)', marginBottom: 'var(--space-xl)'}}>
+              <div style={{backgroundColor: 'var(--bg-card)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)', padding: 'var(--space-xl)', marginBottom: 'var(--space-xl)'}}>
                 <h2 style={{marginBottom: 'var(--space-lg)'}}>Project Information</h2>
                 <div style={{display: 'flex', flexDirection: 'column', gap: 'var(--space-md)'}}>
                   <div>
@@ -317,7 +318,7 @@ export default function Ticket811DetailPage({ params }: { params: { id: string }
               </div>
 
               {/* Inspections */}
-              <div style={{backgroundColor: 'var(--white)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)', padding: 'var(--space-xl)'}}>
+              <div style={{backgroundColor: 'var(--bg-card)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)', padding: 'var(--space-xl)'}}>
                 <h2 style={{marginBottom: 'var(--space-lg)'}}>Field Inspections</h2>
                 <div style={{display: 'flex', flexDirection: 'column', gap: 'var(--space-md)'}}>
                   {ticket.inspections.map((inspection, idx) => (
@@ -356,7 +357,7 @@ export default function Ticket811DetailPage({ params }: { params: { id: string }
             {/* Right Column */}
             <div>
               {/* Utilities */}
-              <div style={{backgroundColor: 'var(--white)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)', padding: 'var(--space-xl)', marginBottom: 'var(--space-xl)'}}>
+              <div style={{backgroundColor: 'var(--bg-card)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)', padding: 'var(--space-xl)', marginBottom: 'var(--space-xl)'}}>
                 <h2 style={{marginBottom: 'var(--space-lg)'}}>Affected Utilities</h2>
                 <div style={{display: 'flex', flexDirection: 'column', gap: 'var(--space-md)'}}>
                   {ticket.utilities.map((utility, idx) => (
@@ -401,7 +402,7 @@ export default function Ticket811DetailPage({ params }: { params: { id: string }
               </div>
 
               {/* Documentation */}
-              <div style={{backgroundColor: 'var(--white)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)', padding: 'var(--space-xl)', marginBottom: 'var(--space-xl)'}}>
+              <div style={{backgroundColor: 'var(--bg-card)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)', padding: 'var(--space-xl)', marginBottom: 'var(--space-xl)'}}>
                 <h2 style={{marginBottom: 'var(--space-lg)'}}>Documentation</h2>
                 <div style={{display: 'flex', flexDirection: 'column', gap: 'var(--space-sm)'}}>
                   {ticket.documentation.map((doc, idx) => (
@@ -429,7 +430,7 @@ export default function Ticket811DetailPage({ params }: { params: { id: string }
               </div>
 
               {/* Activity Log */}
-              <div style={{backgroundColor: 'var(--white)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)', padding: 'var(--space-xl)'}}>
+              <div style={{backgroundColor: 'var(--bg-card)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)', padding: 'var(--space-xl)'}}>
                 <h2 style={{marginBottom: 'var(--space-lg)'}}>Activity Log</h2>
                 <div style={{display: 'flex', flexDirection: 'column', gap: 'var(--space-md)'}}>
                   {ticket.notes.map((note, idx) => (

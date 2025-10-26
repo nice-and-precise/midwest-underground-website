@@ -77,7 +77,7 @@ export default function ProjectsPage() {
           <div className="services-grid">
             {mockProjects.map(project => (
               <div key={project.id} style={{
-                backgroundColor: 'var(--white)',
+                backgroundColor: 'var(--bg-card)',
                 borderRadius: 'var(--radius-lg)',
                 boxShadow: 'var(--shadow-md)',
                 padding: 'var(--space-lg)',

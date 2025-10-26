@@ -3,10 +3,11 @@ import { NextRequest, NextResponse } from 'next/server'
 // GET /api/customers/[id] - Get single customer
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const id = parseInt(params.id)
+    const { id: paramId } = await params
+    const id = parseInt(paramId)
 
     // In production:
     // const customer = await prisma.customer.findUnique({
@@ -90,10 +91,11 @@ export async function GET(
 // PUT /api/customers/[id] - Update customer
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const id = parseInt(params.id)
+    const { id: paramId } = await params
+    const id = parseInt(paramId)
     const body = await request.json()
 
     // In production:
@@ -120,10 +122,11 @@ export async function PUT(
 // DELETE /api/customers/[id] - Delete customer
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const id = parseInt(params.id)
+    const { id: paramId } = await params
+    const id = parseInt(paramId)
 
     // In production:
     // await prisma.customer.delete({ where: { id } })

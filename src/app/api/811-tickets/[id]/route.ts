@@ -3,10 +3,11 @@ import { NextRequest, NextResponse } from 'next/server'
 // GET /api/811-tickets/[id] - Get single 811 ticket
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const id = parseInt(params.id)
+    const { id: paramId } = await params
+    const id = parseInt(paramId)
 
     // In production:
     // const ticket = await prisma.ticket811.findUnique({
@@ -117,10 +118,11 @@ export async function GET(
 // PUT /api/811-tickets/[id] - Update 811 ticket
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const id = parseInt(params.id)
+    const { id: paramId } = await params
+    const id = parseInt(paramId)
     const body = await request.json()
 
     // In production:
@@ -147,10 +149,11 @@ export async function PUT(
 // DELETE /api/811-tickets/[id] - Delete 811 ticket
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const id = parseInt(params.id)
+    const { id: paramId } = await params
+    const id = parseInt(paramId)
 
     // In production:
     // await prisma.ticket811.delete({ where: { id } })

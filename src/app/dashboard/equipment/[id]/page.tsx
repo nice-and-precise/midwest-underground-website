@@ -121,14 +121,15 @@ const mockEquipment = {
   ]
 }
 
-export async function generateMetadata({ params }: { params: { id: string } }) {
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
   return {
     title: `Equipment #${params.id} | Dashboard`,
     description: `Equipment details and maintenance history for equipment ${params.id}`
   }
 }
 
-export default function EquipmentDetailPage({ params }: { params: { id: string } }) {
+export default async function EquipmentDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
   const equipment = mockEquipment
 
   const formatCurrency = (amount: number) => {
@@ -196,7 +197,7 @@ export default function EquipmentDetailPage({ params }: { params: { id: string }
             gap: 'var(--space-lg)',
             marginBottom: 'var(--space-2xl)'
           }}>
-            <div style={{backgroundColor: 'var(--white)', padding: 'var(--space-lg)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)'}}>
+            <div style={{backgroundColor: 'var(--bg-card)', padding: 'var(--space-lg)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)'}}>
               <p style={{fontSize: 'var(--text-sm)', color: 'var(--text-secondary)', marginBottom: 'var(--space-xs)'}}>Total Hours</p>
               <p style={{fontSize: 'var(--text-3xl)', fontWeight: 'bold', color: 'var(--color-primary)'}}>
                 {equipment.operatingHours.total.toLocaleString()}
@@ -205,7 +206,7 @@ export default function EquipmentDetailPage({ params }: { params: { id: string }
                 {equipment.operatingHours.thisYear} this year
               </p>
             </div>
-            <div style={{backgroundColor: 'var(--white)', padding: 'var(--space-lg)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)'}}>
+            <div style={{backgroundColor: 'var(--bg-card)', padding: 'var(--space-lg)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)'}}>
               <p style={{fontSize: 'var(--text-sm)', color: 'var(--text-secondary)', marginBottom: 'var(--space-xs)'}}>This Month</p>
               <p style={{fontSize: 'var(--text-3xl)', fontWeight: 'bold', color: 'var(--color-secondary)'}}>
                 {equipment.operatingHours.thisMonth} hrs
@@ -214,7 +215,7 @@ export default function EquipmentDetailPage({ params }: { params: { id: string }
                 {utilizationRate.toFixed(0)}% utilization
               </p>
             </div>
-            <div style={{backgroundColor: 'var(--white)', padding: 'var(--space-lg)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)'}}>
+            <div style={{backgroundColor: 'var(--bg-card)', padding: 'var(--space-lg)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)'}}>
               <p style={{fontSize: 'var(--text-sm)', color: 'var(--text-secondary)', marginBottom: 'var(--space-xs)'}}>Current Value</p>
               <p style={{fontSize: 'var(--text-3xl)', fontWeight: 'bold', color: 'var(--success)'}}>
                 {formatCurrency(equipment.currentValue)}
@@ -223,7 +224,7 @@ export default function EquipmentDetailPage({ params }: { params: { id: string }
                 Purchased: {formatCurrency(equipment.purchasePrice)}
               </p>
             </div>
-            <div style={{backgroundColor: 'var(--white)', padding: 'var(--space-lg)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)'}}>
+            <div style={{backgroundColor: 'var(--bg-card)', padding: 'var(--space-lg)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)'}}>
               <p style={{fontSize: 'var(--text-sm)', color: 'var(--text-secondary)', marginBottom: 'var(--space-xs)'}}>Assignment</p>
               <p style={{fontSize: 'var(--text-lg)', fontWeight: 600}}>{equipment.assignedTo}</p>
               <p style={{fontSize: 'var(--text-sm)', color: 'var(--text-secondary)', marginTop: 'var(--space-xs)'}}>
@@ -236,7 +237,7 @@ export default function EquipmentDetailPage({ params }: { params: { id: string }
             {/* Left Column */}
             <div>
               {/* Specifications */}
-              <div style={{backgroundColor: 'var(--white)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)', padding: 'var(--space-xl)', marginBottom: 'var(--space-xl)'}}>
+              <div style={{backgroundColor: 'var(--bg-card)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)', padding: 'var(--space-xl)', marginBottom: 'var(--space-xl)'}}>
                 <h2 style={{marginBottom: 'var(--space-lg)'}}>Specifications</h2>
                 <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: 'var(--space-md)'}}>
                   {Object.entries(equipment.specifications).map(([key, value]) => (
@@ -251,7 +252,7 @@ export default function EquipmentDetailPage({ params }: { params: { id: string }
               </div>
 
               {/* Basic Information */}
-              <div style={{backgroundColor: 'var(--white)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)', padding: 'var(--space-xl)', marginBottom: 'var(--space-xl)'}}>
+              <div style={{backgroundColor: 'var(--bg-card)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)', padding: 'var(--space-xl)', marginBottom: 'var(--space-xl)'}}>
                 <h2 style={{marginBottom: 'var(--space-lg)'}}>Equipment Information</h2>
                 <div style={{display: 'flex', flexDirection: 'column', gap: 'var(--space-md)'}}>
                   <div>
@@ -270,7 +271,7 @@ export default function EquipmentDetailPage({ params }: { params: { id: string }
               </div>
 
               {/* Upcoming Maintenance */}
-              <div style={{backgroundColor: 'var(--white)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)', padding: 'var(--space-xl)'}}>
+              <div style={{backgroundColor: 'var(--bg-card)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)', padding: 'var(--space-xl)'}}>
                 <h2 style={{marginBottom: 'var(--space-lg)'}}>Upcoming Maintenance</h2>
                 <div style={{display: 'flex', flexDirection: 'column', gap: 'var(--space-md)'}}>
                   {equipment.upcomingMaintenance.map((maintenance, idx) => (
@@ -306,7 +307,7 @@ export default function EquipmentDetailPage({ params }: { params: { id: string }
             {/* Right Column */}
             <div>
               {/* Maintenance History */}
-              <div style={{backgroundColor: 'var(--white)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)', padding: 'var(--space-xl)', marginBottom: 'var(--space-xl)'}}>
+              <div style={{backgroundColor: 'var(--bg-card)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)', padding: 'var(--space-xl)', marginBottom: 'var(--space-xl)'}}>
                 <h2 style={{marginBottom: 'var(--space-lg)'}}>Maintenance History</h2>
                 <div style={{display: 'flex', flexDirection: 'column', gap: 'var(--space-md)'}}>
                   {equipment.maintenanceHistory.map((record, idx) => (
@@ -350,7 +351,7 @@ export default function EquipmentDetailPage({ params }: { params: { id: string }
               </div>
 
               {/* Project History */}
-              <div style={{backgroundColor: 'var(--white)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)', padding: 'var(--space-xl)', marginBottom: 'var(--space-xl)'}}>
+              <div style={{backgroundColor: 'var(--bg-card)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)', padding: 'var(--space-xl)', marginBottom: 'var(--space-xl)'}}>
                 <h2 style={{marginBottom: 'var(--space-lg)'}}>Project History</h2>
                 <div style={{display: 'flex', flexDirection: 'column', gap: 'var(--space-md)'}}>
                   {equipment.projectHistory.map((project) => (
@@ -386,7 +387,7 @@ export default function EquipmentDetailPage({ params }: { params: { id: string }
               </div>
 
               {/* Documents */}
-              <div style={{backgroundColor: 'var(--white)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)', padding: 'var(--space-xl)'}}>
+              <div style={{backgroundColor: 'var(--bg-card)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)', padding: 'var(--space-xl)'}}>
                 <h2 style={{marginBottom: 'var(--space-lg)'}}>Documents</h2>
                 <div style={{display: 'flex', flexDirection: 'column', gap: 'var(--space-sm)'}}>
                   {equipment.documents.map((doc, idx) => (

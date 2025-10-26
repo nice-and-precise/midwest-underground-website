@@ -56,14 +56,14 @@ export default function FieldReportsPage() {
               <h1 style={{fontSize: 'var(--text-3xl)', marginBottom: 'var(--space-xs)'}}>Daily Field Reports</h1>
               <p style={{fontSize: 'var(--text-lg)', opacity: 0.9}}>Crew activities, production metrics, and equipment usage</p>
             </div>
-            <Link href="/dashboard/field-reports/new" className="btn btn-white btn-lg">+ New Report</Link>
+            <Link href="/dashboard/hdd/daily-report" className="btn btn-white btn-lg">+ New Report</Link>
           </div>
         </div>
       </section>
 
       <section className="section">
         <div className="container">
-          <div style={{backgroundColor: 'var(--white)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)', overflow: 'hidden'}}>
+          <div style={{backgroundColor: 'var(--bg-card)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)', overflow: 'hidden'}}>
             <div style={{overflowX: 'auto'}}>
               <table style={{width: '100%', borderCollapse: 'collapse', fontSize: 'var(--text-sm)'}}>
                 <thead>

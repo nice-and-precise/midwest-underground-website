@@ -3,10 +3,11 @@ import { NextRequest, NextResponse } from 'next/server'
 // GET /api/field-reports/[id] - Get single field report
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const id = parseInt(params.id)
+    const { id: paramId } = await params
+    const id = parseInt(paramId)
 
     // In production:
     // const report = await prisma.fieldReport.findUnique({
@@ -26,7 +27,7 @@ export async function GET(
       date: '2025-10-22',
       project: 'Willmar Fiber Network - Phase 2',
       projectId: 1,
-      crew: 'Crew A - John Smith',
+      crewName: 'Crew A - John Smith',
       location: 'County Rd 5 & Hwy 12',
       status: 'Submitted',
       submittedBy: 'John Smith',
@@ -111,10 +112,11 @@ export async function GET(
 // PUT /api/field-reports/[id] - Update field report
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const id = parseInt(params.id)
+    const { id: paramId } = await params
+    const id = parseInt(paramId)
     const body = await request.json()
 
     // In production:
@@ -141,10 +143,11 @@ export async function PUT(
 // DELETE /api/field-reports/[id] - Delete field report
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const id = parseInt(params.id)
+    const { id: paramId } = await params
+    const id = parseInt(paramId)
 
     // In production:
     // await prisma.fieldReport.delete({ where: { id } })

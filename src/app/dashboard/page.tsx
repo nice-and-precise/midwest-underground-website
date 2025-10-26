@@ -134,7 +134,7 @@ export default function DashboardPage() {
             gap: 'var(--space-lg)'
           }}>
             <div style={{
-              backgroundColor: 'var(--white)',
+              backgroundColor: 'var(--bg-card)',
               padding: 'var(--space-lg)',
               borderRadius: 'var(--radius-lg)',
               boxShadow: 'var(--shadow-md)',
@@ -149,7 +149,7 @@ export default function DashboardPage() {
             </div>
 
             <div style={{
-              backgroundColor: 'var(--white)',
+              backgroundColor: 'var(--bg-card)',
               padding: 'var(--space-lg)',
               borderRadius: 'var(--radius-lg)',
               boxShadow: 'var(--shadow-md)',
@@ -164,7 +164,7 @@ export default function DashboardPage() {
             </div>
 
             <div style={{
-              backgroundColor: 'var(--white)',
+              backgroundColor: 'var(--bg-card)',
               padding: 'var(--space-lg)',
               borderRadius: 'var(--radius-lg)',
               boxShadow: 'var(--shadow-md)',

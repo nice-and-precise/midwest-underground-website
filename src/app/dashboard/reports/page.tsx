@@ -119,7 +119,7 @@ export default function ReportsPage() {
           <div className="services-grid">
             {reportCategories.map(category => (
               <div key={category.id} style={{
-                backgroundColor: 'var(--white)',
+                backgroundColor: 'var(--bg-card)',
                 borderRadius: 'var(--radius-lg)',
                 boxShadow: 'var(--shadow-md)',
                 padding: 'var(--space-lg)',
@@ -165,7 +165,7 @@ export default function ReportsPage() {
           {/* Recent Reports */}
           <div style={{marginTop: 'var(--space-3xl)'}}>
             <h2 style={{marginBottom: 'var(--space-lg)'}}>Recent Reports</h2>
-            <div style={{backgroundColor: 'var(--white)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)', padding: 'var(--space-lg)'}}>
+            <div style={{backgroundColor: 'var(--bg-card)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)', padding: 'var(--space-lg)'}}>
               <div style={{display: 'flex', flexDirection: 'column', gap: 'var(--space-md)'}}>
                 <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: 'var(--space-sm)', backgroundColor: 'var(--bg-secondary)', borderRadius: 'var(--radius-sm)'}}>
                   <div>

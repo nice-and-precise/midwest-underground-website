@@ -127,7 +127,7 @@ export default function BoreLogsPage() {
 
           {/* Data Table */}
           <div style={{
-            backgroundColor: 'var(--white)',
+            backgroundColor: 'var(--bg-card)',
             borderRadius: 'var(--radius-lg)',
             boxShadow: 'var(--shadow-md)',
             overflow: 'hidden'

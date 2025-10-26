@@ -160,14 +160,15 @@ const mockInspection = {
   ]
 }
 
-export async function generateMetadata({ params }: { params: { id: string } }) {
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
   return {
     title: `Inspection #${params.id} | Dashboard`,
     description: `Detailed inspection report and results for inspection ${params.id}`
   }
 }
 
-export default function InspectionDetailPage({ params }: { params: { id: string } }) {
+export default async function InspectionDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
   const inspection = mockInspection
 
   const getStatusColor = (status: string) => {
@@ -238,13 +239,13 @@ export default function InspectionDetailPage({ params }: { params: { id: string 
             gap: 'var(--space-lg)',
             marginBottom: 'var(--space-2xl)'
           }}>
-            <div style={{backgroundColor: 'var(--white)', padding: 'var(--space-lg)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)'}}>
+            <div style={{backgroundColor: 'var(--bg-card)', padding: 'var(--space-lg)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)'}}>
               <p style={{fontSize: 'var(--text-sm)', color: 'var(--text-secondary)', marginBottom: 'var(--space-xs)'}}>Items Inspected</p>
               <p style={{fontSize: 'var(--text-3xl)', fontWeight: 'bold', color: 'var(--color-primary)'}}>
                 {totalItems}
               </p>
             </div>
-            <div style={{backgroundColor: 'var(--white)', padding: 'var(--space-lg)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)'}}>
+            <div style={{backgroundColor: 'var(--bg-card)', padding: 'var(--space-lg)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)'}}>
               <p style={{fontSize: 'var(--text-sm)', color: 'var(--text-secondary)', marginBottom: 'var(--space-xs)'}}>Pass Rate</p>
               <p style={{fontSize: 'var(--text-3xl)', fontWeight: 'bold', color: 'var(--success)'}}>
                 {((passedItems / totalItems) * 100).toFixed(0)}%
@@ -253,13 +254,13 @@ export default function InspectionDetailPage({ params }: { params: { id: string 
                 {passedItems} of {totalItems}
               </p>
             </div>
-            <div style={{backgroundColor: 'var(--white)', padding: 'var(--space-lg)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)'}}>
+            <div style={{backgroundColor: 'var(--bg-card)', padding: 'var(--space-lg)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)'}}>
               <p style={{fontSize: 'var(--text-sm)', color: 'var(--text-secondary)', marginBottom: 'var(--space-xs)'}}>Deficiencies</p>
               <p style={{fontSize: 'var(--text-3xl)', fontWeight: 'bold', color: inspection.deficiencies.length === 0 ? 'var(--success)' : 'var(--warning)'}}>
                 {inspection.deficiencies.length}
               </p>
             </div>
-            <div style={{backgroundColor: 'var(--white)', padding: 'var(--space-lg)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)'}}>
+            <div style={{backgroundColor: 'var(--bg-card)', padding: 'var(--space-lg)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)'}}>
               <p style={{fontSize: 'var(--text-sm)', color: 'var(--text-secondary)', marginBottom: 'var(--space-xs)'}}>Inspector</p>
               <p style={{fontSize: 'var(--text-lg)', fontWeight: 600}}>{inspection.inspector.name}</p>
               <p style={{fontSize: 'var(--text-sm)', color: 'var(--text-secondary)', marginTop: '4px'}}>
@@ -272,7 +273,7 @@ export default function InspectionDetailPage({ params }: { params: { id: string 
             {/* Left Column */}
             <div>
               {/* Project Information */}
-              <div style={{backgroundColor: 'var(--white)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)', padding: 'var(--space-xl)', marginBottom: 'var(--space-xl)'}}>
+              <div style={{backgroundColor: 'var(--bg-card)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)', padding: 'var(--space-xl)', marginBottom: 'var(--space-xl)'}}>
                 <h2 style={{marginBottom: 'var(--space-lg)'}}>Project Information</h2>
                 <div style={{display: 'flex', flexDirection: 'column', gap: 'var(--space-md)'}}>
                   <div>
@@ -304,7 +305,7 @@ export default function InspectionDetailPage({ params }: { params: { id: string 
               </div>
 
               {/* Inspector Information */}
-              <div style={{backgroundColor: 'var(--white)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)', padding: 'var(--space-xl)', marginBottom: 'var(--space-xl)'}}>
+              <div style={{backgroundColor: 'var(--bg-card)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)', padding: 'var(--space-xl)', marginBottom: 'var(--space-xl)'}}>
                 <h2 style={{marginBottom: 'var(--space-lg)'}}>Inspector</h2>
                 <div style={{display: 'flex', flexDirection: 'column', gap: 'var(--space-md)'}}>
                   <div>
@@ -332,7 +333,7 @@ export default function InspectionDetailPage({ params }: { params: { id: string 
               </div>
 
               {/* Measurements */}
-              <div style={{backgroundColor: 'var(--white)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)', padding: 'var(--space-xl)', marginBottom: 'var(--space-xl)'}}>
+              <div style={{backgroundColor: 'var(--bg-card)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)', padding: 'var(--space-xl)', marginBottom: 'var(--space-xl)'}}>
                 <h2 style={{marginBottom: 'var(--space-lg)'}}>Measurements</h2>
                 <div style={{display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 'var(--space-md)'}}>
                   {Object.entries(inspection.measurements).map(([key, value]) => (
@@ -347,7 +348,7 @@ export default function InspectionDetailPage({ params }: { params: { id: string 
               </div>
 
               {/* Test Results */}
-              <div style={{backgroundColor: 'var(--white)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)', padding: 'var(--space-xl)'}}>
+              <div style={{backgroundColor: 'var(--bg-card)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)', padding: 'var(--space-xl)'}}>
                 <h2 style={{marginBottom: 'var(--space-lg)'}}>Test Results</h2>
                 <div style={{display: 'flex', flexDirection: 'column', gap: 'var(--space-md)'}}>
                   {inspection.testResults.map((test, idx) => (
@@ -388,7 +389,7 @@ export default function InspectionDetailPage({ params }: { params: { id: string 
             {/* Right Column */}
             <div>
               {/* Inspection Items */}
-              <div style={{backgroundColor: 'var(--white)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)', padding: 'var(--space-xl)', marginBottom: 'var(--space-xl)'}}>
+              <div style={{backgroundColor: 'var(--bg-card)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)', padding: 'var(--space-xl)', marginBottom: 'var(--space-xl)'}}>
                 <h2 style={{marginBottom: 'var(--space-lg)'}}>Inspection Items</h2>
                 <div style={{display: 'flex', flexDirection: 'column', gap: 'var(--space-xl)'}}>
                   {inspection.inspectionItems.map((category, catIdx) => (
@@ -432,7 +433,7 @@ export default function InspectionDetailPage({ params }: { params: { id: string 
 
               {/* Next Steps */}
               {inspection.nextSteps.length > 0 && (
-                <div style={{backgroundColor: 'var(--white)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)', padding: 'var(--space-xl)', marginBottom: 'var(--space-xl)'}}>
+                <div style={{backgroundColor: 'var(--bg-card)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)', padding: 'var(--space-xl)', marginBottom: 'var(--space-xl)'}}>
                   <h2 style={{marginBottom: 'var(--space-lg)'}}>Next Steps</h2>
                   <ul style={{paddingLeft: 'var(--space-lg)', display: 'flex', flexDirection: 'column', gap: 'var(--space-sm)'}}>
                     {inspection.nextSteps.map((step, idx) => (
@@ -443,7 +444,7 @@ export default function InspectionDetailPage({ params }: { params: { id: string 
               )}
 
               {/* Photos */}
-              <div style={{backgroundColor: 'var(--white)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)', padding: 'var(--space-xl)', marginBottom: 'var(--space-xl)'}}>
+              <div style={{backgroundColor: 'var(--bg-card)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)', padding: 'var(--space-xl)', marginBottom: 'var(--space-xl)'}}>
                 <h2 style={{marginBottom: 'var(--space-lg)'}}>Photo Documentation ({inspection.photos.length})</h2>
                 <div style={{display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 'var(--space-md)'}}>
                   {inspection.photos.map((photo, idx) => (
@@ -474,7 +475,7 @@ export default function InspectionDetailPage({ params }: { params: { id: string 
               </div>
 
               {/* Signatures */}
-              <div style={{backgroundColor: 'var(--white)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)', padding: 'var(--space-xl)'}}>
+              <div style={{backgroundColor: 'var(--bg-card)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)', padding: 'var(--space-xl)'}}>
                 <h2 style={{marginBottom: 'var(--space-lg)'}}>Signatures</h2>
                 <div style={{display: 'flex', flexDirection: 'column', gap: 'var(--space-md)'}}>
                   {Object.entries(inspection.signatures).map(([role, sig]) => (
@@ -512,14 +513,14 @@ export default function InspectionDetailPage({ params }: { params: { id: string 
 
           {/* Inspector Notes */}
           {inspection.notes && (
-            <div style={{backgroundColor: 'var(--white)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)', padding: 'var(--space-xl)', marginTop: 'var(--space-xl)'}}>
+            <div style={{backgroundColor: 'var(--bg-card)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)', padding: 'var(--space-xl)', marginTop: 'var(--space-xl)'}}>
               <h2 style={{marginBottom: 'var(--space-lg)'}}>Inspector Notes</h2>
               <p style={{lineHeight: 1.8, fontSize: 'var(--text-base)'}}>{inspection.notes}</p>
             </div>
           )}
 
           {/* Attachments */}
-          <div style={{backgroundColor: 'var(--white)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)', padding: 'var(--space-xl)', marginTop: 'var(--space-xl)'}}>
+          <div style={{backgroundColor: 'var(--bg-card)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)', padding: 'var(--space-xl)', marginTop: 'var(--space-xl)'}}>
             <h2 style={{marginBottom: 'var(--space-lg)'}}>Attachments</h2>
             <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: 'var(--space-md)'}}>
               {inspection.attachments.map((attachment, idx) => (

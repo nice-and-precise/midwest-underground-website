@@ -54,7 +54,19 @@
       "Bash(psql:*)",
       "Bash(pg_isready:*)",
       "Bash(npm run dev:*)",
-      "Bash(git reset:*)"
+      "Bash(git reset:*)",
+      "Bash(timeout /t 5)",
+      "Bash(do echo \"Testing /dashboard$page\")",
+      "Bash(npm run build:*)",
+      "Bash(while read file)",
+      "Bash(do if grep -q \"{ params }: { params: { \" \"$file\")",
+      "Bash(then echo \"$file\")",
+      "Bash(fi)",
+      "Bash(while IFS= read -r file)",
+      "Bash(do echo \"=== $file ===\")",
+      "Bash(if [ -f .next/BUILD_ID ])",
+      "Bash(then echo \"✅ BUILD SUCCESSFUL\")",
+      "Bash(else echo \"❌ Build failed or still running\")"
     ],
     "deny": [],
     "ask": []

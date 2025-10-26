@@ -35,14 +35,15 @@ const mockProject = {
   ]
 }
 
-export async function generateMetadata({ params }: { params: { id: string } }) {
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
   return {
     title: `Project #${params.id} | Dashboard`,
     description: `Project details and management for project ${params.id}`
   }
 }
 
-export default function ProjectDetailPage({ params }: { params: { id: string } }) {
+export default async function ProjectDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
   const project = mockProject
   const budgetUsed = (project.actualCost / project.budget) * 100
 
@@ -88,7 +89,7 @@ export default function ProjectDetailPage({ params }: { params: { id: string } }
             gap: 'var(--space-lg)',
             marginBottom: 'var(--space-2xl)'
           }}>
-            <div style={{backgroundColor: 'var(--white)', padding: 'var(--space-lg)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)'}}>
+            <div style={{backgroundColor: 'var(--bg-card)', padding: 'var(--space-lg)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)'}}>
               <p style={{fontSize: 'var(--text-sm)', color: 'var(--text-secondary)', marginBottom: 'var(--space-xs)'}}>Progress</p>
               <p style={{fontSize: 'var(--text-3xl)', fontWeight: 'bold', color: 'var(--color-primary)'}}>{project.progress}%</p>
               <div style={{
@@ -107,7 +108,7 @@ export default function ProjectDetailPage({ params }: { params: { id: string } }
                 }} />
               </div>
             </div>
-            <div style={{backgroundColor: 'var(--white)', padding: 'var(--space-lg)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)'}}>
+            <div style={{backgroundColor: 'var(--bg-card)', padding: 'var(--space-lg)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)'}}>
               <p style={{fontSize: 'var(--text-sm)', color: 'var(--text-secondary)', marginBottom: 'var(--space-xs)'}}>Budget</p>
               <p style={{fontSize: 'var(--text-3xl)', fontWeight: 'bold', color: 'var(--success)'}}>
                 ${(project.budget / 1000).toFixed(0)}K
@@ -116,13 +117,13 @@ export default function ProjectDetailPage({ params }: { params: { id: string } }
                 ${(project.actualCost / 1000).toFixed(0)}K used ({budgetUsed.toFixed(0)}%)
               </p>
             </div>
-            <div style={{backgroundColor: 'var(--white)', padding: 'var(--space-lg)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)'}}>
+            <div style={{backgroundColor: 'var(--bg-card)', padding: 'var(--space-lg)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)'}}>
               <p style={{fontSize: 'var(--text-sm)', color: 'var(--text-secondary)', marginBottom: 'var(--space-xs)'}}>Footage</p>
               <p style={{fontSize: 'var(--text-3xl)', fontWeight: 'bold', color: 'var(--color-secondary)'}}>
                 {project.footage}
               </p>
             </div>
-            <div style={{backgroundColor: 'var(--white)', padding: 'var(--space-lg)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)'}}>
+            <div style={{backgroundColor: 'var(--bg-card)', padding: 'var(--space-lg)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)'}}>
               <p style={{fontSize: 'var(--text-sm)', color: 'var(--text-secondary)', marginBottom: 'var(--space-xs)'}}>Timeline</p>
               <p style={{fontSize: 'var(--text-lg)', fontWeight: 600}}>{project.startDate}</p>
               <p style={{fontSize: 'var(--text-sm)', color: 'var(--text-secondary)'}}>to {project.endDate}</p>
@@ -131,7 +132,7 @@ export default function ProjectDetailPage({ params }: { params: { id: string } }
 
           <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 'var(--space-xl)'}}>
             {/* Project Details */}
-            <div style={{backgroundColor: 'var(--white)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)', padding: 'var(--space-xl)'}}>
+            <div style={{backgroundColor: 'var(--bg-card)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)', padding: 'var(--space-xl)'}}>
               <h2 style={{marginBottom: 'var(--space-lg)'}}>Project Details</h2>
               <p style={{color: 'var(--text-secondary)', lineHeight: 1.6, marginBottom: 'var(--space-xl)'}}>{project.description}</p>
 
@@ -156,7 +157,7 @@ export default function ProjectDetailPage({ params }: { params: { id: string } }
             {/* Milestones & Activity */}
             <div>
               {/* Milestones */}
-              <div style={{backgroundColor: 'var(--white)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)', padding: 'var(--space-xl)', marginBottom: 'var(--space-xl)'}}>
+              <div style={{backgroundColor: 'var(--bg-card)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)', padding: 'var(--space-xl)', marginBottom: 'var(--space-xl)'}}>
                 <h2 style={{marginBottom: 'var(--space-lg)'}}>Milestones</h2>
                 <div style={{display: 'flex', flexDirection: 'column', gap: 'var(--space-sm)'}}>
                   {project.milestones.map((milestone, idx) => (
@@ -195,7 +196,7 @@ export default function ProjectDetailPage({ params }: { params: { id: string } }
               </div>
 
               {/* Recent Activity */}
-              <div style={{backgroundColor: 'var(--white)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)', padding: 'var(--space-xl)'}}>
+              <div style={{backgroundColor: 'var(--bg-card)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)', padding: 'var(--space-xl)'}}>
                 <h2 style={{marginBottom: 'var(--space-lg)'}}>Recent Activity</h2>
                 <div style={{display: 'flex', flexDirection: 'column', gap: 'var(--space-md)'}}>
                   {project.recentActivity.map((activity, idx) => (

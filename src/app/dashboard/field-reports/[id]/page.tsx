@@ -87,14 +87,16 @@ const mockFieldReport = {
   notes: 'Smooth operation with no complications. Soil conditions were favorable. All equipment performed well. Team worked efficiently and safely. Client representative (Tom Anderson) visited site at 11:00 AM and expressed satisfaction with progress. Ready to proceed with fiber cable installation next week.'
 }
 
-export async function generateMetadata({ params }: { params: { id: string } }) {
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
   return {
-    title: `Field Report #${params.id} | Dashboard`,
-    description: `Daily field report and work summary for report ${params.id}`
+    title: `Field Report #${id} | Dashboard`,
+    description: `Daily field report and work summary for report ${id}`
   }
 }
 
-export default function FieldReportDetailPage({ params }: { params: { id: string } }) {
+export default async function FieldReportDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
   const report = mockFieldReport
 
   return (
@@ -115,7 +117,7 @@ export default function FieldReportDetailPage({ params }: { params: { id: string
           <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'start', flexWrap: 'wrap', gap: 'var(--space-md)'}}>
             <div>
               <h1 style={{fontSize: 'var(--text-3xl)', marginBottom: 'var(--space-xs)'}}>
-                Field Report #{params.id}
+                Field Report #{id}
               </h1>
               <p style={{fontSize: 'var(--text-lg)', opacity: 0.9}}>{report.project} • {report.date}</p>
             </div>
@@ -138,7 +140,7 @@ export default function FieldReportDetailPage({ params }: { params: { id: string
             gap: 'var(--space-lg)',
             marginBottom: 'var(--space-2xl)'
           }}>
-            <div style={{backgroundColor: 'var(--white)', padding: 'var(--space-lg)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)'}}>
+            <div style={{backgroundColor: 'var(--bg-card)', padding: 'var(--space-lg)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)'}}>
               <p style={{fontSize: 'var(--text-sm)', color: 'var(--text-secondary)', marginBottom: 'var(--space-xs)'}}>Total Hours</p>
               <p style={{fontSize: 'var(--text-3xl)', fontWeight: 'bold', color: 'var(--color-primary)'}}>
                 {report.workPerformed.totalHours}
@@ -147,7 +149,7 @@ export default function FieldReportDetailPage({ params }: { params: { id: string
                 {report.workPerformed.workingHours} working hours
               </p>
             </div>
-            <div style={{backgroundColor: 'var(--white)', padding: 'var(--space-lg)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)'}}>
+            <div style={{backgroundColor: 'var(--bg-card)', padding: 'var(--space-lg)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)'}}>
               <p style={{fontSize: 'var(--text-sm)', color: 'var(--text-secondary)', marginBottom: 'var(--space-xs)'}}>Progress</p>
               <p style={{fontSize: 'var(--text-3xl)', fontWeight: 'bold', color: 'var(--color-secondary)'}}>
                 {report.progress.actual}
@@ -156,7 +158,7 @@ export default function FieldReportDetailPage({ params }: { params: { id: string
                 {report.progress.variance} vs planned
               </p>
             </div>
-            <div style={{backgroundColor: 'var(--white)', padding: 'var(--space-lg)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)'}}>
+            <div style={{backgroundColor: 'var(--bg-card)', padding: 'var(--space-lg)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)'}}>
               <p style={{fontSize: 'var(--text-sm)', color: 'var(--text-secondary)', marginBottom: 'var(--space-xs)'}}>Safety</p>
               <p style={{fontSize: 'var(--text-3xl)', fontWeight: 'bold', color: 'var(--success)'}}>
                 {report.safetyObservations.incidents}
@@ -165,7 +167,7 @@ export default function FieldReportDetailPage({ params }: { params: { id: string
                 Incidents
               </p>
             </div>
-            <div style={{backgroundColor: 'var(--white)', padding: 'var(--space-lg)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)'}}>
+            <div style={{backgroundColor: 'var(--bg-card)', padding: 'var(--space-lg)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)'}}>
               <p style={{fontSize: 'var(--text-sm)', color: 'var(--text-secondary)', marginBottom: 'var(--space-xs)'}}>Status</p>
               <span style={{
                 padding: '8px 16px',
@@ -184,7 +186,7 @@ export default function FieldReportDetailPage({ params }: { params: { id: string
             {/* Left Column */}
             <div>
               {/* Work Performed */}
-              <div style={{backgroundColor: 'var(--white)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)', padding: 'var(--space-xl)', marginBottom: 'var(--space-xl)'}}>
+              <div style={{backgroundColor: 'var(--bg-card)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)', padding: 'var(--space-xl)', marginBottom: 'var(--space-xl)'}}>
                 <h2 style={{marginBottom: 'var(--space-lg)'}}>Work Performed</h2>
                 <div style={{display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 'var(--space-md)', marginBottom: 'var(--space-lg)'}}>
                   <div>
@@ -211,7 +213,7 @@ export default function FieldReportDetailPage({ params }: { params: { id: string
               </div>
 
               {/* Crew */}
-              <div style={{backgroundColor: 'var(--white)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)', padding: 'var(--space-xl)', marginBottom: 'var(--space-xl)'}}>
+              <div style={{backgroundColor: 'var(--bg-card)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)', padding: 'var(--space-xl)', marginBottom: 'var(--space-xl)'}}>
                 <h2 style={{marginBottom: 'var(--space-lg)'}}>Crew</h2>
                 <div style={{overflowX: 'auto'}}>
                   <table style={{width: '100%', borderCollapse: 'collapse', fontSize: 'var(--text-sm)'}}>
@@ -236,7 +238,7 @@ export default function FieldReportDetailPage({ params }: { params: { id: string
               </div>
 
               {/* Equipment */}
-              <div style={{backgroundColor: 'var(--white)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)', padding: 'var(--space-xl)', marginBottom: 'var(--space-xl)'}}>
+              <div style={{backgroundColor: 'var(--bg-card)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)', padding: 'var(--space-xl)', marginBottom: 'var(--space-xl)'}}>
                 <h2 style={{marginBottom: 'var(--space-lg)'}}>Equipment Used</h2>
                 <div style={{overflowX: 'auto'}}>
                   <table style={{width: '100%', borderCollapse: 'collapse', fontSize: 'var(--text-sm)'}}>
@@ -261,7 +263,7 @@ export default function FieldReportDetailPage({ params }: { params: { id: string
               </div>
 
               {/* Materials */}
-              <div style={{backgroundColor: 'var(--white)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)', padding: 'var(--space-xl)'}}>
+              <div style={{backgroundColor: 'var(--bg-card)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)', padding: 'var(--space-xl)'}}>
                 <h2 style={{marginBottom: 'var(--space-lg)'}}>Materials Used</h2>
                 <div style={{overflowX: 'auto'}}>
                   <table style={{width: '100%', borderCollapse: 'collapse', fontSize: 'var(--text-sm)'}}>
@@ -289,7 +291,7 @@ export default function FieldReportDetailPage({ params }: { params: { id: string
             {/* Right Column */}
             <div>
               {/* Weather */}
-              <div style={{backgroundColor: 'var(--white)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)', padding: 'var(--space-xl)', marginBottom: 'var(--space-xl)'}}>
+              <div style={{backgroundColor: 'var(--bg-card)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)', padding: 'var(--space-xl)', marginBottom: 'var(--space-xl)'}}>
                 <h2 style={{marginBottom: 'var(--space-lg)'}}>Weather Conditions</h2>
                 <div style={{display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 'var(--space-md)'}}>
                   <div>
@@ -316,7 +318,7 @@ export default function FieldReportDetailPage({ params }: { params: { id: string
               </div>
 
               {/* Safety */}
-              <div style={{backgroundColor: 'var(--white)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)', padding: 'var(--space-xl)', marginBottom: 'var(--space-xl)'}}>
+              <div style={{backgroundColor: 'var(--bg-card)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)', padding: 'var(--space-xl)', marginBottom: 'var(--space-xl)'}}>
                 <h2 style={{marginBottom: 'var(--space-lg)'}}>Safety Observations</h2>
                 <div style={{display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 'var(--space-md)', marginBottom: 'var(--space-lg)'}}>
                   <div style={{
@@ -351,7 +353,7 @@ export default function FieldReportDetailPage({ params }: { params: { id: string
               </div>
 
               {/* Signatures */}
-              <div style={{backgroundColor: 'var(--white)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)', padding: 'var(--space-xl)', marginBottom: 'var(--space-xl)'}}>
+              <div style={{backgroundColor: 'var(--bg-card)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)', padding: 'var(--space-xl)', marginBottom: 'var(--space-xl)'}}>
                 <h2 style={{marginBottom: 'var(--space-lg)'}}>Signatures</h2>
                 <div style={{display: 'flex', flexDirection: 'column', gap: 'var(--space-md)'}}>
                   {Object.entries(report.signatures).map(([role, sig]) => (
@@ -380,7 +382,7 @@ export default function FieldReportDetailPage({ params }: { params: { id: string
               </div>
 
               {/* Photos */}
-              <div style={{backgroundColor: 'var(--white)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)', padding: 'var(--space-xl)'}}>
+              <div style={{backgroundColor: 'var(--bg-card)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)', padding: 'var(--space-xl)'}}>
                 <h2 style={{marginBottom: 'var(--space-lg)'}}>Photos ({report.photos.length})</h2>
                 <div style={{display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 'var(--space-md)'}}>
                   {report.photos.map((photo, idx) => (
@@ -413,7 +415,7 @@ export default function FieldReportDetailPage({ params }: { params: { id: string
 
           {/* Additional Notes */}
           {report.notes && (
-            <div style={{backgroundColor: 'var(--white)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)', padding: 'var(--space-xl)', marginTop: 'var(--space-xl)'}}>
+            <div style={{backgroundColor: 'var(--bg-card)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)', padding: 'var(--space-xl)', marginTop: 'var(--space-xl)'}}>
               <h2 style={{marginBottom: 'var(--space-lg)'}}>Additional Notes</h2>
               <p style={{lineHeight: 1.6}}>{report.notes}</p>
             </div>

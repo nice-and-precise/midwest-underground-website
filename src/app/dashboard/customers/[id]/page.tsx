@@ -67,14 +67,15 @@ const mockCustomer = {
   ]
 }
 
-export async function generateMetadata({ params }: { params: { id: string } }) {
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
   return {
     title: `Customer #${params.id} | Dashboard`,
     description: `Customer profile and project history for customer ${params.id}`
   }
 }
 
-export default function CustomerDetailPage({ params }: { params: { id: string } }) {
+export default async function CustomerDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
   const customer = mockCustomer
 
   const formatCurrency = (amount: number) => {
@@ -124,25 +125,25 @@ export default function CustomerDetailPage({ params }: { params: { id: string } 
             gap: 'var(--space-lg)',
             marginBottom: 'var(--space-2xl)'
           }}>
-            <div style={{backgroundColor: 'var(--white)', padding: 'var(--space-lg)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)'}}>
+            <div style={{backgroundColor: 'var(--bg-card)', padding: 'var(--space-lg)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)'}}>
               <p style={{fontSize: 'var(--text-sm)', color: 'var(--text-secondary)', marginBottom: 'var(--space-xs)'}}>Total Revenue</p>
               <p style={{fontSize: 'var(--text-3xl)', fontWeight: 'bold', color: 'var(--success)'}}>
                 {formatCurrency(customer.totalRevenue)}
               </p>
             </div>
-            <div style={{backgroundColor: 'var(--white)', padding: 'var(--space-lg)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)'}}>
+            <div style={{backgroundColor: 'var(--bg-card)', padding: 'var(--space-lg)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)'}}>
               <p style={{fontSize: 'var(--text-sm)', color: 'var(--text-secondary)', marginBottom: 'var(--space-xs)'}}>Active Projects</p>
               <p style={{fontSize: 'var(--text-3xl)', fontWeight: 'bold', color: 'var(--color-secondary)'}}>
                 {customer.currentProjects}
               </p>
             </div>
-            <div style={{backgroundColor: 'var(--white)', padding: 'var(--space-lg)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)'}}>
+            <div style={{backgroundColor: 'var(--bg-card)', padding: 'var(--space-lg)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)'}}>
               <p style={{fontSize: 'var(--text-sm)', color: 'var(--text-secondary)', marginBottom: 'var(--space-xs)'}}>Completed</p>
               <p style={{fontSize: 'var(--text-3xl)', fontWeight: 'bold', color: 'var(--color-primary)'}}>
                 {customer.completedProjects}
               </p>
             </div>
-            <div style={{backgroundColor: 'var(--white)', padding: 'var(--space-lg)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)'}}>
+            <div style={{backgroundColor: 'var(--bg-card)', padding: 'var(--space-lg)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)'}}>
               <p style={{fontSize: 'var(--text-sm)', color: 'var(--text-secondary)', marginBottom: 'var(--space-xs)'}}>Customer Type</p>
               <p style={{fontSize: 'var(--text-xl)', fontWeight: 600}}>{customer.type}</p>
               <span style={{
@@ -161,7 +162,7 @@ export default function CustomerDetailPage({ params }: { params: { id: string } 
           <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: 'var(--space-xl)'}}>
             {/* Contact Information */}
             <div>
-              <div style={{backgroundColor: 'var(--white)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)', padding: 'var(--space-xl)', marginBottom: 'var(--space-xl)'}}>
+              <div style={{backgroundColor: 'var(--bg-card)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)', padding: 'var(--space-xl)', marginBottom: 'var(--space-xl)'}}>
                 <h2 style={{marginBottom: 'var(--space-lg)'}}>Contact Information</h2>
                 <div style={{display: 'flex', flexDirection: 'column', gap: 'var(--space-md)'}}>
                   <div>
@@ -192,7 +193,7 @@ export default function CustomerDetailPage({ params }: { params: { id: string } 
               </div>
 
               {/* Additional Contacts */}
-              <div style={{backgroundColor: 'var(--white)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)', padding: 'var(--space-xl)'}}>
+              <div style={{backgroundColor: 'var(--bg-card)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)', padding: 'var(--space-xl)'}}>
                 <h3 style={{fontSize: 'var(--text-lg)', marginBottom: 'var(--space-md)'}}>Additional Contacts</h3>
                 <div style={{display: 'flex', flexDirection: 'column', gap: 'var(--space-md)'}}>
                   {customer.contacts.map((contact, idx) => (
@@ -218,7 +219,7 @@ export default function CustomerDetailPage({ params }: { params: { id: string } 
             {/* Projects & History */}
             <div>
               {/* Active Projects */}
-              <div style={{backgroundColor: 'var(--white)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)', padding: 'var(--space-xl)', marginBottom: 'var(--space-xl)'}}>
+              <div style={{backgroundColor: 'var(--bg-card)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)', padding: 'var(--space-xl)', marginBottom: 'var(--space-xl)'}}>
                 <h2 style={{marginBottom: 'var(--space-lg)'}}>Projects</h2>
                 <div style={{display: 'flex', flexDirection: 'column', gap: 'var(--space-md)'}}>
                   {customer.projects.map((project) => (
@@ -262,7 +263,7 @@ export default function CustomerDetailPage({ params }: { params: { id: string } 
                           <div style={{
                             width: '100%',
                             height: '6px',
-                            backgroundColor: 'var(--white)',
+                            backgroundColor: 'var(--bg-card)',
                             borderRadius: 'var(--radius-sm)',
                             overflow: 'hidden'
                           }}>
@@ -281,7 +282,7 @@ export default function CustomerDetailPage({ params }: { params: { id: string } 
               </div>
 
               {/* Revenue History */}
-              <div style={{backgroundColor: 'var(--white)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)', padding: 'var(--space-xl)', marginBottom: 'var(--space-xl)'}}>
+              <div style={{backgroundColor: 'var(--bg-card)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)', padding: 'var(--space-xl)', marginBottom: 'var(--space-xl)'}}>
                 <h3 style={{fontSize: 'var(--text-lg)', marginBottom: 'var(--space-md)'}}>Revenue History</h3>
                 <div style={{overflowX: 'auto'}}>
                   <table style={{width: '100%', borderCollapse: 'collapse', fontSize: 'var(--text-sm)'}}>
@@ -308,7 +309,7 @@ export default function CustomerDetailPage({ params }: { params: { id: string } 
               </div>
 
               {/* Notes */}
-              <div style={{backgroundColor: 'var(--white)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)', padding: 'var(--space-xl)'}}>
+              <div style={{backgroundColor: 'var(--bg-card)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)', padding: 'var(--space-xl)'}}>
                 <h3 style={{fontSize: 'var(--text-lg)', marginBottom: 'var(--space-md)'}}>Recent Notes</h3>
                 <div style={{display: 'flex', flexDirection: 'column', gap: 'var(--space-md)'}}>
                   {customer.notes.map((note, idx) => (

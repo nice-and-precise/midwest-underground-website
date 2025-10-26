@@ -32,7 +32,9 @@
   /* Semantic Colors (theme-aware) - Light Mode Default */
   --bg-primary: var(--brand-white);
   --bg-secondary: var(--brand-gray);
+  --bg-tertiary: #E8EAED;
   --bg-accent: #F5F6F7;
+  --bg-card: var(--brand-white); /* Cards and elevated surfaces */
   --text-primary: var(--brand-slate-dark);
   --text-secondary: var(--brand-slate-dark); /* FIX: Changed from slate for better contrast (9.28:1 AAA) */
   --text-muted: var(--brand-slate); /* Muted text can be slightly lighter */
@@ -117,27 +119,38 @@
 
 /* Dark Mode Theme */
 [data-theme="dark"] {
-  /* Semantic Colors - Dark Mode (NEW BRAND) */
-  --bg-primary: #2B3139; /* Darker than slate-dark for better contrast */
-  --bg-secondary: var(--brand-slate-dark); /* Use slate-dark instead of slate */
-  --bg-accent: #3A424C; /* Darker accent background */
-  --text-primary: var(--brand-white);
-  --text-secondary: var(--brand-gray);
-  --text-muted: var(--brand-slate-light);
-  --color-primary: var(--brand-white);
-  --color-secondary: var(--brand-accent);
-  --color-accent: var(--brand-accent);
-  --color-primary-dark: var(--brand-white);
+  /* Semantic Colors - Dark Mode (NEW BRAND) - Enhanced Contrast */
+  --bg-primary: #1a1d23; /* Very dark background for maximum contrast */
+  --bg-secondary: #2a2f38; /* Medium dark for cards and sections */
+  --bg-tertiary: #343d46; /* Lighter tertiary background */
+  --bg-accent: #3f4954; /* Even lighter accent background */
+  --bg-card: #2a2f38; /* Card background - medium dark gray */
+  --text-primary: #ffffff; /* Pure white for primary text */
+  --text-secondary: #e5e7eb; /* Light gray for secondary text (high contrast) */
+  --text-muted: #c0c5ce; /* Brand gray for muted text */
+  --color-primary: #ffffff; /* White for primary color */
+  --color-secondary: #FF8800; /* Brand accent orange */
+  --color-accent: #FF9A1F; /* Lighter orange for accents */
+  --color-primary-dark: #ffffff;
   --color-secondary-dark: #FF9A1F;
-  --color-accent-dark: #FF9A1F;
-  --border-color: var(--brand-slate-light);
-  --shadow-color: rgba(0, 0, 0, 0.4);
+  --color-accent-dark: #FFAA3F;
+  --border-color: #4f5b66; /* Brand slate for borders */
+  --shadow-color: rgba(0, 0, 0, 0.6); /* Darker shadows */
 
   /* Override legacy colors for dark mode */
-  --steel: var(--brand-gray); /* Change from #4F5B66 to #C0C5CE for readability */
-  --primary-charcoal: var(--brand-white);
-  --neutral-light: var(--brand-gray);
-  --sand: var(--brand-slate-light);
+  --steel: #e5e7eb; /* Light gray for high contrast */
+  --primary-charcoal: #ffffff;
+  --neutral-light: #c0c5ce;
+  --neutral-medium: #e5e7eb;
+  --sand: #c0c5ce;
+
+  /* Shadows - Enhanced for dark mode */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+  --shadow-base: 0 1px 3px 0 rgba(0, 0, 0, 0.4), 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.4);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 10px 10px -5px rgba(0, 0, 0, 0.4);
+  --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
 
   /* Logo Variants - White logo for dark backgrounds */
   --logo-horizontal: url('/images/logo_horizontal_white.svg');
@@ -154,15 +167,18 @@
   background: linear-gradient(135deg, #C0C5CE 0%, #E8EAED 100%); /* Gray to lighter gray */
 }
 
-/* Dark mode: darken gradient background and ensure white text */
+/* Dark mode: darker gradient background with better contrast */
 [data-theme="dark"] .gradient-bg-light {
-  background: linear-gradient(135deg, #4F5B66 0%, #343D46 100%); /* Slate to Slate Dark for dark mode */
+  background: linear-gradient(135deg, #2a2f38 0%, #1a1d23 100%); /* Darker gradient for dark mode */
 }
 
-/* Force proper text colors in gradient sections */
+/* Force proper text colors in gradient sections - Enhanced contrast */
 [data-theme="dark"] .gradient-bg-light h2,
 [data-theme="dark"] .gradient-bg-light h3,
-[data-theme="dark"] .gradient-bg-light p {
+[data-theme="dark"] .gradient-bg-light h4,
+[data-theme="dark"] .gradient-bg-light p,
+[data-theme="dark"] .gradient-bg-light span,
+[data-theme="dark"] .gradient-bg-light label {
   color: var(--brand-white) !important;
 }
 

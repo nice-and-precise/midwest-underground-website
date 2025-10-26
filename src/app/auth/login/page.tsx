@@ -20,7 +20,7 @@ export default function LoginPage() {
           <div style={{
             maxWidth: '480px',
             margin: '0 auto',
-            backgroundColor: 'var(--white)',
+            backgroundColor: 'var(--bg-card)',
             padding: 'var(--space-2xl)',
             borderRadius: 'var(--radius-lg)',
             boxShadow: 'var(--shadow-xl)'
