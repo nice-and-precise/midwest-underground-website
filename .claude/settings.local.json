@@ -66,7 +66,16 @@
       "Bash(do echo \"=== $file ===\")",
       "Bash(if [ -f .next/BUILD_ID ])",
       "Bash(then echo \"✅ BUILD SUCCESSFUL\")",
-      "Bash(else echo \"❌ Build failed or still running\")"
+      "Bash(else echo \"❌ Build failed or still running\")",
+      "Bash(git log:*)",
+      "Bash(git rev-list:*)",
+      "Bash(if curl -s http://localhost:3006)",
+      "Bash(then echo \"✅ Running on http://localhost:3006\")",
+      "Bash(else echo \"❌ Not running\")",
+      "Bash(taskkill:*)",
+      "Bash(timeout /t 3)",
+      "Bash(mkdir:*)",
+      "Bash(cp:*)"
     ],
     "deny": [],
     "ask": []
