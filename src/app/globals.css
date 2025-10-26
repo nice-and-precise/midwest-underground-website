@@ -462,17 +462,19 @@ ul, ol {
 }
 
 .logo-image {
-  height: 50px; /* Base size for tablets */
+  height: 50px; /* Base size for tablets - industry standard */
   width: auto;
+  max-width: 280px; /* Prevent logo from being too wide */
   display: block;
   transition: transform var(--transition-base);
   filter: brightness(0) saturate(100%); /* Convert to black for light backgrounds */
 }
 
-/* Larger logo for desktop */
+/* Larger logo for desktop - following best practice 50-100px height */
 @media (min-width: 769px) {
   .logo-image {
-    height: 70px; /* Reasonable desktop size for header */
+    height: 60px; /* Industry standard for desktop header */
+    max-width: 300px;
   }
 }
 
@@ -483,7 +485,8 @@ ul, ol {
 /* Responsive logo sizing */
 @media (max-width: 768px) {
   .logo-image {
-    height: 40px; /* Mobile size */
+    height: 40px; /* Mobile size - stays within best practice range */
+    max-width: 200px;
   }
 }
 

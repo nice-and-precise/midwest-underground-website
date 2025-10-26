@@ -47,11 +47,11 @@ export default function RootLayout({
               <Image
                 src="/images/logo_horizontal_official.png"
                 alt="Midwest Underground of Minnesota"
-                width={280}
-                height={140}
+                width={240}
+                height={120}
                 className="logo-image"
                 priority
-                sizes="(max-width: 768px) 80px, (max-width: 1024px) 100px, 140px"
+                sizes="(max-width: 768px) 200px, (max-width: 1024px) 280px, 300px"
                 style={{ width: 'auto', height: 'auto' }}
               />
             </Link>
