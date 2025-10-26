@@ -60,3 +60,5 @@ prisma/migrations/
 
 # Local testing files
 .local/
+# Production Environment - DO NOT COMMIT
+.env.production
