@@ -1,21 +1,11 @@
 import Link from 'next/link'
+import ParallaxHero from '@/components/ParallaxHero'
 
 export default function HomePage() {
   return (
     <>
-      {/* Hero Section */}
-      <section className="parallax-hero" role="banner">
-        <div className="parallax-bg" style={{backgroundImage: "url('/images/BAckhoe digging.webp')"}}></div>
-        <div className="parallax-overlay"></div>
-        <div className="parallax-content">
-          <h1>HDD Field Operations Management</h1>
-          <p>Professional bore tracking, field reports, and project management for Midwest Underground of Minnesota</p>
-          <div className="parallax-cta">
-            <Link href="/dashboard" className="btn btn-primary btn-lg">Access Dashboard</Link>
-            <Link href="/auth/login" className="btn btn-white btn-lg">Sign In</Link>
-          </div>
-        </div>
-      </section>
+      {/* Hero Section with Parallax Effect */}
+      <ParallaxHero />
 
       {/* Features Overview */}
       <section className="section gradient-bg-light">
