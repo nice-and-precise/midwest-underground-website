@@ -51,7 +51,7 @@ export default function RootLayout({
                 height={160}
                 className="logo-image"
                 priority
-                style={{ width: 'auto', height: 'auto' }}
+                sizes="(max-width: 768px) 120px, (max-width: 1024px) 160px, 320px"
               />
             </Link>
 
