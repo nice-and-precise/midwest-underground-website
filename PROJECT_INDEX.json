@@ -1,0 +1,63 @@
+{
+  "project": {
+    "name": "midwest-underground-website",
+    "branch": "feat/nextjs-migration",
+    "status": "40% Complete",
+    "generated": "2025-11-21"
+  },
+  "entry_points": {
+    "homepage": "src/app/page.tsx",
+    "layout": "src/app/layout.tsx",
+    "dashboard": "src/app/dashboard/page.tsx",
+    "login": "src/app/auth/login/page.tsx",
+    "auth_api": "src/app/api/auth/[...nextauth]/route.ts",
+    "auth_config": "src/auth.ts",
+    "middleware": "src/middleware.ts",
+    "database_schema": "prisma/schema.prisma",
+    "database_client": "src/lib/prisma.ts"
+  },
+  "structure": {
+    "api_routes": 24,
+    "dashboard_pages": 32,
+    "components": 8,
+    "database_models": 17,
+    "documentation_files": 26
+  },
+  "completion_status": {
+    "infrastructure": 100,
+    "database_schema": 100,
+    "authentication_config": 100,
+    "static_assets": 100,
+    "documentation": 100,
+    "api_structure": 100,
+    "dashboard_structure": 100,
+    "api_logic": 0,
+    "dashboard_logic": 0,
+    "authentication_flow": 0,
+    "testing": 0,
+    "advanced_features": 0
+  },
+  "tech_stack": {
+    "framework": "Next.js 15.0.3",
+    "react": "18.3.1",
+    "database": "Prisma 6.0.1 + SQLite (dev) / PostgreSQL (prod)",
+    "auth": "NextAuth 5.0.0-beta.29",
+    "styling": "Tailwind CSS 3.4.1",
+    "validation": "Zod 3.25.76",
+    "typescript": "5.x"
+  },
+  "critical_issues": [
+    "All API routes are STUBS - return mock data only",
+    "No authentication flow - login doesn't work",
+    "Dashboard pages are PLACEHOLDERS - no functionality",
+    "No database seeding - empty database",
+    "Zero test coverage"
+  ],
+  "next_priorities": [
+    "Database seeding with test data",
+    "Implement authentication flow",
+    "Build core API routes (Projects, Bores, Daily Reports)",
+    "Add dashboard functionality",
+    "Write tests"
+  ]
+}

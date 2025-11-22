@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Midwest Underground - Agent Progress Dashboard</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+            color: #fff;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .container { max-width: 1400px; margin: 0 auto; }
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 30px;
+        }
+        .progress-bar {
+            background: rgba(255,255,255,0.2);
+            border-radius: 10px;
+            height: 40px;
+            margin-bottom: 40px;
+            overflow: hidden;
+            position: relative;
+        }
+        .progress-fill {
+            background: linear-gradient(90deg, #10b981 0%, #34d399 100%);
+            height: 100%;
+            transition: width 1s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        .agents-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .agent-card {
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 20px;
+            border: 2px solid rgba(255,255,255,0.2);
+            transition: all 0.3s ease;
+        }
+        .agent-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        .agent-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .agent-status {
+            font-size: 2rem;
+            margin-right: 15px;
+        }
+        .agent-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+        .agent-subtitle {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        .agent-mission {
+            background: rgba(0,0,0,0.2);
+            padding: 12px;
+            border-radius: 8px;
+            margin: 12px 0;
+            font-size: 0.95rem;
+        }
+        .deliverables {
+            list-style: none;
+            margin-top: 12px;
+        }
+        .deliverables li {
+            padding: 6px 0;
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        .deliverables li:before {
+            content: "□ ";
+            margin-right: 8px;
+            opacity: 0.6;
+        }
+        .deliverables li.done:before {
+            content: "✓ ";
+            color: #10b981;
+        }
+        .status-complete { color: #10b981; }
+        .status-active { color: #fbbf24; }
+        .status-queued { color: #94a3b8; }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        .stat-card {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        .refresh-notice {
+            text-align: center;
+            padding: 15px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 8px;
+            margin-top: 20px;
+            font-size: 0.9rem;
+        }
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+        .badge-complete { background: #10b981; }
+        .badge-active { background: #fbbf24; color: #000; }
+        .badge-queued { background: #64748b; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 Midwest Underground - Multi-Agent Build Progress</h1>
+        <p class="subtitle">Real-time coordination dashboard for parallel development agents</p>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="overallProgress">15%</div>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number" id="agentsComplete">1</div>
+                <div class="stat-label">Agents Complete</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="agentsActive">2</div>
+                <div class="stat-label">Agents Running</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="agentsQueued">6</div>
+                <div class="stat-label">Agents Queued</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="totalAgents">9</div>
+                <div class="stat-label">Total Agents</div>
+            </div>
+        </div>
+
+        <h2 style="margin: 30px 0 20px 0; font-size: 1.8rem;">Agent Status Board</h2>
+
+        <div class="agents-grid">
+            <!-- Agent 1: Complete -->
+            <div class="agent-card">
+                <div class="agent-header">
+                    <div class="agent-status status-complete">✅</div>
+                    <div>
+                        <div class="agent-title">
+                            Agent 1: Database Foundation
+                            <span class="badge badge-complete">COMPLETE</span>
+                        </div>
+                        <div class="agent-subtitle">Phase 1</div>
+                    </div>
+                </div>
+                <div class="agent-mission">
+                    <strong>Mission:</strong> Set up database schema and seed with test data
+                </div>
+                <ul class="deliverables">
+                    <li class="done">66 records across 17 models</li>
+                    <li class="done">6 test user accounts</li>
+                    <li class="done">Seed script (1,060 lines)</li>
+                    <li class="done">All dependencies ready</li>
+                </ul>
+            </div>
+
+            <!-- Agent 2: Authentication -->
+            <div class="agent-card">
+                <div class="agent-header">
+                    <div class="agent-status status-active">🔄</div>
+                    <div>
+                        <div class="agent-title">
+                            Agent 2: Authentication
+                            <span class="badge badge-active">LAUNCHING</span>
+                        </div>
+                        <div class="agent-subtitle">Wave 2</div>
+                    </div>
+                </div>
+                <div class="agent-mission">
+                    <strong>Mission:</strong> Implement working login/logout with session management
+                </div>
+                <ul class="deliverables">
+                    <li>NextAuth login flow</li>
+                    <li>Session management</li>
+                    <li>Protected routes</li>
+                    <li>Role-based access</li>
+                </ul>
+            </div>
+
+            <!-- Agent 3: Projects & Bores API -->
+            <div class="agent-card">
+                <div class="agent-header">
+                    <div class="agent-status status-active">🔄</div>
+                    <div>
+                        <div class="agent-title">
+                            Agent 3: Projects & Bores API
+                            <span class="badge badge-active">LAUNCHING</span>
+                        </div>
+                        <div class="agent-subtitle">Wave 2</div>
+                    </div>
+                </div>
+                <div class="agent-mission">
+                    <strong>Mission:</strong> Full CRUD operations for Projects and Bore Logs
+                </div>
+                <ul class="deliverables">
+                    <li>Projects API (CRUD)</li>
+                    <li>Bore Logs API (CRUD)</li>
+                    <li>Prisma integration</li>
+                    <li>Zod validation</li>
+                </ul>
+            </div>
+
+            <!-- Agent 4: Reports & Rod Passes -->
+            <div class="agent-card">
+                <div class="agent-header">
+                    <div class="agent-status status-queued">⏳</div>
+                    <div>
+                        <div class="agent-title">
+                            Agent 4: Reports & Rod Passes
+                            <span class="badge badge-queued">QUEUED</span>
+                        </div>
+                        <div class="agent-subtitle">Wave 3</div>
+                    </div>
+                </div>
+                <div class="agent-mission">
+                    <strong>Mission:</strong> Field reports and rod-by-rod logging APIs
+                </div>
+                <ul class="deliverables">
+                    <li>Daily Reports API</li>
+                    <li>Rod Passes API</li>
+                    <li>Report signing</li>
+                    <li>Audit trails</li>
+                </ul>
+            </div>
+
+            <!-- Agent 5: 811 & Inspections -->
+            <div class="agent-card">
+                <div class="agent-header">
+                    <div class="agent-status status-queued">⏳</div>
+                    <div>
+                        <div class="agent-title">
+                            Agent 5: 811 & Inspections
+                            <span class="badge badge-queued">QUEUED</span>
+                        </div>
+                        <div class="agent-subtitle">Wave 3</div>
+                    </div>
+                </div>
+                <div class="agent-mission">
+                    <strong>Mission:</strong> Compliance tracking and QA/QC APIs
+                </div>
+                <ul class="deliverables">
+                    <li>811 Tickets API</li>
+                    <li>Inspections API</li>
+                    <li>Corrective actions</li>
+                    <li>Compliance reports</li>
+                </ul>
+            </div>
+
+            <!-- Agent 6: Dashboard Group A -->
+            <div class="agent-card">
+                <div class="agent-header">
+                    <div class="agent-status status-queued">⏳</div>
+                    <div>
+                        <div class="agent-title">
+                            Agent 6: Dashboard Group A
+                            <span class="badge badge-queued">QUEUED</span>
+                        </div>
+                        <div class="agent-subtitle">Wave 3</div>
+                    </div>
+                </div>
+                <div class="agent-mission">
+                    <strong>Mission:</strong> Home, Projects, and Bores pages with real data
+                </div>
+                <ul class="deliverables">
+                    <li>Dashboard home with KPIs</li>
+                    <li>Projects list & detail</li>
+                    <li>Bore logs list & detail</li>
+                    <li>Data fetching & display</li>
+                </ul>
+            </div>
+
+            <!-- Agent 7: Dashboard Group B -->
+            <div class="agent-card">
+                <div class="agent-header">
+                    <div class="agent-status status-queued">⏳</div>
+                    <div>
+                        <div class="agent-title">
+                            Agent 7: Dashboard Group B
+                            <span class="badge badge-queued">QUEUED</span>
+                        </div>
+                        <div class="agent-subtitle">Wave 3</div>
+                    </div>
+                </div>
+                <div class="agent-mission">
+                    <strong>Mission:</strong> Reports, 811 Compliance, and HDD operation pages
+                </div>
+                <ul class="deliverables">
+                    <li>Field reports pages</li>
+                    <li>811 compliance tracker</li>
+                    <li>HDD operations (rod logger)</li>
+                    <li>Reports & analytics</li>
+                </ul>
+            </div>
+
+            <!-- Agent 8: Advanced Features -->
+            <div class="agent-card">
+                <div class="agent-header">
+                    <div class="agent-status status-queued">⏳</div>
+                    <div>
+                        <div class="agent-title">
+                            Agent 8: Advanced Features
+                            <span class="badge badge-queued">QUEUED</span>
+                        </div>
+                        <div class="agent-subtitle">Wave 4</div>
+                    </div>
+                </div>
+                <div class="agent-mission">
+                    <strong>Mission:</strong> KPI dashboard, offline sync, photo uploads
+                </div>
+                <ul class="deliverables">
+                    <li>KPI metrics & charts</li>
+                    <li>Offline sync (IndexedDB)</li>
+                    <li>Photo upload system</li>
+                    <li>PDF export</li>
+                </ul>
+            </div>
+
+            <!-- Agent 9: Testing -->
+            <div class="agent-card">
+                <div class="agent-header">
+                    <div class="agent-status status-queued">⏳</div>
+                    <div>
+                        <div class="agent-title">
+                            Agent 9: Testing Suite
+                            <span class="badge badge-queued">QUEUED</span>
+                        </div>
+                        <div class="agent-subtitle">Wave 4</div>
+                    </div>
+                </div>
+                <div class="agent-mission">
+                    <strong>Mission:</strong> Comprehensive test coverage for all features
+                </div>
+                <ul class="deliverables">
+                    <li>Unit tests for APIs</li>
+                    <li>Integration tests</li>
+                    <li>Component tests</li>
+                    <li>E2E tests (optional)</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="refresh-notice">
+            📊 <strong>Monitoring:</strong> Check AGENT_COORDINATION.md for latest status | This dashboard updates as agents complete their tasks
+        </div>
+    </div>
+
+    <script>
+        // Auto-refresh every 30 seconds
+        setTimeout(() => location.reload(), 30000);
+    </script>
+</body>
+</html>
