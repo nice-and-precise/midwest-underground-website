@@ -412,27 +412,109 @@ function updatePageControls() {
 }
 
 // ==========================================================================
-// Zoom Controls (Stub - will be implemented in Task 9)
+// Zoom Controls
 // ==========================================================================
 
+/**
+ * Zoom in (increase zoom by 25%)
+ */
 function zoomIn() {
-  console.log('Zoom in');
-  // Implementation in Task 9
+  const newZoom = viewerState.zoom + 0.25;
+  setZoom(newZoom);
 }
 
+/**
+ * Zoom out (decrease zoom by 25%)
+ */
 function zoomOut() {
-  console.log('Zoom out');
-  // Implementation in Task 9
+  const newZoom = viewerState.zoom - 0.25;
+  setZoom(newZoom);
 }
 
-function fitToWidth() {
-  console.log('Fit to width');
-  // Implementation in Task 9
+/**
+ * Fit page to container width
+ */
+async function fitToWidth() {
+  if (!viewerState.pdfDoc) return;
+
+  try {
+    // Get first page to calculate dimensions
+    const page = await viewerState.pdfDoc.getPage(viewerState.currentPage);
+
+    // Get page viewport at scale 1.0
+    const viewport = page.getViewport({ scale: 1.0 });
+
+    // Calculate container width (accounting for padding)
+    const containerWidth = elements.viewerContainer.clientWidth - 64; // 2rem padding on each side
+
+    // Calculate zoom to fit width
+    const zoom = containerWidth / viewport.width;
+
+    setZoom(zoom);
+  } catch (error) {
+    console.error('Error calculating fit to width:', error);
+  }
 }
 
-function fitToPage() {
-  console.log('Fit to page');
-  // Implementation in Task 9
+/**
+ * Fit entire page to container
+ */
+async function fitToPage() {
+  if (!viewerState.pdfDoc) return;
+
+  try {
+    // Get current page to calculate dimensions
+    const page = await viewerState.pdfDoc.getPage(viewerState.currentPage);
+
+    // Get page viewport at scale 1.0
+    const viewport = page.getViewport({ scale: 1.0 });
+
+    // Calculate container dimensions (accounting for padding)
+    const containerWidth = elements.viewerContainer.clientWidth - 64;
+    const containerHeight = elements.viewerContainer.clientHeight - 64;
+
+    // Calculate zoom to fit both width and height
+    const zoomWidth = containerWidth / viewport.width;
+    const zoomHeight = containerHeight / viewport.height;
+
+    // Use the smaller zoom to ensure entire page fits
+    const zoom = Math.min(zoomWidth, zoomHeight);
+
+    setZoom(zoom);
+  } catch (error) {
+    console.error('Error calculating fit to page:', error);
+  }
+}
+
+/**
+ * Set zoom level and re-render page
+ * @param {number} zoom - Zoom level (0.25 to 5.0)
+ */
+function setZoom(zoom) {
+  // Enforce zoom limits (25% to 500%)
+  const MIN_ZOOM = 0.25;
+  const MAX_ZOOM = 5.0;
+
+  const clampedZoom = Math.max(MIN_ZOOM, Math.min(MAX_ZOOM, zoom));
+
+  // Update state
+  viewerState.zoom = clampedZoom;
+
+  // Update zoom display
+  updateZoomDisplay();
+
+  // Re-render current page with new zoom
+  renderPage(viewerState.currentPage);
+
+  console.log(`Zoom set to ${Math.round(clampedZoom * 100)}%`);
+}
+
+/**
+ * Update zoom level display
+ */
+function updateZoomDisplay() {
+  const percentage = Math.round(viewerState.zoom * 100);
+  elements.zoomLevel.textContent = `${percentage}%`;
 }
 
 // ==========================================================================
