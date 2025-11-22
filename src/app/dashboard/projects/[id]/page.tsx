@@ -1,55 +1,92 @@
 import Link from 'next/link'
-
-const mockProject = {
-  id: 1,
-  name: 'Willmar Fiber Network - Phase 2',
-  client: 'Willmar Municipal Utilities',
-  startDate: '2025-09-15',
-  endDate: '2025-11-30',
-  budget: 245000,
-  actualCost: 159250,
-  progress: 65,
-  status: 'Active',
-  footage: '12,450 ft',
-  description: 'Installation of fiber optic cable infrastructure for Phase 2 of the city-wide broadband network. Includes directional drilling under major roadways and installation of conduit for fiber cable.',
-
-  team: [
-    { name: 'Tom Anderson', role: 'Project Manager', email: 'tanderson@willmarmu.gov' },
-    { name: 'John Smith', role: 'Crew Lead', email: 'jsmith@midwestunderground.com' },
-    { name: 'Mike Johnson', role: 'Operator', email: 'mjohnson@midwestunderground.com' }
-  ],
-
-  milestones: [
-    { name: 'Site Survey Complete', date: '2025-09-20', status: 'Completed' },
-    { name: 'Permits Obtained', date: '2025-09-25', status: 'Completed' },
-    { name: 'Phase 1 Drilling', date: '2025-10-15', status: 'Completed' },
-    { name: 'Phase 2 Drilling', date: '2025-11-01', status: 'In Progress' },
-    { name: 'Fiber Installation', date: '2025-11-15', status: 'Pending' },
-    { name: 'Final Inspection', date: '2025-11-30', status: 'Pending' }
-  ],
-
-  recentActivity: [
-    { date: '2025-10-23', action: 'Bore log created', user: 'John Smith', details: 'County Rd 5 Bore #12 completed' },
-    { date: '2025-10-22', action: 'Field report submitted', user: 'Mike Johnson', details: '485 ft drilled, 8.5 hours' },
-    { date: '2025-10-21', action: 'Equipment assigned', user: 'System', details: 'Ditch Witch JT40 assigned to crew' }
-  ]
-}
+import { auth } from '@/auth'
+import { redirect, notFound } from 'next/navigation'
+import { prisma } from '@/lib/prisma'
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
+  const project = await prisma.project.findUnique({
+    where: { id },
+    select: { name: true }
+  })
+
   return {
-    title: `Project #${id} | Dashboard`,
-    description: `Project details and management for project ${id}`
+    title: project ? `${project.name} | Dashboard` : 'Project Not Found',
+    description: `Project details and management`
   }
 }
 
 export default async function ProjectDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const session = await auth()
+  if (!session) {
+    redirect('/auth/login')
+  }
+
   const { id } = await params
-  const project = mockProject
-  const budgetUsed = (project.actualCost / project.budget) * 100
+
+  // Fetch project with all related data
+  const project = await prisma.project.findUnique({
+    where: { id },
+    include: {
+      createdBy: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          role: true
+        }
+      },
+      bores: {
+        include: {
+          _count: {
+            select: {
+              rodPasses: true
+            }
+          }
+        },
+        orderBy: { createdAt: 'desc' }
+      },
+      dailyReports: {
+        include: {
+          createdBy: {
+            select: {
+              name: true,
+              email: true
+            }
+          }
+        },
+        orderBy: { reportDate: 'desc' },
+        take: 5
+      },
+      tickets811: {
+        orderBy: { ticketDate: 'desc' },
+        take: 5
+      },
+      _count: {
+        select: {
+          bores: true,
+          dailyReports: true,
+          tickets811: true,
+          inspections: true
+        }
+      }
+    }
+  })
+
+  if (!project) {
+    notFound()
+  }
+
+  // Calculate stats
+  const totalFootage = project.bores.reduce((sum, bore) => sum + (bore.totalLength || 0), 0)
+  const activeBores = project.bores.filter(b => b.status === 'IN_PROGRESS').length
+  const completedBores = project.bores.filter(b => b.status === 'COMPLETED').length
+
+  const location = project.location as any
 
   return (
     <>
+      {/* Header */}
       <section className="section" style={{
         background: 'linear-gradient(135deg, var(--color-primary) 0%, var(--brand-slate-dark) 100%)',
         color: 'var(--white)',
@@ -65,22 +102,27 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
           <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'start', flexWrap: 'wrap', gap: 'var(--space-md)'}}>
             <div>
               <h1 style={{fontSize: 'var(--text-3xl)', marginBottom: 'var(--space-xs)'}}>{project.name}</h1>
-              <p style={{fontSize: 'var(--text-lg)', opacity: 0.9}}>{project.client}</p>
+              <p style={{fontSize: 'var(--text-lg)', opacity: 0.9}}>{project.customerName || 'N/A'}</p>
             </div>
             <span style={{
               padding: '8px 16px',
               borderRadius: 'var(--radius-md)',
               fontSize: 'var(--text-sm)',
               fontWeight: 600,
-              backgroundColor: 'var(--color-secondary)',
+              backgroundColor:
+                project.status === 'IN_PROGRESS' ? '#10b981' :
+                project.status === 'COMPLETED' ? '#3b82f6' :
+                project.status === 'ON_HOLD' ? '#f59e0b' :
+                '#6b7280',
               color: 'var(--white)'
             }}>
-              {project.status}
+              {project.status.replace('_', ' ')}
             </span>
           </div>
         </div>
       </section>
 
+      {/* Content */}
       <section className="section">
         <div className="container">
           {/* Overview Cards */}
@@ -91,126 +133,183 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
             marginBottom: 'var(--space-2xl)'
           }}>
             <div style={{backgroundColor: 'var(--bg-card)', padding: 'var(--space-lg)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)'}}>
-              <p style={{fontSize: 'var(--text-sm)', color: 'var(--text-secondary)', marginBottom: 'var(--space-xs)'}}>Progress</p>
-              <p style={{fontSize: 'var(--text-3xl)', fontWeight: 'bold', color: 'var(--color-primary)'}}>{project.progress}%</p>
-              <div style={{
-                width: '100%',
-                height: '8px',
-                backgroundColor: 'var(--bg-secondary)',
-                borderRadius: 'var(--radius-sm)',
-                overflow: 'hidden',
-                marginTop: 'var(--space-sm)'
-              }}>
-                <div style={{
-                  width: `${project.progress}%`,
-                  height: '100%',
-                  backgroundColor: 'var(--color-secondary)',
-                  transition: 'width var(--transition-base)'
-                }} />
-              </div>
-            </div>
-            <div style={{backgroundColor: 'var(--bg-card)', padding: 'var(--space-lg)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)'}}>
-              <p style={{fontSize: 'var(--text-sm)', color: 'var(--text-secondary)', marginBottom: 'var(--space-xs)'}}>Budget</p>
-              <p style={{fontSize: 'var(--text-3xl)', fontWeight: 'bold', color: 'var(--success)'}}>
-                ${(project.budget / 1000).toFixed(0)}K
-              </p>
-              <p style={{fontSize: 'var(--text-sm)', color: 'var(--text-secondary)', marginTop: 'var(--space-xs)'}}>
-                ${(project.actualCost / 1000).toFixed(0)}K used ({budgetUsed.toFixed(0)}%)
+              <p style={{fontSize: 'var(--text-sm)', color: 'var(--text-secondary)', marginBottom: 'var(--space-xs)'}}>Total Bores</p>
+              <p style={{fontSize: 'var(--text-3xl)', fontWeight: 'bold', color: 'var(--color-primary)'}}>{project._count.bores}</p>
+              <p style={{fontSize: 'var(--text-xs)', color: 'var(--text-secondary)', marginTop: 'var(--space-xs)'}}>
+                {activeBores} active, {completedBores} completed
               </p>
             </div>
             <div style={{backgroundColor: 'var(--bg-card)', padding: 'var(--space-lg)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)'}}>
-              <p style={{fontSize: 'var(--text-sm)', color: 'var(--text-secondary)', marginBottom: 'var(--space-xs)'}}>Footage</p>
+              <p style={{fontSize: 'var(--text-sm)', color: 'var(--text-secondary)', marginBottom: 'var(--space-xs)'}}>Total Footage</p>
               <p style={{fontSize: 'var(--text-3xl)', fontWeight: 'bold', color: 'var(--color-secondary)'}}>
-                {project.footage}
+                {Math.round(totalFootage)}
               </p>
+              <p style={{fontSize: 'var(--text-xs)', color: 'var(--text-secondary)', marginTop: 'var(--space-xs)'}}>linear feet</p>
             </div>
             <div style={{backgroundColor: 'var(--bg-card)', padding: 'var(--space-lg)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)'}}>
-              <p style={{fontSize: 'var(--text-sm)', color: 'var(--text-secondary)', marginBottom: 'var(--space-xs)'}}>Timeline</p>
-              <p style={{fontSize: 'var(--text-lg)', fontWeight: 600}}>{project.startDate}</p>
-              <p style={{fontSize: 'var(--text-sm)', color: 'var(--text-secondary)'}}>to {project.endDate}</p>
+              <p style={{fontSize: 'var(--text-sm)', color: 'var(--text-secondary)', marginBottom: 'var(--space-xs)'}}>Daily Reports</p>
+              <p style={{fontSize: 'var(--text-3xl)', fontWeight: 'bold', color: '#10b981'}}>
+                {project._count.dailyReports}
+              </p>
+              <p style={{fontSize: 'var(--text-xs)', color: 'var(--text-secondary)', marginTop: 'var(--space-xs)'}}>submitted</p>
+            </div>
+            <div style={{backgroundColor: 'var(--bg-card)', padding: 'var(--space-lg)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)'}}>
+              <p style={{fontSize: 'var(--text-sm)', color: 'var(--text-secondary)', marginBottom: 'var(--space-xs)'}}>811 Tickets</p>
+              <p style={{fontSize: 'var(--text-3xl)', fontWeight: 'bold', color: '#f59e0b'}}>
+                {project._count.tickets811}
+              </p>
+              <p style={{fontSize: 'var(--text-xs)', color: 'var(--text-secondary)', marginTop: 'var(--space-xs)'}}>active</p>
             </div>
           </div>
 
-          <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 'var(--space-xl)'}}>
+          {/* Project Details and Bores */}
+          <div style={{display: 'grid', gridTemplateColumns: '1fr', gap: 'var(--space-xl)'}}>
             {/* Project Details */}
             <div style={{backgroundColor: 'var(--bg-card)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)', padding: 'var(--space-xl)'}}>
               <h2 style={{marginBottom: 'var(--space-lg)'}}>Project Details</h2>
-              <p style={{color: 'var(--text-secondary)', lineHeight: 1.6, marginBottom: 'var(--space-xl)'}}>{project.description}</p>
-
-              <h3 style={{fontSize: 'var(--text-lg)', marginBottom: 'var(--space-md)'}}>Project Team</h3>
-              <div style={{display: 'flex', flexDirection: 'column', gap: 'var(--space-md)'}}>
-                {project.team.map((member, idx) => (
-                  <div key={idx} style={{
-                    padding: 'var(--space-md)',
-                    backgroundColor: 'var(--bg-secondary)',
-                    borderRadius: 'var(--radius-md)'
-                  }}>
-                    <p style={{fontWeight: 600}}>{member.name}</p>
-                    <p style={{fontSize: 'var(--text-sm)', color: 'var(--text-secondary)'}}>{member.role}</p>
-                    <p style={{fontSize: 'var(--text-sm)'}}>
-                      <a href={`mailto:${member.email}`} style={{color: 'var(--color-primary)'}}>{member.email}</a>
-                    </p>
+              <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: 'var(--space-lg)'}}>
+                <div>
+                  <p style={{fontSize: 'var(--text-sm)', color: 'var(--text-secondary)', marginBottom: 'var(--space-xs)'}}>Description</p>
+                  <p style={{color: 'var(--text-primary)'}}>{project.description || 'No description provided'}</p>
+                </div>
+                <div>
+                  <p style={{fontSize: 'var(--text-sm)', color: 'var(--text-secondary)', marginBottom: 'var(--space-xs)'}}>Customer Contact</p>
+                  <p style={{color: 'var(--text-primary)'}}>{project.customerContact || 'N/A'}</p>
+                </div>
+                <div>
+                  <p style={{fontSize: 'var(--text-sm)', color: 'var(--text-secondary)', marginBottom: 'var(--space-xs)'}}>Location</p>
+                  <p style={{color: 'var(--text-primary)'}}>{location?.address || location?.city || 'N/A'}</p>
+                </div>
+                <div>
+                  <p style={{fontSize: 'var(--text-sm)', color: 'var(--text-secondary)', marginBottom: 'var(--space-xs)'}}>Timeline</p>
+                  <p style={{color: 'var(--text-primary)'}}>
+                    {project.startDate ? new Date(project.startDate).toLocaleDateString() : 'Not set'}
+                    {project.endDate && ` - ${new Date(project.endDate).toLocaleDateString()}`}
+                  </p>
+                </div>
+                {project.budget && (
+                  <div>
+                    <p style={{fontSize: 'var(--text-sm)', color: 'var(--text-secondary)', marginBottom: 'var(--space-xs)'}}>Budget</p>
+                    <p style={{color: 'var(--text-primary)'}}>${project.budget.toLocaleString()}</p>
                   </div>
-                ))}
+                )}
+                <div>
+                  <p style={{fontSize: 'var(--text-sm)', color: 'var(--text-secondary)', marginBottom: 'var(--space-xs)'}}>Created By</p>
+                  <p style={{color: 'var(--text-primary)'}}>{project.createdBy.name || project.createdBy.email}</p>
+                </div>
               </div>
             </div>
 
-            {/* Milestones & Activity */}
-            <div>
-              {/* Milestones */}
-              <div style={{backgroundColor: 'var(--bg-card)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)', padding: 'var(--space-xl)', marginBottom: 'var(--space-xl)'}}>
-                <h2 style={{marginBottom: 'var(--space-lg)'}}>Milestones</h2>
-                <div style={{display: 'flex', flexDirection: 'column', gap: 'var(--space-sm)'}}>
-                  {project.milestones.map((milestone, idx) => (
-                    <div key={idx} style={{
-                      padding: 'var(--space-md)',
-                      borderLeft: `4px solid ${
-                        milestone.status === 'Completed' ? 'var(--success)' :
-                        milestone.status === 'In Progress' ? 'var(--color-secondary)' :
-                        'var(--bg-accent)'
-                      }`,
-                      backgroundColor: 'var(--bg-secondary)',
-                      borderRadius: 'var(--radius-sm)'
-                    }}>
+            {/* Bores List */}
+            {project.bores.length > 0 && (
+              <div style={{backgroundColor: 'var(--bg-card)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)', padding: 'var(--space-xl)'}}>
+                <h2 style={{marginBottom: 'var(--space-lg)'}}>Bores ({project.bores.length})</h2>
+                <div style={{overflowX: 'auto'}}>
+                  <table style={{width: '100%', borderCollapse: 'collapse'}}>
+                    <thead>
+                      <tr style={{borderBottom: '2px solid var(--bg-secondary)'}}>
+                        <th style={{padding: 'var(--space-md)', textAlign: 'left', fontSize: 'var(--text-sm)', fontWeight: 600}}>Name</th>
+                        <th style={{padding: 'var(--space-md)', textAlign: 'left', fontSize: 'var(--text-sm)', fontWeight: 600}}>Status</th>
+                        <th style={{padding: 'var(--space-md)', textAlign: 'right', fontSize: 'var(--text-sm)', fontWeight: 600}}>Length (ft)</th>
+                        <th style={{padding: 'var(--space-md)', textAlign: 'center', fontSize: 'var(--text-sm)', fontWeight: 600}}>Rod Passes</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {project.bores.map((bore) => (
+                        <tr key={bore.id} style={{borderBottom: '1px solid var(--bg-secondary)'}}>
+                          <td style={{padding: 'var(--space-md)'}}>
+                            <Link href={`/dashboard/bore-logs/${bore.id}`} style={{color: 'var(--color-primary)', fontWeight: 600}}>
+                              {bore.name}
+                            </Link>
+                          </td>
+                          <td style={{padding: 'var(--space-md)'}}>
+                            <span style={{
+                              padding: 'var(--space-xs) var(--space-sm)',
+                              borderRadius: 'var(--radius-sm)',
+                              fontSize: 'var(--text-xs)',
+                              fontWeight: 600,
+                              backgroundColor: bore.status === 'IN_PROGRESS' ? '#10b981' : bore.status === 'COMPLETED' ? '#3b82f6' : '#6b7280',
+                              color: 'white'
+                            }}>
+                              {bore.status}
+                            </span>
+                          </td>
+                          <td style={{padding: 'var(--space-md)', textAlign: 'right', color: 'var(--text-secondary)'}}>
+                            {bore.totalLength ? Math.round(bore.totalLength) : 'N/A'}
+                          </td>
+                          <td style={{padding: 'var(--space-md)', textAlign: 'center', color: 'var(--text-secondary)'}}>
+                            {bore._count.rodPasses}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
+
+            {/* Recent Daily Reports */}
+            {project.dailyReports.length > 0 && (
+              <div style={{backgroundColor: 'var(--bg-card)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)', padding: 'var(--space-xl)'}}>
+                <h2 style={{marginBottom: 'var(--space-lg)'}}>Recent Daily Reports</h2>
+                <div style={{display: 'flex', flexDirection: 'column', gap: 'var(--space-md)'}}>
+                  {project.dailyReports.map((report) => (
+                    <div key={report.id} style={{padding: 'var(--space-md)', backgroundColor: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)'}}>
+                      <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: 'var(--space-xs)'}}>
+                        <p style={{fontWeight: 600}}>{new Date(report.reportDate).toLocaleDateString()}</p>
+                        <span style={{
+                          padding: '2px 8px',
+                          borderRadius: 'var(--radius-sm)',
+                          fontSize: 'var(--text-xs)',
+                          fontWeight: 600,
+                          backgroundColor: report.status === 'APPROVED' ? '#10b981' : report.status === 'SUBMITTED' ? '#f59e0b' : '#6b7280',
+                          color: 'white'
+                        }}>
+                          {report.status}
+                        </span>
+                      </div>
+                      <p style={{fontSize: 'var(--text-sm)', color: 'var(--text-secondary)'}}>
+                        By {report.createdBy.name || report.createdBy.email}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* 811 Tickets */}
+            {project.tickets811.length > 0 && (
+              <div style={{backgroundColor: 'var(--bg-card)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)', padding: 'var(--space-xl)'}}>
+                <h2 style={{marginBottom: 'var(--space-lg)'}}>811 Tickets</h2>
+                <div style={{display: 'flex', flexDirection: 'column', gap: 'var(--space-md)'}}>
+                  {project.tickets811.map((ticket) => (
+                    <div key={ticket.id} style={{padding: 'var(--space-md)', backgroundColor: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)'}}>
                       <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'start'}}>
                         <div>
-                          <p style={{fontWeight: 600}}>{milestone.name}</p>
-                          <p style={{fontSize: 'var(--text-sm)', color: 'var(--text-secondary)'}}>{milestone.date}</p>
+                          <p style={{fontWeight: 600}}>Ticket #{ticket.ticketNumber}</p>
+                          <p style={{fontSize: 'var(--text-sm)', color: 'var(--text-secondary)'}}>
+                            Issued: {new Date(ticket.ticketDate).toLocaleDateString()}
+                          </p>
+                          <p style={{fontSize: 'var(--text-sm)', color: 'var(--text-secondary)'}}>
+                            Expires: {new Date(ticket.expirationDate).toLocaleDateString()}
+                          </p>
                         </div>
                         <span style={{
                           padding: '2px 8px',
                           borderRadius: 'var(--radius-sm)',
                           fontSize: 'var(--text-xs)',
                           fontWeight: 600,
-                          backgroundColor:
-                            milestone.status === 'Completed' ? 'var(--success)' :
-                            milestone.status === 'In Progress' ? 'var(--color-secondary)' :
-                            'var(--bg-accent)',
-                          color: 'var(--white)'
+                          backgroundColor: ticket.status === 'ACTIVE' ? '#10b981' : ticket.status === 'EXPIRED' ? '#ef4444' : '#f59e0b',
+                          color: 'white'
                         }}>
-                          {milestone.status}
+                          {ticket.status}
                         </span>
                       </div>
                     </div>
                   ))}
                 </div>
               </div>
-
-              {/* Recent Activity */}
-              <div style={{backgroundColor: 'var(--bg-card)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)', padding: 'var(--space-xl)'}}>
-                <h2 style={{marginBottom: 'var(--space-lg)'}}>Recent Activity</h2>
-                <div style={{display: 'flex', flexDirection: 'column', gap: 'var(--space-md)'}}>
-                  {project.recentActivity.map((activity, idx) => (
-                    <div key={idx} style={{paddingBottom: 'var(--space-md)', borderBottom: idx < project.recentActivity.length - 1 ? '1px solid var(--bg-secondary)' : 'none'}}>
-                      <p style={{fontSize: 'var(--text-sm)', color: 'var(--text-secondary)', marginBottom: '4px'}}>{activity.date}</p>
-                      <p style={{fontWeight: 600}}>{activity.action}</p>
-                      <p style={{fontSize: 'var(--text-sm)', color: 'var(--text-secondary)'}}>{activity.details}</p>
-                      <p style={{fontSize: 'var(--text-xs)', color: 'var(--text-secondary)', marginTop: '4px'}}>by {activity.user}</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
+            )}
           </div>
         </div>
       </section>

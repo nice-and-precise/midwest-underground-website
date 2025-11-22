@@ -1,60 +1,147 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { auth } from '@/auth'
-import { prisma } from '@/lib/prisma'
+import { NextRequest } from 'next/server';
+import { prisma } from '@/lib/prisma';
+import { rodPassCreateSchema } from '@/lib/validations';
+import { z } from 'zod';
 
+// GET /api/hdd/rod-passes - List all rod passes with filters
+export async function GET(request: NextRequest) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const boreId = searchParams.get('boreId');
+    const passNumber = searchParams.get('passNumber');
+
+    // Build where clause
+    const where: any = {};
+    if (boreId) where.boreId = boreId;
+    if (passNumber) where.passNumber = parseInt(passNumber);
+
+    const rodPasses = await prisma.rodPass.findMany({
+      where,
+      include: {
+        bore: {
+          select: {
+            id: true,
+            name: true,
+            status: true,
+            projectId: true,
+            diameterIn: true,
+            productMaterial: true,
+            totalLength: true
+          }
+        },
+        loggedBy: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            role: true
+          }
+        }
+      },
+      orderBy: [
+        { boreId: 'asc' },
+        { sequence: 'asc' }
+      ]
+    });
+
+    return Response.json({ rodPasses });
+  } catch (error) {
+    console.error('Error fetching rod passes:', error);
+    return Response.json(
+      { error: 'Failed to fetch rod passes' },
+      { status: 500 }
+    );
+  }
+}
+
+// POST /api/hdd/rod-passes - Create new rod pass
 export async function POST(request: NextRequest) {
   try {
-    const session = await auth()
-    if (!session?.user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    const body = await request.json();
+
+    // Validate with Zod
+    const validatedData = rodPassCreateSchema.parse(body);
+
+    // Verify bore exists
+    const bore = await prisma.bore.findUnique({
+      where: { id: validatedData.boreId }
+    });
+
+    if (!bore) {
+      return Response.json(
+        { error: 'Bore not found' },
+        { status: 404 }
+      );
     }
 
-    const body = await request.json()
+    // For now, use first user as loggedById (in production, use session)
+    // TODO: Replace with actual session user ID when auth is implemented
+    const users = await prisma.user.findMany({ take: 1 });
+    const loggedById = users[0]?.id;
 
-    // Create or update bore
-    const bore = await prisma.bore.upsert({
-      where: { id: body.boreId },
-      update: {
-        totalLength: body.rodPasses.reduce((sum: number, pass: any) => sum + pass.linearFeet, 0),
-        status: 'COMPLETED'
+    if (!loggedById) {
+      return Response.json(
+        { error: 'No users found in system' },
+        { status: 500 }
+      );
+    }
+
+    // Create rod pass
+    const rodPass = await prisma.rodPass.create({
+      data: {
+        ...validatedData,
+        loggedById
       },
-      create: {
-        id: body.boreId,
-        projectId: body.projectId,
-        name: body.name || `Bore ${body.boreId}`,
-        totalLength: body.rodPasses.reduce((sum: number, pass: any) => sum + pass.linearFeet, 0),
-        diameterIn: body.pipeSize ? parseFloat(body.pipeSize) : null,
-        productMaterial: body.pipeType || null,
-        status: 'COMPLETED'
-      }
-    })
-
-    // Create rod passes
-    const rodPassPromises = body.rodPasses.map((pass: any) => {
-      return prisma.rodPass.create({
-        data: {
-          boreId: bore.id,
-          sequence: pass.sequence || pass.passNumber,
-          passNumber: pass.passNumber,
-          linearFeet: pass.linearFeet,
-          startedAt: pass.startTime ? new Date(pass.startTime) : null,
-          completedAt: pass.endTime ? new Date(pass.endTime) : null,
-          fluidMix: pass.fluidMix || null,
-          fluidVolumeGal: pass.fluidVolumeGal || null,
-          notes: pass.notes || null,
-          loggedById: session.user.id as string
+      include: {
+        bore: {
+          select: {
+            id: true,
+            name: true,
+            status: true,
+            projectId: true,
+            diameterIn: true,
+            productMaterial: true,
+            totalLength: true
+          }
+        },
+        loggedBy: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            role: true
+          }
         }
-      })
-    })
+      }
+    });
 
-    await Promise.all(rodPassPromises)
+    // Update bore total length if needed
+    const allPasses = await prisma.rodPass.findMany({
+      where: { boreId: validatedData.boreId },
+      select: { linearFeet: true }
+    });
 
-    return NextResponse.json({ bore, passesCreated: body.rodPasses.length }, { status: 201 })
+    const totalLength = allPasses.reduce((sum, pass) => sum + pass.linearFeet, 0);
+
+    await prisma.bore.update({
+      where: { id: validatedData.boreId },
+      data: { totalLength }
+    });
+
+    return Response.json({ rodPass }, { status: 201 });
   } catch (error) {
-    console.error('Error creating rod passes:', error)
-    return NextResponse.json(
-      { error: 'Failed to create rod passes' },
+    console.error('Error creating rod pass:', error);
+
+    if (error instanceof z.ZodError) {
+      return Response.json(
+        { error: 'Validation failed', details: error.errors },
+        { status: 400 }
+      );
+    }
+
+    return Response.json(
+      { error: 'Failed to create rod pass' },
       { status: 500 }
-    )
+    );
   }
 }

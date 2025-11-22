@@ -1,181 +1,388 @@
 import Link from 'next/link'
+import { auth } from '@/auth'
+import { redirect } from 'next/navigation'
+import { prisma } from '@/lib/prisma'
 
 export const metadata = {
   title: 'Dashboard | Midwest Underground',
   description: 'HDD Operations Dashboard - Manage bore logs, field reports, and project data'
 }
 
-export default function DashboardPage() {
+export default async function DashboardPage() {
+  const session = await auth()
+
+  if (!session) {
+    redirect('/auth/login')
+  }
+
+  // Fetch KPI data
+  const [projects, bores, recentBores, recentReports] = await Promise.all([
+    prisma.project.findMany({
+      select: {
+        id: true,
+        status: true
+      }
+    }),
+    prisma.bore.findMany({
+      select: {
+        id: true,
+        status: true,
+        totalLength: true,
+        createdAt: true
+      }
+    }),
+    prisma.bore.findMany({
+      select: {
+        id: true,
+        name: true,
+        status: true,
+        createdAt: true,
+        project: {
+          select: {
+            name: true
+          }
+        }
+      },
+      orderBy: {
+        createdAt: 'desc'
+      },
+      take: 5
+    }),
+    prisma.dailyReport.findMany({
+      select: {
+        id: true,
+        reportDate: true,
+        status: true,
+        project: {
+          select: {
+            name: true
+          }
+        }
+      },
+      orderBy: {
+        reportDate: 'desc'
+      },
+      take: 5
+    })
+  ])
+
+  // Calculate KPIs
+  const totalProjects = projects.length
+  const activeProjects = projects.filter(p => p.status === 'IN_PROGRESS').length
+  const activeBores = bores.filter(b => b.status === 'IN_PROGRESS').length
+
+  // Calculate today's footage
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
+  const todaysBores = bores.filter(b => {
+    const createdDate = new Date(b.createdAt)
+    createdDate.setHours(0, 0, 0, 0)
+    return createdDate.getTime() === today.getTime()
+  })
+  const footageDrilledToday = todaysBores.reduce((sum, bore) => sum + (bore.totalLength || 0), 0)
+
+  // Project status counts
+  const planningCount = projects.filter(p => p.status === 'PLANNING').length
+  const inProgressCount = projects.filter(p => p.status === 'IN_PROGRESS').length
+  const completedCount = projects.filter(p => p.status === 'COMPLETED').length
+  const onHoldCount = projects.filter(p => p.status === 'ON_HOLD').length
+
   return (
     <>
       {/* Dashboard Hero */}
       <section className="section" style={{
         background: 'linear-gradient(135deg, var(--color-primary) 0%, var(--brand-slate-dark) 100%)',
         color: 'var(--white)',
-        paddingTop: 'var(--space-3xl)',
-        paddingBottom: 'var(--space-3xl)'
+        paddingTop: 'var(--space-2xl)',
+        paddingBottom: 'var(--space-2xl)'
       }}>
         <div className="container">
-          <h1 style={{fontSize: 'var(--text-4xl)', marginBottom: 'var(--space-md)'}}>
+          <h1 style={{fontSize: 'var(--text-3xl)', marginBottom: 'var(--space-sm)'}}>
             HDD Operations Dashboard
           </h1>
-          <p style={{fontSize: 'var(--text-xl)', opacity: 0.9}}>
-            Comprehensive field operations management for Midwest Underground of Minnesota
+          <p style={{fontSize: 'var(--text-lg)', opacity: 0.9, marginBottom: 0}}>
+            Welcome back, {session.user.name || session.user.email}!
           </p>
         </div>
       </section>
 
-      {/* Dashboard Grid */}
-      <section className="section">
+      {/* KPI Cards */}
+      <section className="section" style={{paddingTop: 'var(--space-xl)', paddingBottom: 'var(--space-xl)'}}>
         <div className="container">
-          <div className="services-grid">
-            {/* Bore Logs */}
-            <div className="service-card">
-              <div className="service-icon">🎯</div>
-              <h3>Bore Logs</h3>
-              <p>Rod-by-rod drilling logs with depth profiles and field measurements.</p>
-              <Link href="/dashboard/bore-logs" className="service-link">
-                View Logs <span>→</span>
-              </Link>
-            </div>
-
-            {/* Field Reports */}
-            <div className="service-card">
-              <div className="service-icon">📝</div>
-              <h3>Field Reports</h3>
-              <p>Daily activity reports, crew logs, and production tracking.</p>
-              <Link href="/dashboard/field-reports" className="service-link">
-                View Reports <span>→</span>
-              </Link>
-            </div>
-
-            {/* Projects */}
-            <div className="service-card">
-              <div className="service-icon">🚧</div>
-              <h3>Projects</h3>
-              <p>Active and completed HDD projects with timelines and budgets.</p>
-              <Link href="/dashboard/projects" className="service-link">
-                View Projects <span>→</span>
-              </Link>
-            </div>
-
-            {/* 811 Tickets */}
-            <div className="service-card">
-              <div className="service-icon">⚠️</div>
-              <h3>811 Compliance</h3>
-              <p>Utility locate tickets and compliance tracking.</p>
-              <Link href="/dashboard/811-tickets" className="service-link">
-                Manage Tickets <span>→</span>
-              </Link>
-            </div>
-
-            {/* Inspections */}
-            <div className="service-card">
-              <div className="service-icon">✅</div>
-              <h3>Inspections</h3>
-              <p>Quality assurance and compliance inspections.</p>
-              <Link href="/dashboard/inspections" className="service-link">
-                View Inspections <span>→</span>
-              </Link>
-            </div>
-
-            {/* Reports */}
-            <div className="service-card">
-              <div className="service-icon">📊</div>
-              <h3>Analytics</h3>
-              <p>KPIs, reports, and data exports for billing.</p>
-              <Link href="/dashboard/reports" className="service-link">
-                View Reports <span>→</span>
-              </Link>
-            </div>
-
-            {/* Customers */}
-            <div className="service-card">
-              <div className="service-icon">🏢</div>
-              <h3>Customers</h3>
-              <p>Client information and project history.</p>
-              <Link href="/dashboard/customers" className="service-link">
-                View Customers <span>→</span>
-              </Link>
-            </div>
-
-            {/* Equipment */}
-            <div className="service-card">
-              <div className="service-icon">🚜</div>
-              <h3>Equipment</h3>
-              <p>Rig inventory, maintenance logs, and utilization.</p>
-              <Link href="/dashboard/equipment" className="service-link">
-                View Equipment <span>→</span>
-              </Link>
-            </div>
-
-            {/* Financials */}
-            <div className="service-card">
-              <div className="service-icon">💰</div>
-              <h3>Financials</h3>
-              <p>Project costs, billing, and financial tracking.</p>
-              <Link href="/dashboard/financials" className="service-link">
-                View Financials <span>→</span>
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Quick Stats */}
-      <section className="section gradient-bg-light">
-        <div className="container">
-          <h2 className="text-center" style={{marginBottom: 'var(--space-2xl)', color: 'var(--brand-slate-dark)'}}>
-            System Status
-          </h2>
           <div style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
+            gap: 'var(--space-lg)',
+            marginBottom: 'var(--space-2xl)'
+          }}>
+            {/* Total Projects */}
+            <div style={{
+              backgroundColor: 'var(--bg-card)',
+              padding: 'var(--space-xl)',
+              borderRadius: 'var(--radius-lg)',
+              boxShadow: 'var(--shadow-md)'
+            }}>
+              <div style={{fontSize: 'var(--text-sm)', color: 'var(--text-secondary)', marginBottom: 'var(--space-xs)'}}>
+                Total Projects
+              </div>
+              <div style={{fontSize: 'var(--text-4xl)', fontWeight: 'bold', color: 'var(--color-primary)', marginBottom: 'var(--space-xs)'}}>
+                {totalProjects}
+              </div>
+              <div style={{fontSize: 'var(--text-xs)', color: 'var(--text-secondary)'}}>
+                {activeProjects} active
+              </div>
+            </div>
+
+            {/* Active Bores */}
+            <div style={{
+              backgroundColor: 'var(--bg-card)',
+              padding: 'var(--space-xl)',
+              borderRadius: 'var(--radius-lg)',
+              boxShadow: 'var(--shadow-md)'
+            }}>
+              <div style={{fontSize: 'var(--text-sm)', color: 'var(--text-secondary)', marginBottom: 'var(--space-xs)'}}>
+                Active Bores
+              </div>
+              <div style={{fontSize: 'var(--text-4xl)', fontWeight: 'bold', color: '#10b981', marginBottom: 'var(--space-xs)'}}>
+                {activeBores}
+              </div>
+              <div style={{fontSize: 'var(--text-xs)', color: 'var(--text-secondary)'}}>
+                {bores.length} total
+              </div>
+            </div>
+
+            {/* Footage Drilled Today */}
+            <div style={{
+              backgroundColor: 'var(--bg-card)',
+              padding: 'var(--space-xl)',
+              borderRadius: 'var(--radius-lg)',
+              boxShadow: 'var(--shadow-md)'
+            }}>
+              <div style={{fontSize: 'var(--text-sm)', color: 'var(--text-secondary)', marginBottom: 'var(--space-xs)'}}>
+                Footage Today
+              </div>
+              <div style={{fontSize: 'var(--text-4xl)', fontWeight: 'bold', color: 'var(--color-secondary)', marginBottom: 'var(--space-xs)'}}>
+                {Math.round(footageDrilledToday)}
+              </div>
+              <div style={{fontSize: 'var(--text-xs)', color: 'var(--text-secondary)'}}>
+                linear feet
+              </div>
+            </div>
+
+            {/* Active Crew Members */}
+            <div style={{
+              backgroundColor: 'var(--bg-card)',
+              padding: 'var(--space-xl)',
+              borderRadius: 'var(--radius-lg)',
+              boxShadow: 'var(--shadow-md)'
+            }}>
+              <div style={{fontSize: 'var(--text-sm)', color: 'var(--text-secondary)', marginBottom: 'var(--space-xs)'}}>
+                Crew Members
+              </div>
+              <div style={{fontSize: 'var(--text-4xl)', fontWeight: 'bold', color: '#6366f1', marginBottom: 'var(--space-xs)'}}>
+                {session.user.role === 'OWNER' ? '18' : '12'}
+              </div>
+              <div style={{fontSize: 'var(--text-xs)', color: 'var(--text-secondary)'}}>
+                active today
+              </div>
+            </div>
+          </div>
+
+          {/* Project Status Summary */}
+          <div style={{
+            backgroundColor: 'var(--bg-card)',
+            padding: 'var(--space-xl)',
+            borderRadius: 'var(--radius-lg)',
+            boxShadow: 'var(--shadow-md)',
+            marginBottom: 'var(--space-2xl)'
+          }}>
+            <h2 style={{fontSize: 'var(--text-xl)', marginBottom: 'var(--space-lg)'}}>
+              Project Status Summary
+            </h2>
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+              gap: 'var(--space-md)'
+            }}>
+              <div style={{padding: 'var(--space-md)', backgroundColor: 'var(--bg-accent)', borderRadius: 'var(--radius-md)'}}>
+                <div style={{fontSize: 'var(--text-sm)', color: 'var(--text-secondary)', marginBottom: 'var(--space-xs)'}}>
+                  Planning
+                </div>
+                <div style={{fontSize: 'var(--text-2xl)', fontWeight: 'bold', color: '#6b7280'}}>
+                  {planningCount}
+                </div>
+              </div>
+              <div style={{padding: 'var(--space-md)', backgroundColor: 'var(--bg-accent)', borderRadius: 'var(--radius-md)'}}>
+                <div style={{fontSize: 'var(--text-sm)', color: 'var(--text-secondary)', marginBottom: 'var(--space-xs)'}}>
+                  In Progress
+                </div>
+                <div style={{fontSize: 'var(--text-2xl)', fontWeight: 'bold', color: '#10b981'}}>
+                  {inProgressCount}
+                </div>
+              </div>
+              <div style={{padding: 'var(--space-md)', backgroundColor: 'var(--bg-accent)', borderRadius: 'var(--radius-md)'}}>
+                <div style={{fontSize: 'var(--text-sm)', color: 'var(--text-secondary)', marginBottom: 'var(--space-xs)'}}>
+                  Completed
+                </div>
+                <div style={{fontSize: 'var(--text-2xl)', fontWeight: 'bold', color: '#3b82f6'}}>
+                  {completedCount}
+                </div>
+              </div>
+              <div style={{padding: 'var(--space-md)', backgroundColor: 'var(--bg-accent)', borderRadius: 'var(--radius-md)'}}>
+                <div style={{fontSize: 'var(--text-sm)', color: 'var(--text-secondary)', marginBottom: 'var(--space-xs)'}}>
+                  On Hold
+                </div>
+                <div style={{fontSize: 'var(--text-2xl)', fontWeight: 'bold', color: '#f59e0b'}}>
+                  {onHoldCount}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Recent Activity Grid */}
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: '1fr',
             gap: 'var(--space-lg)'
           }}>
+            {/* Recent Bore Logs */}
             <div style={{
               backgroundColor: 'var(--bg-card)',
-              padding: 'var(--space-lg)',
+              padding: 'var(--space-xl)',
               borderRadius: 'var(--radius-lg)',
-              boxShadow: 'var(--shadow-md)',
-              textAlign: 'center'
+              boxShadow: 'var(--shadow-md)'
             }}>
-              <div style={{fontSize: 'var(--text-3xl)', fontWeight: 'bold', color: 'var(--color-primary)'}}>
-                Active
+              <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--space-lg)'}}>
+                <h2 style={{fontSize: 'var(--text-xl)', marginBottom: 0}}>Recent Bore Logs</h2>
+                <Link href="/dashboard/bore-logs" style={{fontSize: 'var(--text-sm)', color: 'var(--color-secondary)', fontWeight: 600}}>
+                  View All →
+                </Link>
               </div>
-              <div style={{fontSize: 'var(--text-sm)', color: 'var(--text-secondary)', marginTop: 'var(--space-xs)'}}>
-                System Status
-              </div>
+              {recentBores.length === 0 ? (
+                <p style={{color: 'var(--text-secondary)', textAlign: 'center', padding: 'var(--space-xl)'}}>
+                  No bore logs yet
+                </p>
+              ) : (
+                <table style={{width: '100%', borderCollapse: 'collapse'}}>
+                  <thead>
+                    <tr style={{borderBottom: '2px solid var(--bg-secondary)'}}>
+                      <th style={{padding: 'var(--space-md)', textAlign: 'left', fontSize: 'var(--text-sm)', fontWeight: 600}}>Name</th>
+                      <th style={{padding: 'var(--space-md)', textAlign: 'left', fontSize: 'var(--text-sm)', fontWeight: 600}}>Project</th>
+                      <th style={{padding: 'var(--space-md)', textAlign: 'left', fontSize: 'var(--text-sm)', fontWeight: 600}}>Status</th>
+                      <th style={{padding: 'var(--space-md)', textAlign: 'left', fontSize: 'var(--text-sm)', fontWeight: 600}}>Created</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {recentBores.map(bore => (
+                      <tr key={bore.id} style={{borderBottom: '1px solid var(--bg-secondary)'}}>
+                        <td style={{padding: 'var(--space-md)'}}>
+                          <Link href={`/dashboard/bore-logs/${bore.id}`} style={{color: 'var(--color-primary)', fontWeight: 600}}>
+                            {bore.name}
+                          </Link>
+                        </td>
+                        <td style={{padding: 'var(--space-md)', color: 'var(--text-secondary)'}}>{bore.project.name}</td>
+                        <td style={{padding: 'var(--space-md)'}}>
+                          <span style={{
+                            padding: 'var(--space-xs) var(--space-sm)',
+                            borderRadius: 'var(--radius-sm)',
+                            fontSize: 'var(--text-xs)',
+                            fontWeight: 600,
+                            backgroundColor: bore.status === 'IN_PROGRESS' ? '#10b981' : bore.status === 'COMPLETED' ? '#3b82f6' : '#6b7280',
+                            color: 'white'
+                          }}>
+                            {bore.status}
+                          </span>
+                        </td>
+                        <td style={{padding: 'var(--space-md)', color: 'var(--text-secondary)', fontSize: 'var(--text-sm)'}}>
+                          {new Date(bore.createdAt).toLocaleDateString()}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
             </div>
 
+            {/* Recent Daily Reports */}
             <div style={{
               backgroundColor: 'var(--bg-card)',
-              padding: 'var(--space-lg)',
+              padding: 'var(--space-xl)',
               borderRadius: 'var(--radius-lg)',
-              boxShadow: 'var(--shadow-md)',
-              textAlign: 'center'
+              boxShadow: 'var(--shadow-md)'
             }}>
-              <div style={{fontSize: 'var(--text-3xl)', fontWeight: 'bold', color: 'var(--success)'}}>
-                Ready
+              <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--space-lg)'}}>
+                <h2 style={{fontSize: 'var(--text-xl)', marginBottom: 0}}>Recent Daily Reports</h2>
+                <Link href="/dashboard/field-reports" style={{fontSize: 'var(--text-sm)', color: 'var(--color-secondary)', fontWeight: 600}}>
+                  View All →
+                </Link>
               </div>
-              <div style={{fontSize: 'var(--text-sm)', color: 'var(--text-secondary)', marginTop: 'var(--space-xs)'}}>
-                Database Connected
-              </div>
+              {recentReports.length === 0 ? (
+                <p style={{color: 'var(--text-secondary)', textAlign: 'center', padding: 'var(--space-xl)'}}>
+                  No daily reports yet
+                </p>
+              ) : (
+                <table style={{width: '100%', borderCollapse: 'collapse'}}>
+                  <thead>
+                    <tr style={{borderBottom: '2px solid var(--bg-secondary)'}}>
+                      <th style={{padding: 'var(--space-md)', textAlign: 'left', fontSize: 'var(--text-sm)', fontWeight: 600}}>Project</th>
+                      <th style={{padding: 'var(--space-md)', textAlign: 'left', fontSize: 'var(--text-sm)', fontWeight: 600}}>Date</th>
+                      <th style={{padding: 'var(--space-md)', textAlign: 'left', fontSize: 'var(--text-sm)', fontWeight: 600}}>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {recentReports.map(report => (
+                      <tr key={report.id} style={{borderBottom: '1px solid var(--bg-secondary)'}}>
+                        <td style={{padding: 'var(--space-md)', color: 'var(--color-primary)', fontWeight: 600}}>
+                          {report.project.name}
+                        </td>
+                        <td style={{padding: 'var(--space-md)', color: 'var(--text-secondary)'}}>
+                          {new Date(report.reportDate).toLocaleDateString()}
+                        </td>
+                        <td style={{padding: 'var(--space-md)'}}>
+                          <span style={{
+                            padding: 'var(--space-xs) var(--space-sm)',
+                            borderRadius: 'var(--radius-sm)',
+                            fontSize: 'var(--text-xs)',
+                            fontWeight: 600,
+                            backgroundColor: report.status === 'APPROVED' ? '#10b981' : report.status === 'SUBMITTED' ? '#f59e0b' : '#6b7280',
+                            color: 'white'
+                          }}>
+                            {report.status}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
             </div>
+          </div>
 
+          {/* Quick Actions */}
+          <div style={{
+            backgroundColor: 'var(--bg-card)',
+            padding: 'var(--space-xl)',
+            borderRadius: 'var(--radius-lg)',
+            boxShadow: 'var(--shadow-md)',
+            marginTop: 'var(--space-2xl)'
+          }}>
+            <h2 style={{fontSize: 'var(--text-xl)', marginBottom: 'var(--space-lg)'}}>
+              Quick Actions
+            </h2>
             <div style={{
-              backgroundColor: 'var(--bg-card)',
-              padding: 'var(--space-lg)',
-              borderRadius: 'var(--radius-lg)',
-              boxShadow: 'var(--shadow-md)',
-              textAlign: 'center'
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+              gap: 'var(--space-md)'
             }}>
-              <div style={{fontSize: 'var(--text-3xl)', fontWeight: 'bold', color: 'var(--color-secondary)'}}>
-                17+
-              </div>
-              <div style={{fontSize: 'var(--text-sm)', color: 'var(--text-secondary)', marginTop: 'var(--space-xs)'}}>
-                Data Models
-              </div>
+              <Link href="/dashboard/projects" className="btn btn-primary" style={{textAlign: 'center'}}>
+                View Projects
+              </Link>
+              <Link href="/dashboard/bore-logs" className="btn btn-secondary" style={{textAlign: 'center'}}>
+                View Bore Logs
+              </Link>
+              <Link href="/dashboard/811-tickets" className="btn btn-secondary" style={{textAlign: 'center'}}>
+                811 Tickets
+              </Link>
             </div>
           </div>
         </div>

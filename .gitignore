@@ -62,3 +62,5 @@ prisma/migrations/
 .local/
 # Production Environment - DO NOT COMMIT
 .env.production
+nul
+prisma/prisma/test.db

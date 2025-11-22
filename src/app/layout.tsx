@@ -2,8 +2,10 @@ import type { Metadata } from 'next'
 import { Oswald, Inter } from 'next/font/google'
 import Image from 'next/image'
 import Link from 'next/link'
+import { auth } from '@/auth'
 import DarkModeToggle from '@/components/DarkModeToggle'
 import MobileMenu from '@/components/MobileMenu'
+import UserMenu from '@/components/UserMenu'
 import './globals.css'
 
 const oswald = Oswald({
@@ -32,11 +34,13 @@ export const viewport = {
   ],
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
+  const session = await auth()
+
   return (
     <html lang="en" className={`${oswald.variable} ${inter.variable} no-transition`}>
       <body>
@@ -62,7 +66,7 @@ export default function RootLayout({
               <ul className="nav-links">
                 <li><Link href="/">Home</Link></li>
                 <li><Link href="/dashboard">Dashboard</Link></li>
-                <li><Link href="/auth/login">Login</Link></li>
+                {!session && <li><Link href="/auth/login">Login</Link></li>}
               </ul>
               <a href="tel:3203826636" className="nav-phone" aria-label="Call us at 320-382-6636">
                 📞 (320) 382-6636
@@ -70,6 +74,11 @@ export default function RootLayout({
 
               {/* Dark Mode Toggle */}
               <DarkModeToggle />
+
+              {/* User Menu (when logged in) */}
+              {session?.user && (
+                <UserMenu user={session.user} />
+              )}
             </nav>
 
             {/* Mobile Menu */}

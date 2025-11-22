@@ -40,6 +40,7 @@ model User {
   ticket811Responses    Ticket811Response[]
   events                Event[]
   auditLogs             ReportAudit[]
+  photos                Photo[]
 
   @@index([email])
   @@index([role])
@@ -121,6 +122,7 @@ model Bore {
   inspections     Inspection[]
   rfis            RFI[]
   events          Event[]
+  photos          Photo[]
 
   @@index([projectId])
   @@index([status])
@@ -187,6 +189,7 @@ model DailyReport {
   createdBy       User          @relation("ReportCreator", fields: [createdById], references: [id])
   signedBy        User?         @relation("ReportSigner", fields: [signedById], references: [id])
   auditLogs       ReportAudit[]
+  photosNew       Photo[]
 
   @@unique([projectId, reportDate])
   @@index([projectId])
@@ -240,6 +243,7 @@ model Inspection {
   assignee        User?               @relation("InspectionAssignee", fields: [assigneeId], references: [id])
   createdBy       User                @relation("InspectionCreator", fields: [createdById], references: [id])
   correctiveActions CorrectiveAction[]
+  photos          Photo[]
 
   @@index([projectId])
   @@index([status])
@@ -475,4 +479,32 @@ model Pit {
   exitBores       Bore[]    @relation("ExitPit")
 
   @@index([projectId])
+}
+
+// ============================================================================
+// PHOTO MANAGEMENT
+// ============================================================================
+
+model Photo {
+  id            String       @id @default(cuid())
+  filename      String
+  url           String
+  thumbnailUrl  String?
+  size          Int
+  mimeType      String
+  boreId        String?
+  inspectionId  String?
+  dailyReportId String?
+  uploadedById  String
+  createdAt     DateTime     @default(now())
+
+  // Relations
+  bore          Bore?        @relation(fields: [boreId], references: [id], onDelete: Cascade)
+  inspection    Inspection?  @relation(fields: [inspectionId], references: [id], onDelete: Cascade)
+  dailyReport   DailyReport? @relation(fields: [dailyReportId], references: [id], onDelete: Cascade)
+  uploadedBy    User         @relation(fields: [uploadedById], references: [id])
+
+  @@index([boreId])
+  @@index([inspectionId])
+  @@index([dailyReportId])
 }

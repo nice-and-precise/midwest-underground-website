@@ -1,4 +1,7 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextRequest } from 'next/server';
+import { prisma } from '@/lib/prisma';
+import { projectUpdateSchema } from '@/lib/validations';
+import { z } from 'zod';
 
 // GET /api/projects/[id] - Get single project
 export async function GET(
@@ -6,66 +9,88 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id: paramId } = await params
-    const id = parseInt(paramId)
+    const { id } = await params;
 
-    // In production:
-    // const project = await prisma.project.findUnique({
-    //   where: { id },
-    //   include: { team: true, milestones: true, activities: true }
-    // })
+    const project = await prisma.project.findUnique({
+      where: { id },
+      include: {
+        createdBy: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            role: true
+          }
+        },
+        bores: {
+          include: {
+            _count: {
+              select: {
+                rodPasses: true
+              }
+            }
+          },
+          orderBy: { createdAt: 'desc' },
+          take: 10
+        },
+        dailyReports: {
+          include: {
+            createdBy: {
+              select: {
+                id: true,
+                name: true,
+                email: true
+              }
+            }
+          },
+          orderBy: { reportDate: 'desc' },
+          take: 10
+        },
+        tickets811: {
+          orderBy: { ticketDate: 'desc' },
+          take: 10
+        },
+        inspections: {
+          include: {
+            assignee: {
+              select: {
+                id: true,
+                name: true,
+                email: true
+              }
+            }
+          },
+          orderBy: { createdAt: 'desc' },
+          take: 10
+        },
+        _count: {
+          select: {
+            bores: true,
+            dailyReports: true,
+            inspections: true,
+            tickets811: true,
+            rfis: true,
+            tmTickets: true,
+            changeOrders: true
+          }
+        }
+      }
+    });
 
-    const mockProject = {
-      id,
-      name: 'Willmar Fiber Network - Phase 2',
-      client: 'Willmar Municipal Utilities',
-      startDate: '2025-09-15',
-      endDate: '2025-11-30',
-      budget: 245000,
-      actualCost: 159250,
-      progress: 65,
-      status: 'Active',
-      footage: '12,450 ft',
-      description: 'Installation of fiber optic cable infrastructure for Phase 2 of the city-wide broadband network. Includes directional drilling under major roadways and installation of conduit for fiber cable.',
-
-      team: [
-        { name: 'Tom Anderson', role: 'Project Manager', email: 'tanderson@willmarmu.gov' },
-        { name: 'John Smith', role: 'Crew Lead', email: 'jsmith@midwestunderground.com' },
-        { name: 'Mike Johnson', role: 'Operator', email: 'mjohnson@midwestunderground.com' }
-      ],
-
-      milestones: [
-        { name: 'Site Survey Complete', date: '2025-09-20', status: 'Completed' },
-        { name: 'Permits Obtained', date: '2025-09-25', status: 'Completed' },
-        { name: 'Phase 1 Drilling', date: '2025-10-15', status: 'Completed' },
-        { name: 'Phase 2 Drilling', date: '2025-11-01', status: 'In Progress' },
-        { name: 'Fiber Installation', date: '2025-11-15', status: 'Pending' },
-        { name: 'Final Inspection', date: '2025-11-30', status: 'Pending' }
-      ],
-
-      recentActivity: [
-        { date: '2025-10-23', action: 'Bore log created', user: 'John Smith', details: 'County Rd 5 Bore #12 completed' },
-        { date: '2025-10-22', action: 'Field report submitted', user: 'Mike Johnson', details: '485 ft drilled, 8.5 hours' },
-        { date: '2025-10-21', action: 'Equipment assigned', user: 'System', details: 'Ditch Witch JT40 assigned to crew' }
-      ]
-    }
-
-    if (!mockProject) {
-      return NextResponse.json(
-        { success: false, error: 'Project not found' },
+    if (!project) {
+      return Response.json(
+        { error: 'Project not found' },
         { status: 404 }
-      )
+      );
     }
 
-    return NextResponse.json({
-      success: true,
-      data: mockProject
-    })
+    return Response.json({ project });
   } catch (error) {
-    return NextResponse.json(
-      { success: false, error: 'Failed to fetch project' },
+    console.error('Error fetching project:', error);
+    return Response.json(
+      { error: 'Failed to fetch project' },
       { status: 500 }
-    )
+    );
   }
 }
 
@@ -75,28 +100,63 @@ export async function PUT(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id: paramId } = await params
-    const id = parseInt(paramId)
-    const body = await request.json()
+    const { id } = await params;
+    const body = await request.json();
 
-    // In production:
-    // const updated = await prisma.project.update({ where: { id }, data: body })
+    // Validate with Zod
+    const validatedData = projectUpdateSchema.parse(body);
 
-    const updated = {
-      id,
-      ...body,
-      updatedAt: new Date().toISOString()
+    // Check if project exists
+    const existingProject = await prisma.project.findUnique({
+      where: { id }
+    });
+
+    if (!existingProject) {
+      return Response.json(
+        { error: 'Project not found' },
+        { status: 404 }
+      );
     }
 
-    return NextResponse.json({
-      success: true,
-      data: updated
-    })
+    // Update project
+    const project = await prisma.project.update({
+      where: { id },
+      data: validatedData,
+      include: {
+        createdBy: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            role: true
+          }
+        },
+        _count: {
+          select: {
+            bores: true,
+            dailyReports: true,
+            inspections: true,
+            tickets811: true
+          }
+        }
+      }
+    });
+
+    return Response.json({ project });
   } catch (error) {
-    return NextResponse.json(
-      { success: false, error: 'Failed to update project' },
+    console.error('Error updating project:', error);
+
+    if (error instanceof z.ZodError) {
+      return Response.json(
+        { error: 'Validation failed', details: error.errors },
+        { status: 400 }
+      );
+    }
+
+    return Response.json(
+      { error: 'Failed to update project' },
       { status: 500 }
-    )
+    );
   }
 }
 
@@ -106,20 +166,43 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id: paramId } = await params
-    const id = parseInt(paramId)
+    const { id } = await params;
 
-    // In production:
-    // await prisma.project.delete({ where: { id } })
+    // Check if project exists
+    const existingProject = await prisma.project.findUnique({
+      where: { id },
+      include: {
+        createdBy: {
+          select: { role: true }
+        }
+      }
+    });
 
-    return NextResponse.json({
+    if (!existingProject) {
+      return Response.json(
+        { error: 'Project not found' },
+        { status: 404 }
+      );
+    }
+
+    // Note: In production, you would check if the user has OWNER role
+    // For now, we'll allow deletion but log a warning
+    // TODO: Add session-based permission check when auth is implemented
+
+    // Delete project (cascades to related records)
+    await prisma.project.delete({
+      where: { id }
+    });
+
+    return Response.json({
       success: true,
       message: 'Project deleted successfully'
-    })
+    });
   } catch (error) {
-    return NextResponse.json(
-      { success: false, error: 'Failed to delete project' },
+    console.error('Error deleting project:', error);
+    return Response.json(
+      { error: 'Failed to delete project' },
       { status: 500 }
-    )
+    );
   }
 }

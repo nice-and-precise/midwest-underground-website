@@ -5,43 +5,73 @@ export const metadata = {
   description: 'Daily field reports with crew activities, production metrics, and equipment tracking'
 }
 
-const mockReports = [
-  {
-    id: 1,
-    date: '2025-10-23',
-    project: 'Willmar Fiber Network - Phase 2',
-    crew: 'Crew A - John Smith',
-    hours: 8.5,
-    footage: 485,
-    equipment: 'Ditch Witch JT40',
-    weather: 'Sunny, 68°F',
-    status: 'Submitted'
-  },
-  {
-    id: 2,
-    date: '2025-10-22',
-    project: 'CenturyLink Expansion',
-    crew: 'Crew B - Mike Johnson',
-    hours: 7.0,
-    footage: 320,
-    equipment: 'Vermeer D24x40',
-    weather: 'Cloudy, 62°F',
-    status: 'Approved'
-  },
-  {
-    id: 3,
-    date: '2025-10-21',
-    project: 'Rural Electric Co-op',
-    crew: 'Crew A - John Smith',
-    hours: 9.5,
-    footage: 680,
-    equipment: 'Ditch Witch JT40',
-    weather: 'Rain, 58°F',
-    status: 'Pending Review'
+// Fetch daily reports from API
+async function getDailyReports() {
+  try {
+    // In production, this would be: await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/hdd/daily-reports`)
+    // For now, return mock data
+    return [
+      {
+        id: 1,
+        date: '2025-10-23',
+        project: { id: 1, name: 'Willmar Fiber Network - Phase 2' },
+        bore: { id: 1, boreId: 'B-001' },
+        crew: 'Crew A - John Smith',
+        hours: 8.5,
+        footage: 485,
+        status: 'SUBMITTED'
+      },
+      {
+        id: 2,
+        date: '2025-10-22',
+        project: { id: 2, name: 'CenturyLink Expansion' },
+        bore: { id: 2, boreId: 'B-002' },
+        crew: 'Crew B - Mike Johnson',
+        hours: 7.0,
+        footage: 320,
+        status: 'APPROVED'
+      },
+      {
+        id: 3,
+        date: '2025-10-21',
+        project: { id: 3, name: 'Rural Electric Co-op' },
+        bore: { id: 3, boreId: 'B-003' },
+        crew: 'Crew A - John Smith',
+        hours: 9.5,
+        footage: 680,
+        status: 'DRAFT'
+      }
+    ]
+  } catch (error) {
+    console.error('Failed to fetch daily reports:', error)
+    return []
   }
-]
+}
 
-export default function FieldReportsPage() {
+function StatusBadge({ status }: { status: string }) {
+  const colors: Record<string, string> = {
+    DRAFT: '#6b7280',
+    SUBMITTED: '#3b82f6',
+    APPROVED: '#10b981',
+    REJECTED: '#ef4444'
+  }
+  return (
+    <span style={{
+      padding: 'var(--space-xs) var(--space-sm)',
+      borderRadius: 'var(--radius-sm)',
+      fontSize: 'var(--text-xs)',
+      fontWeight: 600,
+      backgroundColor: colors[status] || '#6b7280',
+      color: 'white'
+    }}>
+      {status}
+    </span>
+  )
+}
+
+export default async function FieldReportsPage() {
+  const reports = await getDailyReports()
+
   return (
     <>
       <section className="section" style={{
@@ -63,6 +93,87 @@ export default function FieldReportsPage() {
 
       <section className="section">
         <div className="container">
+          {/* Filters */}
+          <div style={{
+            marginBottom: 'var(--space-xl)',
+            padding: 'var(--space-lg)',
+            backgroundColor: 'var(--bg-secondary)',
+            borderRadius: 'var(--radius-md)',
+            display: 'flex',
+            gap: 'var(--space-md)',
+            flexWrap: 'wrap',
+            alignItems: 'center'
+          }}>
+            <div style={{ flex: '1 1 200px' }}>
+              <label style={{ display: 'block', marginBottom: 'var(--space-xs)', fontSize: 'var(--text-sm)', fontWeight: 600 }}>
+                Date Range
+              </label>
+              <input
+                type="date"
+                style={{
+                  width: '100%',
+                  padding: 'var(--space-sm)',
+                  border: '2px solid var(--bg-primary)',
+                  borderRadius: 'var(--radius-md)',
+                  fontSize: 'var(--text-base)'
+                }}
+              />
+            </div>
+            <div style={{ flex: '1 1 200px' }}>
+              <label style={{ display: 'block', marginBottom: 'var(--space-xs)', fontSize: 'var(--text-sm)', fontWeight: 600 }}>
+                Project
+              </label>
+              <select style={{
+                width: '100%',
+                padding: 'var(--space-sm)',
+                border: '2px solid var(--bg-primary)',
+                borderRadius: 'var(--radius-md)',
+                fontSize: 'var(--text-base)'
+              }}>
+                <option>All Projects</option>
+                <option>Willmar Fiber Network</option>
+                <option>CenturyLink Expansion</option>
+                <option>Rural Electric Co-op</option>
+              </select>
+            </div>
+            <div style={{ flex: '1 1 150px' }}>
+              <label style={{ display: 'block', marginBottom: 'var(--space-xs)', fontSize: 'var(--text-sm)', fontWeight: 600 }}>
+                Crew
+              </label>
+              <select style={{
+                width: '100%',
+                padding: 'var(--space-sm)',
+                border: '2px solid var(--bg-primary)',
+                borderRadius: 'var(--radius-md)',
+                fontSize: 'var(--text-base)'
+              }}>
+                <option>All Crews</option>
+                <option>Crew A</option>
+                <option>Crew B</option>
+                <option>Crew C</option>
+              </select>
+            </div>
+            <div style={{ flex: '1 1 150px' }}>
+              <label style={{ display: 'block', marginBottom: 'var(--space-xs)', fontSize: 'var(--text-sm)', fontWeight: 600 }}>
+                Status
+              </label>
+              <select style={{
+                width: '100%',
+                padding: 'var(--space-sm)',
+                border: '2px solid var(--bg-primary)',
+                borderRadius: 'var(--radius-md)',
+                fontSize: 'var(--text-base)'
+              }}>
+                <option>All Status</option>
+                <option>Draft</option>
+                <option>Submitted</option>
+                <option>Approved</option>
+                <option>Rejected</option>
+              </select>
+            </div>
+          </div>
+
+          {/* Reports Table */}
           <div style={{backgroundColor: 'var(--bg-card)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)', overflow: 'hidden'}}>
             <div style={{overflowX: 'auto'}}>
               <table style={{width: '100%', borderCollapse: 'collapse', fontSize: 'var(--text-sm)'}}>
@@ -70,44 +181,101 @@ export default function FieldReportsPage() {
                   <tr style={{backgroundColor: 'var(--bg-secondary)', borderBottom: '2px solid var(--bg-primary)'}}>
                     <th style={{padding: 'var(--space-md)', textAlign: 'left', fontWeight: 600}}>Date</th>
                     <th style={{padding: 'var(--space-md)', textAlign: 'left', fontWeight: 600}}>Project</th>
+                    <th style={{padding: 'var(--space-md)', textAlign: 'left', fontWeight: 600}}>Bore</th>
                     <th style={{padding: 'var(--space-md)', textAlign: 'left', fontWeight: 600}}>Crew</th>
                     <th style={{padding: 'var(--space-md)', textAlign: 'left', fontWeight: 600}}>Hours</th>
                     <th style={{padding: 'var(--space-md)', textAlign: 'left', fontWeight: 600}}>Footage</th>
-                    <th style={{padding: 'var(--space-md)', textAlign: 'left', fontWeight: 600}}>Equipment</th>
-                    <th style={{padding: 'var(--space-md)', textAlign: 'left', fontWeight: 600}}>Weather</th>
                     <th style={{padding: 'var(--space-md)', textAlign: 'left', fontWeight: 600}}>Status</th>
                     <th style={{padding: 'var(--space-md)', textAlign: 'left', fontWeight: 600}}>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {mockReports.map((report, index) => (
-                    <tr key={report.id} style={{borderBottom: index < mockReports.length - 1 ? '1px solid var(--bg-secondary)' : 'none'}}>
-                      <td style={{padding: 'var(--space-md)'}}>{report.date}</td>
-                      <td style={{padding: 'var(--space-md)', fontWeight: 600}}>{report.project}</td>
-                      <td style={{padding: 'var(--space-md)', color: 'var(--text-secondary)'}}>{report.crew}</td>
-                      <td style={{padding: 'var(--space-md)'}}>{report.hours} hrs</td>
-                      <td style={{padding: 'var(--space-md)'}}>{report.footage} ft</td>
-                      <td style={{padding: 'var(--space-md)', color: 'var(--text-secondary)'}}>{report.equipment}</td>
-                      <td style={{padding: 'var(--space-md)', color: 'var(--text-secondary)'}}>{report.weather}</td>
-                      <td style={{padding: 'var(--space-md)'}}>
-                        <span style={{
-                          padding: '4px 12px',
-                          borderRadius: 'var(--radius-sm)',
-                          fontSize: 'var(--text-xs)',
-                          fontWeight: 600,
-                          backgroundColor: report.status === 'Approved' ? 'var(--success)' : report.status === 'Submitted' ? 'var(--color-secondary)' : 'var(--bg-accent)',
-                          color: 'var(--white)'
-                        }}>
-                          {report.status}
-                        </span>
-                      </td>
-                      <td style={{padding: 'var(--space-md)'}}>
-                        <Link href={`/dashboard/field-reports/${report.id}`} style={{color: 'var(--color-primary)', fontWeight: 600}}>View →</Link>
+                  {reports.length === 0 ? (
+                    <tr>
+                      <td colSpan={8} style={{padding: 'var(--space-2xl)', textAlign: 'center', color: 'var(--text-secondary)'}}>
+                        No field reports found. Create your first report to get started.
                       </td>
                     </tr>
-                  ))}
+                  ) : (
+                    reports.map((report, index) => (
+                      <tr key={report.id} style={{borderBottom: index < reports.length - 1 ? '1px solid var(--bg-secondary)' : 'none'}}>
+                        <td style={{padding: 'var(--space-md)', fontWeight: 600}}>{report.date}</td>
+                        <td style={{padding: 'var(--space-md)'}}>{report.project.name}</td>
+                        <td style={{padding: 'var(--space-md)', fontFamily: 'monospace', color: 'var(--text-secondary)'}}>{report.bore.boreId}</td>
+                        <td style={{padding: 'var(--space-md)', color: 'var(--text-secondary)'}}>{report.crew}</td>
+                        <td style={{padding: 'var(--space-md)'}}>{report.hours} hrs</td>
+                        <td style={{padding: 'var(--space-md)', fontWeight: 600}}>{report.footage} ft</td>
+                        <td style={{padding: 'var(--space-md)'}}>
+                          <StatusBadge status={report.status} />
+                        </td>
+                        <td style={{padding: 'var(--space-md)'}}>
+                          <div style={{ display: 'flex', gap: 'var(--space-sm)' }}>
+                            <Link href={`/dashboard/field-reports/${report.id}`} style={{color: 'var(--color-primary)', fontWeight: 600}}>
+                              View
+                            </Link>
+                            {report.status === 'DRAFT' && (
+                              <>
+                                <span style={{ color: 'var(--text-secondary)' }}>•</span>
+                                <Link href={`/dashboard/field-reports/${report.id}/edit`} style={{color: 'var(--color-secondary)', fontWeight: 600}}>
+                                  Edit
+                                </Link>
+                              </>
+                            )}
+                          </div>
+                        </td>
+                      </tr>
+                    ))
+                  )}
                 </tbody>
               </table>
+            </div>
+          </div>
+
+          {/* Summary Stats */}
+          <div style={{
+            marginTop: 'var(--space-xl)',
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+            gap: 'var(--space-md)'
+          }}>
+            <div style={{
+              padding: 'var(--space-lg)',
+              backgroundColor: 'var(--bg-card)',
+              borderRadius: 'var(--radius-md)',
+              boxShadow: 'var(--shadow-sm)'
+            }}>
+              <p style={{ fontSize: 'var(--text-sm)', color: 'var(--text-secondary)', marginBottom: 'var(--space-xs)' }}>
+                Total Reports
+              </p>
+              <p style={{ fontSize: 'var(--text-2xl)', fontWeight: 700, color: 'var(--color-primary)' }}>
+                {reports.length}
+              </p>
+            </div>
+            <div style={{
+              padding: 'var(--space-lg)',
+              backgroundColor: 'var(--bg-card)',
+              borderRadius: 'var(--radius-md)',
+              boxShadow: 'var(--shadow-sm)'
+            }}>
+              <p style={{ fontSize: 'var(--text-sm)', color: 'var(--text-secondary)', marginBottom: 'var(--space-xs)' }}>
+                Total Footage
+              </p>
+              <p style={{ fontSize: 'var(--text-2xl)', fontWeight: 700, color: 'var(--color-secondary)' }}>
+                {reports.reduce((sum, r) => sum + r.footage, 0)} ft
+              </p>
+            </div>
+            <div style={{
+              padding: 'var(--space-lg)',
+              backgroundColor: 'var(--bg-card)',
+              borderRadius: 'var(--radius-md)',
+              boxShadow: 'var(--shadow-sm)'
+            }}>
+              <p style={{ fontSize: 'var(--text-sm)', color: 'var(--text-secondary)', marginBottom: 'var(--space-xs)' }}>
+                Total Hours
+              </p>
+              <p style={{ fontSize: 'var(--text-2xl)', fontWeight: 700, color: 'var(--success)' }}>
+                {reports.reduce((sum, r) => sum + r.hours, 0).toFixed(1)} hrs
+              </p>
             </div>
           </div>
         </div>

@@ -1,4 +1,6 @@
 import Link from 'next/link'
+import { redirect } from 'next/navigation'
+import { auth } from '@/auth'
 import LoginForm from '@/components/LoginForm'
 
 export const metadata = {
@@ -6,7 +8,14 @@ export const metadata = {
   description: 'Sign in to access your HDD operations dashboard'
 }
 
-export default function LoginPage() {
+export default async function LoginPage() {
+  // Check if user is already authenticated
+  const session = await auth()
+
+  if (session) {
+    redirect('/dashboard')
+  }
+
   return (
     <>
       {/* Login Hero */}
@@ -61,7 +70,7 @@ export default function LoginPage() {
             <div style={{textAlign: 'center', fontSize: 'var(--text-sm)', color: 'var(--text-secondary)'}}>
               <p>
                 Don't have an account?{' '}
-                <Link href="/auth/register" style={{color: 'var(--color-primary)', fontWeight: 600}}>
+                <Link href="/contact" style={{color: 'var(--color-primary)', fontWeight: 600}}>
                   Contact your administrator
                 </Link>
               </p>
@@ -76,12 +85,12 @@ export default function LoginPage() {
               border: '2px solid var(--color-secondary)'
             }}>
               <p style={{fontSize: 'var(--text-sm)', color: 'var(--text-secondary)', margin: 0, marginBottom: 'var(--space-xs)'}}>
-                <strong style={{color: 'var(--color-primary)'}}>Demo Credentials:</strong>
+                <strong style={{color: 'var(--color-primary)'}}>Test Credentials:</strong>
               </p>
-              <p style={{fontSize: 'var(--text-xs)', color: 'var(--text-secondary)', margin: 0, fontFamily: 'monospace'}}>
-                Admin: jsmith@midwestunderground.com / admin123<br/>
-                Operator: mjohnson@midwestunderground.com / operator123<br/>
-                Client: tanderson@willmarmu.gov / client123
+              <p style={{fontSize: 'var(--text-xs)', color: 'var(--text-secondary)', margin: 0, fontFamily: 'monospace', lineHeight: '1.6'}}>
+                Owner: owner@midwestunderground.com / password123<br/>
+                Super: super@midwestunderground.com / password123<br/>
+                Crew: crew@midwestunderground.com / password123
               </p>
             </div>
           </div>

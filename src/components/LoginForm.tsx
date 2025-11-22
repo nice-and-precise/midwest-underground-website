@@ -1,10 +1,8 @@
 'use client'
 
-import { useState } from 'react'
-import { signIn } from 'next-auth/react'
+import { useState, useTransition } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import Link from 'next/link'
-import { loginSchema } from '@/lib/validations'
+import { signIn } from 'next-auth/react'
 
 export default function LoginForm() {
   const router = useRouter()
@@ -13,155 +11,170 @@ export default function LoginForm() {
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [error, setError] = useState('')
-  const [fieldErrors, setFieldErrors] = useState<{ email?: string; password?: string }>({})
-  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [isPending, startTransition] = useTransition()
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setError('')
-    setFieldErrors({})
-    setIsLoading(true)
+    setError(null)
 
-    // Validate with Zod
-    const validation = loginSchema.safeParse({ email, password })
-    if (!validation.success) {
-      const errors: { email?: string; password?: string } = {}
-      validation.error.errors.forEach((err) => {
-        if (err.path[0] === 'email') errors.email = err.message
-        if (err.path[0] === 'password') errors.password = err.message
-      })
-      setFieldErrors(errors)
-      setIsLoading(false)
-      return
-    }
+    startTransition(async () => {
+      try {
+        const result = await signIn('credentials', {
+          email,
+          password,
+          redirect: false,
+        })
 
-    try {
-      const result = await signIn('credentials', {
-        email,
-        password,
-        redirect: false
-      })
-
-      if (result?.error) {
-        setError('Invalid email or password')
-        setIsLoading(false)
-      } else {
-        router.push(callbackUrl)
-        router.refresh()
+        if (result?.error) {
+          setError(result.error)
+        } else if (result?.ok) {
+          router.push(callbackUrl)
+          router.refresh()
+        }
+      } catch (err) {
+        setError('An unexpected error occurred. Please try again.')
+        console.error('Login error:', err)
       }
-    } catch (error) {
-      setError('An error occurred. Please try again.')
-      setIsLoading(false)
-    }
+    })
   }
 
   return (
-    <form onSubmit={handleSubmit} style={{display: 'flex', flexDirection: 'column', gap: 'var(--space-lg)'}}>
+    <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-lg)' }}>
+      {/* Error Message */}
       {error && (
         <div style={{
           padding: 'var(--space-md)',
-          backgroundColor: '#fee',
-          border: '2px solid #fcc',
+          backgroundColor: 'rgba(239, 68, 68, 0.1)',
+          border: '1px solid rgba(239, 68, 68, 0.3)',
           borderRadius: 'var(--radius-md)',
-          color: '#c00',
+          color: '#ef4444',
           fontSize: 'var(--text-sm)'
         }}>
           {error}
         </div>
       )}
 
+      {/* Email Field */}
       <div>
-        <label htmlFor="email" style={{
-          display: 'block',
-          marginBottom: 'var(--space-xs)',
-          fontWeight: 600,
-          color: 'var(--text-primary)'
-        }}>
+        <label
+          htmlFor="email"
+          style={{
+            display: 'block',
+            marginBottom: 'var(--space-xs)',
+            fontSize: 'var(--text-sm)',
+            fontWeight: 600,
+            color: 'var(--text-primary)'
+          }}
+        >
           Email Address
         </label>
         <input
-          type="email"
           id="email"
-          name="email"
+          type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          placeholder="your.email@example.com"
+          required
+          autoComplete="email"
+          disabled={isPending}
+          placeholder="you@company.com"
           style={{
             width: '100%',
-            padding: 'var(--space-sm)',
-            border: `2px solid ${fieldErrors.email ? '#fcc' : 'var(--bg-secondary)'}`,
-            borderRadius: 'var(--radius-md)',
+            padding: 'var(--space-md)',
             fontSize: 'var(--text-base)',
-            transition: 'border-color var(--transition-base)'
+            border: '1px solid var(--bg-secondary)',
+            borderRadius: 'var(--radius-md)',
+            backgroundColor: 'var(--bg-primary)',
+            color: 'var(--text-primary)',
+            outline: 'none',
+            transition: 'border-color 0.2s'
           }}
-          required
-          disabled={isLoading}
+          onFocus={(e) => e.target.style.borderColor = 'var(--color-primary)'}
+          onBlur={(e) => e.target.style.borderColor = 'var(--bg-secondary)'}
         />
-        {fieldErrors.email && (
-          <p style={{color: '#c00', fontSize: 'var(--text-xs)', marginTop: 'var(--space-xs)'}}>
-            {fieldErrors.email}
-          </p>
-        )}
       </div>
 
+      {/* Password Field */}
       <div>
-        <label htmlFor="password" style={{
-          display: 'block',
-          marginBottom: 'var(--space-xs)',
-          fontWeight: 600,
-          color: 'var(--text-primary)'
-        }}>
+        <label
+          htmlFor="password"
+          style={{
+            display: 'block',
+            marginBottom: 'var(--space-xs)',
+            fontSize: 'var(--text-sm)',
+            fontWeight: 600,
+            color: 'var(--text-primary)'
+          }}
+        >
           Password
         </label>
         <input
-          type="password"
           id="password"
-          name="password"
+          type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          required
+          autoComplete="current-password"
+          disabled={isPending}
           placeholder="••••••••"
           style={{
             width: '100%',
-            padding: 'var(--space-sm)',
-            border: `2px solid ${fieldErrors.password ? '#fcc' : 'var(--bg-secondary)'}`,
-            borderRadius: 'var(--radius-md)',
+            padding: 'var(--space-md)',
             fontSize: 'var(--text-base)',
-            transition: 'border-color var(--transition-base)'
+            border: '1px solid var(--bg-secondary)',
+            borderRadius: 'var(--radius-md)',
+            backgroundColor: 'var(--bg-primary)',
+            color: 'var(--text-primary)',
+            outline: 'none',
+            transition: 'border-color 0.2s'
           }}
-          required
-          disabled={isLoading}
+          onFocus={(e) => e.target.style.borderColor = 'var(--color-primary)'}
+          onBlur={(e) => e.target.style.borderColor = 'var(--bg-secondary)'}
         />
-        {fieldErrors.password && (
-          <p style={{color: '#c00', fontSize: 'var(--text-xs)', marginTop: 'var(--space-xs)'}}>
-            {fieldErrors.password}
-          </p>
-        )}
       </div>
 
+      {/* Submit Button */}
+      <button
+        type="submit"
+        disabled={isPending}
+        className="btn btn-primary"
+        style={{
+          width: '100%',
+          padding: 'var(--space-md)',
+          fontSize: 'var(--text-base)',
+          fontWeight: 600,
+          opacity: isPending ? 0.6 : 1,
+          cursor: isPending ? 'not-allowed' : 'pointer'
+        }}
+      >
+        {isPending ? 'Signing in...' : 'Sign In'}
+      </button>
+
+      {/* Remember Me / Forgot Password (Future) */}
       <div style={{
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
         fontSize: 'var(--text-sm)'
       }}>
-        <label style={{display: 'flex', alignItems: 'center', gap: 'var(--space-xs)'}}>
-          <input type="checkbox" name="remember" disabled={isLoading} />
-          <span>Remember me</span>
+        <label style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-xs)', color: 'var(--text-secondary)' }}>
+          <input type="checkbox" disabled style={{ cursor: 'not-allowed' }} />
+          Remember me
         </label>
-        <Link href="/auth/forgot-password" style={{color: 'var(--color-primary)'}}>
+        <button
+          type="button"
+          disabled
+          style={{
+            background: 'none',
+            border: 'none',
+            color: 'var(--text-secondary)',
+            cursor: 'not-allowed',
+            textDecoration: 'underline'
+          }}
+        >
           Forgot password?
-        </Link>
+        </button>
       </div>
-
-      <button
-        type="submit"
-        className="btn btn-primary btn-lg"
-        style={{width: '100%', opacity: isLoading ? 0.7 : 1}}
-        disabled={isLoading}
-      >
-        {isLoading ? 'Signing in...' : 'Sign In'}
-      </button>
     </form>
   )
 }

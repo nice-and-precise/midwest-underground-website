@@ -1,49 +1,77 @@
 import Link from 'next/link'
-import { notFound } from 'next/navigation'
-
-// Mock data - will be replaced with API call
-const mockBoreLog = {
-  id: 1,
-  date: '2025-10-20',
-  project: 'Willmar Fiber Network - Phase 2',
-  location: 'County Rd 5 & Hwy 12',
-  totalDepth: '485 ft',
-  rodCount: 97,
-  status: 'Completed',
-  crew: 'Crew A - John Smith',
-  equipment: 'Ditch Witch JT40',
-  startTime: '07:30 AM',
-  endTime: '04:15 PM',
-  weather: 'Sunny, 68°F',
-  soilType: 'Clay/Sand Mix',
-  notes: 'Smooth operation. No obstacles encountered. Fiber conduit installed successfully.',
-
-  // Rod-by-rod data
-  rods: [
-    { rodNumber: 1, depth: 5, soilType: 'Topsoil', fluidPressure: 150, notes: 'Entry point' },
-    { rodNumber: 2, depth: 10, soilType: 'Clay', fluidPressure: 180, notes: '' },
-    { rodNumber: 3, depth: 15, soilType: 'Clay', fluidPressure: 190, notes: '' },
-    { rodNumber: 4, depth: 20, soilType: 'Sand', fluidPressure: 160, notes: 'Soil change' },
-    { rodNumber: 5, depth: 25, soilType: 'Sand', fluidPressure: 155, notes: '' },
-    // ... would continue for all 97 rods
-  ]
-}
+import { auth } from '@/auth'
+import { redirect, notFound } from 'next/navigation'
+import { prisma } from '@/lib/prisma'
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
+  const bore = await prisma.bore.findUnique({
+    where: { id },
+    select: { name: true }
+  })
+
   return {
-    title: `Bore Log #${id} | Dashboard`,
-    description: `Detailed bore log information for bore ${id}`
+    title: bore ? `${bore.name} | Bore Logs` : 'Bore Log Not Found',
+    description: `Detailed bore log information`
   }
 }
 
 export default async function BoreLogDetailPage({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = await params
-  // In real app, fetch data based on params.id
-  // const boreLog = await fetchBoreLog(params.id)
-  // if (!boreLog) notFound()
+  const session = await auth()
+  if (!session) {
+    redirect('/auth/login')
+  }
 
-  const boreLog = mockBoreLog
+  const { id } = await params
+
+  // Fetch bore with all related data
+  const bore = await prisma.bore.findUnique({
+    where: { id },
+    include: {
+      project: {
+        select: {
+          id: true,
+          name: true,
+          customerName: true,
+          status: true
+        }
+      },
+      rodPasses: {
+        include: {
+          loggedBy: {
+            select: {
+              name: true,
+              email: true
+            }
+          }
+        },
+        orderBy: { sequence: 'asc' }
+      },
+      inspections: {
+        include: {
+          assignee: {
+            select: {
+              name: true,
+              email: true
+            }
+          }
+        },
+        orderBy: { createdAt: 'desc' },
+        take: 5
+      },
+      _count: {
+        select: {
+          rodPasses: true,
+          inspections: true,
+          rfis: true
+        }
+      }
+    }
+  })
+
+  if (!bore) {
+    notFound()
+  }
 
   return (
     <>
@@ -63,16 +91,28 @@ export default async function BoreLogDetailPage({ params }: { params: Promise<{ 
           <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 'var(--space-md)'}}>
             <div>
               <h1 style={{fontSize: 'var(--text-3xl)', marginBottom: 'var(--space-xs)'}}>
-                Bore Log #{id}
+                {bore.name}
               </h1>
-              <p style={{fontSize: 'var(--text-lg)', opacity: 0.9}}>{boreLog.project}</p>
+              <p style={{fontSize: 'var(--text-lg)', opacity: 0.9}}>
+                <Link href={`/dashboard/projects/${bore.project.id}`} style={{color: 'var(--white)', opacity: 0.9}}>
+                  {bore.project.name}
+                </Link>
+              </p>
             </div>
-            <div style={{display: 'flex', gap: 'var(--space-sm)'}}>
-              <button className="btn btn-white">Edit Log</button>
-              <button className="btn btn-outline" style={{borderColor: 'var(--white)', color: 'var(--white)'}}>
-                Export PDF
-              </button>
-            </div>
+            <span style={{
+              padding: '8px 16px',
+              borderRadius: 'var(--radius-md)',
+              fontSize: 'var(--text-sm)',
+              fontWeight: 600,
+              backgroundColor:
+                bore.status === 'IN_PROGRESS' ? '#10b981' :
+                bore.status === 'COMPLETED' ? '#3b82f6' :
+                bore.status === 'ABANDONED' ? '#ef4444' :
+                '#6b7280',
+              color: 'var(--white)'
+            }}>
+              {bore.status.replace('_', ' ')}
+            </span>
           </div>
         </div>
       </section>
@@ -80,115 +120,143 @@ export default async function BoreLogDetailPage({ params }: { params: Promise<{ 
       {/* Log Overview */}
       <section className="section">
         <div className="container">
+          {/* Overview Cards */}
           <div style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
             gap: 'var(--space-lg)',
             marginBottom: 'var(--space-2xl)'
           }}>
             <div style={{backgroundColor: 'var(--bg-card)', padding: 'var(--space-lg)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)'}}>
-              <p style={{fontSize: 'var(--text-sm)', color: 'var(--text-secondary)', marginBottom: 'var(--space-xs)'}}>Date</p>
-              <p style={{fontSize: 'var(--text-xl)', fontWeight: 600}}>{boreLog.date}</p>
+              <p style={{fontSize: 'var(--text-sm)', color: 'var(--text-secondary)', marginBottom: 'var(--space-xs)'}}>Total Length</p>
+              <p style={{fontSize: 'var(--text-3xl)', fontWeight: 'bold', color: 'var(--color-primary)'}}>
+                {bore.totalLength ? Math.round(bore.totalLength) : 'N/A'}
+              </p>
+              <p style={{fontSize: 'var(--text-xs)', color: 'var(--text-secondary)'}}>linear feet</p>
             </div>
             <div style={{backgroundColor: 'var(--bg-card)', padding: 'var(--space-lg)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)'}}>
-              <p style={{fontSize: 'var(--text-sm)', color: 'var(--text-secondary)', marginBottom: 'var(--space-xs)'}}>Location</p>
-              <p style={{fontSize: 'var(--text-xl)', fontWeight: 600}}>{boreLog.location}</p>
+              <p style={{fontSize: 'var(--text-sm)', color: 'var(--text-secondary)', marginBottom: 'var(--space-xs)'}}>Rod Passes</p>
+              <p style={{fontSize: 'var(--text-3xl)', fontWeight: 'bold', color: 'var(--color-secondary)'}}>
+                {bore._count.rodPasses}
+              </p>
+              <p style={{fontSize: 'var(--text-xs)', color: 'var(--text-secondary)'}}>logged</p>
             </div>
             <div style={{backgroundColor: 'var(--bg-card)', padding: 'var(--space-lg)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)'}}>
-              <p style={{fontSize: 'var(--text-sm)', color: 'var(--text-secondary)', marginBottom: 'var(--space-xs)'}}>Total Depth</p>
-              <p style={{fontSize: 'var(--text-xl)', fontWeight: 600, color: 'var(--color-primary)'}}>{boreLog.totalDepth}</p>
+              <p style={{fontSize: 'var(--text-sm)', color: 'var(--text-secondary)', marginBottom: 'var(--space-xs)'}}>Diameter</p>
+              <p style={{fontSize: 'var(--text-3xl)', fontWeight: 'bold', color: '#10b981'}}>
+                {bore.diameterIn || 'N/A'}
+              </p>
+              <p style={{fontSize: 'var(--text-xs)', color: 'var(--text-secondary)'}}>inches</p>
             </div>
             <div style={{backgroundColor: 'var(--bg-card)', padding: 'var(--space-lg)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)'}}>
-              <p style={{fontSize: 'var(--text-sm)', color: 'var(--text-secondary)', marginBottom: 'var(--space-xs)'}}>Rod Count</p>
-              <p style={{fontSize: 'var(--text-xl)', fontWeight: 600, color: 'var(--color-secondary)'}}>{boreLog.rodCount}</p>
+              <p style={{fontSize: 'var(--text-sm)', color: 'var(--text-secondary)', marginBottom: 'var(--space-xs)'}}>Inspections</p>
+              <p style={{fontSize: 'var(--text-3xl)', fontWeight: 'bold', color: '#f59e0b'}}>
+                {bore._count.inspections}
+              </p>
+              <p style={{fontSize: 'var(--text-xs)', color: 'var(--text-secondary)'}}>total</p>
             </div>
           </div>
 
           {/* Details Card */}
           <div style={{backgroundColor: 'var(--bg-card)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)', padding: 'var(--space-xl)', marginBottom: 'var(--space-2xl)'}}>
-            <h2 style={{marginBottom: 'var(--space-lg)'}}>Operation Details</h2>
-            <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 'var(--space-lg)'}}>
+            <h2 style={{marginBottom: 'var(--space-lg)'}}>Bore Details</h2>
+            <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: 'var(--space-lg)'}}>
               <div>
-                <p style={{fontSize: 'var(--text-sm)', color: 'var(--text-secondary)', marginBottom: 'var(--space-xs)'}}>Crew</p>
-                <p style={{fontWeight: 600}}>{boreLog.crew}</p>
+                <p style={{fontSize: 'var(--text-sm)', color: 'var(--text-secondary)', marginBottom: 'var(--space-xs)'}}>Product Material</p>
+                <p style={{fontWeight: 600}}>{bore.productMaterial || 'Not specified'}</p>
               </div>
               <div>
-                <p style={{fontSize: 'var(--text-sm)', color: 'var(--text-secondary)', marginBottom: 'var(--space-xs)'}}>Equipment</p>
-                <p style={{fontWeight: 600}}>{boreLog.equipment}</p>
+                <p style={{fontSize: 'var(--text-sm)', color: 'var(--text-secondary)', marginBottom: 'var(--space-xs)'}}>Tracer Wire</p>
+                <p style={{fontWeight: 600}}>{bore.tracerWire ? 'Yes' : 'No'}</p>
               </div>
               <div>
-                <p style={{fontSize: 'var(--text-sm)', color: 'var(--text-secondary)', marginBottom: 'var(--space-xs)'}}>Start Time</p>
-                <p style={{fontWeight: 600}}>{boreLog.startTime}</p>
+                <p style={{fontSize: 'var(--text-sm)', color: 'var(--text-secondary)', marginBottom: 'var(--space-xs)'}}>Created</p>
+                <p style={{fontWeight: 600}}>{new Date(bore.createdAt).toLocaleDateString()}</p>
               </div>
               <div>
-                <p style={{fontSize: 'var(--text-sm)', color: 'var(--text-secondary)', marginBottom: 'var(--space-xs)'}}>End Time</p>
-                <p style={{fontWeight: 600}}>{boreLog.endTime}</p>
+                <p style={{fontSize: 'var(--text-sm)', color: 'var(--text-secondary)', marginBottom: 'var(--space-xs)'}}>Last Updated</p>
+                <p style={{fontWeight: 600}}>{new Date(bore.updatedAt).toLocaleDateString()}</p>
               </div>
-              <div>
-                <p style={{fontSize: 'var(--text-sm)', color: 'var(--text-secondary)', marginBottom: 'var(--space-xs)'}}>Weather</p>
-                <p style={{fontWeight: 600}}>{boreLog.weather}</p>
-              </div>
-              <div>
-                <p style={{fontSize: 'var(--text-sm)', color: 'var(--text-secondary)', marginBottom: 'var(--space-xs)'}}>Soil Type</p>
-                <p style={{fontWeight: 600}}>{boreLog.soilType}</p>
-              </div>
-              <div>
-                <p style={{fontSize: 'var(--text-sm)', color: 'var(--text-secondary)', marginBottom: 'var(--space-xs)'}}>Status</p>
-                <span style={{
-                  padding: '4px 12px',
-                  borderRadius: 'var(--radius-sm)',
-                  fontSize: 'var(--text-xs)',
-                  fontWeight: 600,
-                  backgroundColor: 'var(--success)',
-                  color: 'var(--white)'
-                }}>
-                  {boreLog.status}
-                </span>
-              </div>
-            </div>
-
-            <div style={{marginTop: 'var(--space-lg)', paddingTop: 'var(--space-lg)', borderTop: '1px solid var(--bg-secondary)'}}>
-              <p style={{fontSize: 'var(--text-sm)', color: 'var(--text-secondary)', marginBottom: 'var(--space-xs)'}}>Notes</p>
-              <p>{boreLog.notes}</p>
             </div>
           </div>
 
-          {/* Rod-by-Rod Data */}
-          <div style={{backgroundColor: 'var(--bg-card)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)', overflow: 'hidden'}}>
-            <div style={{padding: 'var(--space-xl)', borderBottom: '2px solid var(--bg-secondary)'}}>
-              <h2>Rod-by-Rod Log</h2>
-              <p style={{color: 'var(--text-secondary)', fontSize: 'var(--text-sm)', marginTop: 'var(--space-xs)'}}>
-                Showing first 5 rods of {boreLog.rodCount} total
-              </p>
-            </div>
-            <div style={{overflowX: 'auto'}}>
-              <table style={{width: '100%', borderCollapse: 'collapse', fontSize: 'var(--text-sm)'}}>
-                <thead>
-                  <tr style={{backgroundColor: 'var(--bg-secondary)'}}>
-                    <th style={{padding: 'var(--space-md)', textAlign: 'left', fontWeight: 600}}>Rod #</th>
-                    <th style={{padding: 'var(--space-md)', textAlign: 'left', fontWeight: 600}}>Depth (ft)</th>
-                    <th style={{padding: 'var(--space-md)', textAlign: 'left', fontWeight: 600}}>Soil Type</th>
-                    <th style={{padding: 'var(--space-md)', textAlign: 'left', fontWeight: 600}}>Fluid Pressure (PSI)</th>
-                    <th style={{padding: 'var(--space-md)', textAlign: 'left', fontWeight: 600}}>Notes</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {boreLog.rods.map((rod, index) => (
-                    <tr key={rod.rodNumber} style={{borderBottom: index < boreLog.rods.length - 1 ? '1px solid var(--bg-secondary)' : 'none'}}>
-                      <td style={{padding: 'var(--space-md)', fontWeight: 600}}>{rod.rodNumber}</td>
-                      <td style={{padding: 'var(--space-md)'}}>{rod.depth} ft</td>
-                      <td style={{padding: 'var(--space-md)'}}>{rod.soilType}</td>
-                      <td style={{padding: 'var(--space-md)'}}>{rod.fluidPressure} PSI</td>
-                      <td style={{padding: 'var(--space-md)', color: 'var(--text-secondary)'}}>{rod.notes || '—'}</td>
+          {/* Rod Passes */}
+          {bore.rodPasses.length > 0 && (
+            <div style={{backgroundColor: 'var(--bg-card)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)', overflow: 'hidden', marginBottom: 'var(--space-2xl)'}}>
+              <div style={{padding: 'var(--space-xl)', borderBottom: '2px solid var(--bg-secondary)'}}>
+                <h2>Rod Passes ({bore.rodPasses.length})</h2>
+                <p style={{color: 'var(--text-secondary)', fontSize: 'var(--text-sm)', marginTop: 'var(--space-xs)'}}>
+                  Detailed rod-by-rod drilling log
+                </p>
+              </div>
+              <div style={{overflowX: 'auto'}}>
+                <table style={{width: '100%', borderCollapse: 'collapse'}}>
+                  <thead>
+                    <tr style={{backgroundColor: 'var(--bg-secondary)'}}>
+                      <th style={{padding: 'var(--space-md)', textAlign: 'left', fontSize: 'var(--text-sm)', fontWeight: 600}}>Sequence</th>
+                      <th style={{padding: 'var(--space-md)', textAlign: 'left', fontSize: 'var(--text-sm)', fontWeight: 600}}>Pass #</th>
+                      <th style={{padding: 'var(--space-md)', textAlign: 'right', fontSize: 'var(--text-sm)', fontWeight: 600}}>Linear Feet</th>
+                      <th style={{padding: 'var(--space-md)', textAlign: 'left', fontSize: 'var(--text-sm)', fontWeight: 600}}>Fluid Mix</th>
+                      <th style={{padding: 'var(--space-md)', textAlign: 'right', fontSize: 'var(--text-sm)', fontWeight: 600}}>Volume (gal)</th>
+                      <th style={{padding: 'var(--space-md)', textAlign: 'left', fontSize: 'var(--text-sm)', fontWeight: 600}}>Logged By</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {bore.rodPasses.map((rodPass, index) => (
+                      <tr key={rodPass.id} style={{borderBottom: index < bore.rodPasses.length - 1 ? '1px solid var(--bg-secondary)' : 'none'}}>
+                        <td style={{padding: 'var(--space-md)', fontWeight: 600}}>{rodPass.sequence}</td>
+                        <td style={{padding: 'var(--space-md)', color: 'var(--text-secondary)'}}>{rodPass.passNumber}</td>
+                        <td style={{padding: 'var(--space-md)', textAlign: 'right', color: 'var(--text-secondary)'}}>{rodPass.linearFeet}</td>
+                        <td style={{padding: 'var(--space-md)', color: 'var(--text-secondary)'}}>{rodPass.fluidMix || 'N/A'}</td>
+                        <td style={{padding: 'var(--space-md)', textAlign: 'right', color: 'var(--text-secondary)'}}>{rodPass.fluidVolumeGal || 'N/A'}</td>
+                        <td style={{padding: 'var(--space-md)', fontSize: 'var(--text-sm)', color: 'var(--text-secondary)'}}>
+                          {rodPass.loggedBy.name || rodPass.loggedBy.email}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
-            <div style={{padding: 'var(--space-md)', backgroundColor: 'var(--bg-secondary)', textAlign: 'center'}}>
-              <button className="btn btn-outline btn-sm">Load All Rods</button>
+          )}
+
+          {/* Inspections */}
+          {bore.inspections.length > 0 && (
+            <div style={{backgroundColor: 'var(--bg-card)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-md)', padding: 'var(--space-xl)'}}>
+              <h2 style={{marginBottom: 'var(--space-lg)'}}>Recent Inspections</h2>
+              <div style={{display: 'flex', flexDirection: 'column', gap: 'var(--space-md)'}}>
+                {bore.inspections.map((inspection) => (
+                  <div key={inspection.id} style={{padding: 'var(--space-md)', backgroundColor: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)'}}>
+                    <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: 'var(--space-xs)'}}>
+                      <p style={{fontWeight: 600}}>{inspection.templateName || 'Inspection'}</p>
+                      <span style={{
+                        padding: '2px 8px',
+                        borderRadius: 'var(--radius-sm)',
+                        fontSize: 'var(--text-xs)',
+                        fontWeight: 600,
+                        backgroundColor:
+                          inspection.status === 'COMPLETED' ? '#10b981' :
+                          inspection.status === 'IN_PROGRESS' ? '#f59e0b' :
+                          inspection.status === 'FAILED' ? '#ef4444' :
+                          '#6b7280',
+                        color: 'white'
+                      }}>
+                        {inspection.status}
+                      </span>
+                    </div>
+                    <p style={{fontSize: 'var(--text-sm)', color: 'var(--text-secondary)'}}>
+                      Created: {new Date(inspection.createdAt).toLocaleDateString()}
+                    </p>
+                    {inspection.assignee && (
+                      <p style={{fontSize: 'var(--text-sm)', color: 'var(--text-secondary)'}}>
+                        Assigned to: {inspection.assignee.name || inspection.assignee.email}
+                      </p>
+                    )}
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </section>
     </>

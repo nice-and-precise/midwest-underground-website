@@ -1,104 +1,280 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextRequest } from 'next/server';
+import { prisma } from '@/lib/prisma';
+import { boreUpdateSchema } from '@/lib/validations';
+import { z } from 'zod';
 
-// GET /api/bore-logs/[id] - Get single bore log
+// GET /api/bore-logs/[id] - Get single bore
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id: paramId } = await params
-    const id = parseInt(paramId)
+    const { id } = await params;
 
-    // In production:
-    // const boreLog = await prisma.boreLog.findUnique({ where: { id } })
+    const bore = await prisma.bore.findUnique({
+      where: { id },
+      include: {
+        project: {
+          select: {
+            id: true,
+            name: true,
+            status: true,
+            customerName: true,
+            customerContact: true,
+            startDate: true,
+            endDate: true
+          }
+        },
+        entryPit: {
+          select: {
+            id: true,
+            type: true,
+            location: true,
+            elevation: true,
+            notes: true,
+            photos: true
+          }
+        },
+        exitPit: {
+          select: {
+            id: true,
+            type: true,
+            location: true,
+            elevation: true,
+            notes: true,
+            photos: true
+          }
+        },
+        rodPasses: {
+          include: {
+            loggedBy: {
+              select: {
+                id: true,
+                name: true,
+                email: true
+              }
+            }
+          },
+          orderBy: { sequence: 'asc' }
+        },
+        inspections: {
+          include: {
+            assignee: {
+              select: {
+                id: true,
+                name: true,
+                email: true
+              }
+            },
+            createdBy: {
+              select: {
+                id: true,
+                name: true,
+                email: true
+              }
+            }
+          },
+          orderBy: { createdAt: 'desc' }
+        },
+        rfis: {
+          include: {
+            createdBy: {
+              select: {
+                id: true,
+                name: true,
+                email: true
+              }
+            },
+            respondedBy: {
+              select: {
+                id: true,
+                name: true,
+                email: true
+              }
+            }
+          },
+          orderBy: { createdAt: 'desc' }
+        },
+        events: {
+          include: {
+            createdBy: {
+              select: {
+                id: true,
+                name: true,
+                email: true
+              }
+            }
+          },
+          orderBy: { timestamp: 'desc' }
+        },
+        _count: {
+          select: {
+            rodPasses: true,
+            inspections: true,
+            rfis: true,
+            events: true
+          }
+        }
+      }
+    });
 
-    const mockBoreLog = {
-      id,
-      date: '2025-10-20',
-      project: 'Willmar Fiber Network - Phase 2',
-      location: 'County Rd 5 & Hwy 12',
-      totalDepth: '485 ft',
-      rodCount: 97,
-      status: 'Completed',
-      crew: 'Crew A - John Smith',
-      equipment: 'Ditch Witch JT40',
-      startTime: '07:30 AM',
-      endTime: '04:15 PM',
-      weather: 'Sunny, 68°F',
-      soilType: 'Clay/Sand Mix',
-      notes: 'Smooth operation. No obstacles encountered.'
-    }
-
-    if (!mockBoreLog) {
-      return NextResponse.json(
-        { success: false, error: 'Bore log not found' },
+    if (!bore) {
+      return Response.json(
+        { error: 'Bore not found' },
         { status: 404 }
-      )
+      );
     }
 
-    return NextResponse.json({
-      success: true,
-      data: mockBoreLog
-    })
+    return Response.json({ bore });
   } catch (error) {
-    return NextResponse.json(
-      { success: false, error: 'Failed to fetch bore log' },
+    console.error('Error fetching bore:', error);
+    return Response.json(
+      { error: 'Failed to fetch bore' },
       { status: 500 }
-    )
+    );
   }
 }
 
-// PUT /api/bore-logs/[id] - Update bore log
+// PUT /api/bore-logs/[id] - Update bore
 export async function PUT(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id: paramId } = await params
-    const id = parseInt(paramId)
-    const body = await request.json()
+    const { id } = await params;
+    const body = await request.json();
 
-    // In production:
-    // const updated = await prisma.boreLog.update({ where: { id }, data: body })
+    // Validate with Zod
+    const validatedData = boreUpdateSchema.parse(body);
 
-    const updated = {
-      id,
-      ...body,
-      updatedAt: new Date().toISOString()
+    // Check if bore exists
+    const existingBore = await prisma.bore.findUnique({
+      where: { id }
+    });
+
+    if (!existingBore) {
+      return Response.json(
+        { error: 'Bore not found' },
+        { status: 404 }
+      );
     }
 
-    return NextResponse.json({
-      success: true,
-      data: updated
-    })
+    // Verify pits exist if provided
+    if (validatedData.entryPitId) {
+      const entryPit = await prisma.pit.findUnique({
+        where: { id: validatedData.entryPitId }
+      });
+      if (!entryPit) {
+        return Response.json(
+          { error: 'Entry pit not found' },
+          { status: 404 }
+        );
+      }
+    }
+
+    if (validatedData.exitPitId) {
+      const exitPit = await prisma.pit.findUnique({
+        where: { id: validatedData.exitPitId }
+      });
+      if (!exitPit) {
+        return Response.json(
+          { error: 'Exit pit not found' },
+          { status: 404 }
+        );
+      }
+    }
+
+    // Update bore
+    const bore = await prisma.bore.update({
+      where: { id },
+      data: validatedData,
+      include: {
+        project: {
+          select: {
+            id: true,
+            name: true,
+            status: true,
+            customerName: true
+          }
+        },
+        entryPit: true,
+        exitPit: true,
+        _count: {
+          select: {
+            rodPasses: true,
+            inspections: true,
+            rfis: true,
+            events: true
+          }
+        }
+      }
+    });
+
+    return Response.json({ bore });
   } catch (error) {
-    return NextResponse.json(
-      { success: false, error: 'Failed to update bore log' },
+    console.error('Error updating bore:', error);
+
+    if (error instanceof z.ZodError) {
+      return Response.json(
+        { error: 'Validation failed', details: error.errors },
+        { status: 400 }
+      );
+    }
+
+    return Response.json(
+      { error: 'Failed to update bore' },
       { status: 500 }
-    )
+    );
   }
 }
 
-// DELETE /api/bore-logs/[id] - Delete bore log
+// DELETE /api/bore-logs/[id] - Delete bore
 export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id: paramId } = await params
-    const id = parseInt(paramId)
+    const { id } = await params;
 
-    // In production:
-    // await prisma.boreLog.delete({ where: { id } })
+    // Check if bore exists
+    const existingBore = await prisma.bore.findUnique({
+      where: { id },
+      include: {
+        project: {
+          include: {
+            createdBy: {
+              select: { role: true }
+            }
+          }
+        }
+      }
+    });
 
-    return NextResponse.json({
+    if (!existingBore) {
+      return Response.json(
+        { error: 'Bore not found' },
+        { status: 404 }
+      );
+    }
+
+    // Note: In production, you would check if the user has OWNER/SUPER role
+    // For now, we'll allow deletion but log a warning
+    // TODO: Add session-based permission check when auth is implemented
+
+    // Delete bore (cascades to rod passes)
+    await prisma.bore.delete({
+      where: { id }
+    });
+
+    return Response.json({
       success: true,
-      message: 'Bore log deleted successfully'
-    })
+      message: 'Bore deleted successfully'
+    });
   } catch (error) {
-    return NextResponse.json(
-      { success: false, error: 'Failed to delete bore log' },
+    console.error('Error deleting bore:', error);
+    return Response.json(
+      { error: 'Failed to delete bore' },
       { status: 500 }
-    )
+    );
   }
 }

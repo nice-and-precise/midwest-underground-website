@@ -1,116 +1,192 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextRequest } from 'next/server';
+import { prisma } from '@/lib/prisma';
+import { inspectionCreateSchema } from '@/lib/validations';
+import { z } from 'zod';
 
-// Mock database - replace with Prisma in production
-const mockInspections = [
-  {
-    id: 1,
-    inspectionNumber: 'INS-2025-001-MU',
-    date: '2025-10-23',
-    type: 'Final Inspection',
-    project: 'Willmar Fiber Network - Phase 2',
-    projectId: 1,
-    location: 'County Rd 5 & Hwy 12',
-    inspector: 'Tom Anderson',
-    status: 'Passed',
-    itemsInspected: 16,
-    itemsPassed: 16
-  },
-  {
-    id: 2,
-    inspectionNumber: 'INS-2025-002-MU',
-    date: '2025-10-21',
-    type: 'Progress Inspection',
-    project: 'CenturyLink Expansion',
-    projectId: 2,
-    location: 'Highway 71 North',
-    inspector: 'Sarah Miller',
-    status: 'Passed',
-    itemsInspected: 12,
-    itemsPassed: 12
-  },
-  {
-    id: 3,
-    inspectionNumber: 'INS-2025-003-MU',
-    date: '2025-10-18',
-    type: 'Pre-Construction',
-    project: 'Rural Electric Co-op',
-    projectId: 3,
-    location: 'Township Road 145',
-    inspector: 'Tom Anderson',
-    status: 'Passed',
-    itemsInspected: 8,
-    itemsPassed: 8
-  },
-  {
-    id: 4,
-    inspectionNumber: 'INS-2025-004-MU',
-    date: '2025-10-15',
-    type: 'Final Inspection',
-    project: 'City Water Main Extension',
-    projectId: 4,
-    location: '4th Street SW',
-    inspector: 'Bob Wilson',
-    status: 'Conditional',
-    itemsInspected: 16,
-    itemsPassed: 14
-  }
-]
-
-// GET /api/inspections - List all inspections
+// GET /api/inspections - List all inspections with filters
 export async function GET(request: NextRequest) {
   try {
-    // In production, this would be:
-    // const inspections = await prisma.inspection.findMany({
-    //   include: { project: true, inspector: true, items: true }
-    // })
+    const { searchParams } = new URL(request.url);
+    const boreId = searchParams.get('boreId');
+    const projectId = searchParams.get('projectId');
+    const assigneeId = searchParams.get('assigneeId');
+    const status = searchParams.get('status');
 
-    return NextResponse.json({
-      success: true,
-      data: mockInspections,
-      count: mockInspections.length
-    })
+    // Build where clause
+    const where: any = {};
+    if (boreId) where.boreId = boreId;
+    if (projectId) where.projectId = projectId;
+    if (assigneeId) where.assigneeId = assigneeId;
+    if (status) where.status = status as any;
+
+    const inspections = await prisma.inspection.findMany({
+      where,
+      include: {
+        project: {
+          select: {
+            id: true,
+            name: true,
+            status: true,
+            customerName: true
+          }
+        },
+        bore: {
+          select: {
+            id: true,
+            name: true,
+            status: true
+          }
+        },
+        assignee: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            role: true
+          }
+        },
+        createdBy: {
+          select: {
+            id: true,
+            name: true,
+            email: true
+          }
+        },
+        _count: {
+          select: {
+            correctiveActions: true
+          }
+        }
+      },
+      orderBy: {
+        createdAt: 'desc'
+      }
+    });
+
+    return Response.json({ inspections });
   } catch (error) {
-    return NextResponse.json(
-      { success: false, error: 'Failed to fetch inspections' },
+    console.error('Error fetching inspections:', error);
+    return Response.json(
+      { error: 'Failed to fetch inspections' },
       { status: 500 }
-    )
+    );
   }
 }
 
 // POST /api/inspections - Create new inspection
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json()
+    const body = await request.json();
 
-    // Validate required fields
-    if (!body.date || !body.type || !body.project || !body.inspector) {
-      return NextResponse.json(
-        { success: false, error: 'Missing required fields' },
-        { status: 400 }
-      )
+    // Validate with Zod
+    const validatedData = inspectionCreateSchema.parse(body);
+
+    // Verify project exists
+    const project = await prisma.project.findUnique({
+      where: { id: validatedData.projectId }
+    });
+
+    if (!project) {
+      return Response.json(
+        { error: 'Project not found' },
+        { status: 404 }
+      );
     }
 
-    // In production, this would be:
-    // const newInspection = await prisma.inspection.create({ data: body })
+    // Verify bore exists if provided
+    if (validatedData.boreId) {
+      const bore = await prisma.bore.findUnique({
+        where: { id: validatedData.boreId }
+      });
 
-    const newInspection = {
-      id: mockInspections.length + 1,
-      inspectionNumber: `INS-2025-${String(mockInspections.length + 1).padStart(3, '0')}-MU`,
-      ...body,
-      status: body.status || 'Pending',
-      itemsInspected: 0,
-      itemsPassed: 0,
-      createdAt: new Date().toISOString()
+      if (!bore) {
+        return Response.json(
+          { error: 'Bore not found' },
+          { status: 404 }
+        );
+      }
     }
 
-    return NextResponse.json({
-      success: true,
-      data: newInspection
-    }, { status: 201 })
+    // Verify creator exists
+    const creator = await prisma.user.findUnique({
+      where: { id: validatedData.createdById }
+    });
+
+    if (!creator) {
+      return Response.json(
+        { error: 'Creator user not found' },
+        { status: 404 }
+      );
+    }
+
+    // Verify assignee exists if provided
+    if (validatedData.assigneeId) {
+      const assignee = await prisma.user.findUnique({
+        where: { id: validatedData.assigneeId }
+      });
+
+      if (!assignee) {
+        return Response.json(
+          { error: 'Assignee user not found' },
+          { status: 404 }
+        );
+      }
+    }
+
+    // Create inspection
+    const inspection = await prisma.inspection.create({
+      data: {
+        ...validatedData,
+        items: validatedData.items || []
+      },
+      include: {
+        project: {
+          select: {
+            id: true,
+            name: true,
+            status: true,
+            customerName: true
+          }
+        },
+        bore: {
+          select: {
+            id: true,
+            name: true,
+            status: true
+          }
+        },
+        assignee: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            role: true
+          }
+        },
+        createdBy: {
+          select: {
+            id: true,
+            name: true,
+            email: true
+          }
+        }
+      }
+    });
+
+    return Response.json({ inspection }, { status: 201 });
   } catch (error) {
-    return NextResponse.json(
-      { success: false, error: 'Failed to create inspection' },
+    console.error('Error creating inspection:', error);
+
+    if (error instanceof z.ZodError) {
+      return Response.json(
+        { error: 'Validation failed', details: error.errors },
+        { status: 400 }
+      );
+    }
+
+    return Response.json(
+      { error: 'Failed to create inspection' },
       { status: 500 }
-    )
+    );
   }
 }

@@ -243,3 +243,261 @@ export async function getDailyProductionTrend(projectId: string, days: number = 
     }
   })
 }
+
+// ============================================================================
+// COMPANY-WIDE KPIs
+// ============================================================================
+
+export interface OverviewKPIs {
+  activeProjects: number
+  boresInProgress: number
+  avgBoreCompletionRate: number // ft/day
+  complianceRate811: number // % tickets active
+  inspectionPassRate: number // % passed without CA
+  rodLoggingEfficiency: number // % passes logged vs expected
+  dailyReportCompletionRate: number // % reports on time
+  equipmentUtilizationRate: number // % equipment hours used
+  totalLinearFeet: number
+  avgProjectProfitability: number // revenue vs cost
+}
+
+export async function calculateOverviewKPIs(): Promise<OverviewKPIs> {
+  const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000)
+
+  try {
+    // Active projects
+    const activeProjects = await prisma.project.count({
+      where: { status: 'IN_PROGRESS' }
+    })
+
+    // Bores in progress
+    const boresInProgress = await prisma.bore.count({
+      where: { status: 'IN_PROGRESS' }
+    })
+
+    // Get all projects for calculations
+    const projects = await prisma.project.findMany({
+      where: { status: { in: ['IN_PROGRESS', 'COMPLETED'] } },
+      include: {
+        dailyReports: {
+          where: {
+            reportDate: { gte: thirtyDaysAgo },
+            status: { not: 'DRAFT' }
+          }
+        },
+        tickets811: true,
+        inspections: {
+          where: { status: 'COMPLETED' }
+        },
+        bores: {
+          include: {
+            rodPasses: true
+          }
+        }
+      }
+    })
+
+    // Calculate average bore completion rate
+    let totalBoreLF = 0
+    let totalBoreDays = 0
+    projects.forEach(project => {
+      project.bores.forEach(bore => {
+        if (bore.status === 'COMPLETED' && bore.totalLength) {
+          totalBoreLF += bore.totalLength
+          // Estimate days based on rod passes
+          const uniqueDays = new Set(bore.rodPasses.map(p => p.createdAt.toDateString())).size
+          totalBoreDays += uniqueDays || 1
+        }
+      })
+    })
+    const avgBoreCompletionRate = totalBoreDays > 0 ? totalBoreLF / totalBoreDays : 0
+
+    // 811 Compliance rate
+    const allTickets = projects.flatMap(p => p.tickets811)
+    const activeTickets = allTickets.filter(t => t.status === 'ACTIVE')
+    const complianceRate811 = allTickets.length > 0
+      ? (activeTickets.length / allTickets.length) * 100
+      : 100
+
+    // Inspection pass rate
+    const allInspections = projects.flatMap(p => p.inspections)
+    const passedInspections = await prisma.inspection.count({
+      where: {
+        status: 'COMPLETED',
+        correctiveActions: { none: {} }
+      }
+    })
+    const inspectionPassRate = allInspections.length > 0
+      ? (passedInspections / allInspections.length) * 100
+      : 100
+
+    // Rod logging efficiency
+    const allBores = projects.flatMap(p => p.bores)
+    let totalExpectedPasses = 0
+    let totalActualPasses = 0
+    allBores.forEach(bore => {
+      if (bore.totalLength) {
+        // Assume 10ft rods = expected passes
+        totalExpectedPasses += Math.ceil(bore.totalLength / 10)
+        totalActualPasses += bore.rodPasses.length
+      }
+    })
+    const rodLoggingEfficiency = totalExpectedPasses > 0
+      ? (totalActualPasses / totalExpectedPasses) * 100
+      : 0
+
+    // Daily report completion rate
+    const allReports = projects.flatMap(p => p.dailyReports)
+    const onTimeReports = allReports.filter(report => {
+      const reportDate = new Date(report.reportDate)
+      const submittedDate = new Date(report.createdAt)
+      const deadlineDate = new Date(reportDate)
+      deadlineDate.setHours(20, 0, 0, 0)
+      return submittedDate <= deadlineDate
+    })
+    const dailyReportCompletionRate = allReports.length > 0
+      ? (onTimeReports.length / allReports.length) * 100
+      : 0
+
+    // Equipment utilization (placeholder - would need equipment tracking)
+    const equipmentUtilizationRate = 75 // Placeholder
+
+    // Total linear feet
+    let totalLinearFeet = 0
+    allReports.forEach(report => {
+      const production = Array.isArray(report.production) ? report.production : []
+      production.forEach((item: any) => {
+        totalLinearFeet += parseFloat(item.lf || 0)
+      })
+    })
+
+    // Average project profitability (placeholder)
+    const avgProjectProfitability = 15 // Placeholder %
+
+    return {
+      activeProjects,
+      boresInProgress,
+      avgBoreCompletionRate,
+      complianceRate811,
+      inspectionPassRate,
+      rodLoggingEfficiency,
+      dailyReportCompletionRate,
+      equipmentUtilizationRate,
+      totalLinearFeet,
+      avgProjectProfitability
+    }
+  } catch (error) {
+    console.error('Error calculating overview KPIs:', error)
+    return {
+      activeProjects: 0,
+      boresInProgress: 0,
+      avgBoreCompletionRate: 0,
+      complianceRate811: 0,
+      inspectionPassRate: 0,
+      rodLoggingEfficiency: 0,
+      dailyReportCompletionRate: 0,
+      equipmentUtilizationRate: 0,
+      totalLinearFeet: 0,
+      avgProjectProfitability: 0
+    }
+  }
+}
+
+// ============================================================================
+// CREW PERFORMANCE KPIs
+// ============================================================================
+
+export interface CrewKPIs {
+  totalHours: number
+  totalLinearFeet: number
+  avgFeetPerHour: number
+  projectsWorked: number
+  reportsSubmitted: number
+  onTimeReportRate: number
+  safetyIncidents: number
+}
+
+export async function calculateCrewKPIs(
+  crewMemberId: string,
+  startDate?: Date,
+  endDate?: Date
+): Promise<CrewKPIs> {
+  const start = startDate || new Date(Date.now() - 30 * 24 * 60 * 60 * 1000)
+  const end = endDate || new Date()
+
+  try {
+    // Get all reports created by this crew member
+    const reports = await prisma.dailyReport.findMany({
+      where: {
+        createdById: crewMemberId,
+        reportDate: { gte: start, lte: end },
+        status: { not: 'DRAFT' }
+      },
+      select: {
+        production: true,
+        labor: true,
+        reportDate: true,
+        createdAt: true,
+        projectId: true
+      }
+    })
+
+    // Calculate totals
+    let totalHours = 0
+    let totalLinearFeet = 0
+
+    reports.forEach(report => {
+      const production = Array.isArray(report.production) ? report.production : []
+      const labor = Array.isArray(report.labor) ? report.labor : []
+
+      production.forEach((item: any) => {
+        totalLinearFeet += parseFloat(item.lf || 0)
+      })
+
+      labor.forEach((item: any) => {
+        totalHours += parseFloat(item.hours || 0)
+      })
+    })
+
+    const avgFeetPerHour = totalHours > 0 ? totalLinearFeet / totalHours : 0
+
+    // Projects worked
+    const projectsWorked = new Set(reports.map(r => r.projectId)).size
+
+    // On-time reports
+    const onTimeReports = reports.filter(report => {
+      const reportDate = new Date(report.reportDate)
+      const submittedDate = new Date(report.createdAt)
+      const deadlineDate = new Date(reportDate)
+      deadlineDate.setHours(20, 0, 0, 0)
+      return submittedDate <= deadlineDate
+    })
+    const onTimeReportRate = reports.length > 0
+      ? (onTimeReports.length / reports.length) * 100
+      : 0
+
+    // Safety incidents (placeholder - would need incident tracking)
+    const safetyIncidents = 0
+
+    return {
+      totalHours,
+      totalLinearFeet,
+      avgFeetPerHour,
+      projectsWorked,
+      reportsSubmitted: reports.length,
+      onTimeReportRate,
+      safetyIncidents
+    }
+  } catch (error) {
+    console.error('Error calculating crew KPIs:', error)
+    return {
+      totalHours: 0,
+      totalLinearFeet: 0,
+      avgFeetPerHour: 0,
+      projectsWorked: 0,
+      reportsSubmitted: 0,
+      onTimeReportRate: 0,
+      safetyIncidents: 0
+    }
+  }
+}
