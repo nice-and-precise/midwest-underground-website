@@ -126,32 +126,114 @@ function attachEventListeners() {
 }
 
 // ==========================================================================
-// File Upload Handling (Stub - will be implemented in Task 6)
+// File Upload Handling
 // ==========================================================================
 
+/**
+ * Handle file selection from file input
+ */
 function handleFileSelect(event) {
-  console.log('File selected:', event.target.files[0]);
-  // Implementation in Task 6
+  const file = event.target.files[0];
+  if (file) {
+    processFile(file);
+  }
 }
 
+/**
+ * Handle drag over event
+ */
 function handleDragOver(event) {
   event.preventDefault();
   event.stopPropagation();
   elements.dropZone.classList.add('dragover');
 }
 
+/**
+ * Handle file drop event
+ */
 function handleDrop(event) {
   event.preventDefault();
   event.stopPropagation();
   elements.dropZone.classList.remove('dragover');
-  console.log('File dropped');
-  // Implementation in Task 6
+
+  const files = event.dataTransfer.files;
+  if (files.length > 0) {
+    processFile(files[0]);
+  }
 }
 
+/**
+ * Handle drag leave event
+ */
 function handleDragLeave(event) {
   event.preventDefault();
   event.stopPropagation();
   elements.dropZone.classList.remove('dragover');
+}
+
+/**
+ * Process uploaded file
+ * @param {File} file - The uploaded PDF file
+ */
+function processFile(file) {
+  // Validate file type
+  if (!file.type || file.type !== 'application/pdf') {
+    showError('Please upload a PDF file');
+    return;
+  }
+
+  // Validate file size (50MB limit)
+  const maxSize = 50 * 1024 * 1024; // 50MB in bytes
+  if (file.size > maxSize) {
+    showError('File size exceeds 50MB limit. Please upload a smaller file.');
+    return;
+  }
+
+  // Store file metadata
+  viewerState.fileName = file.name;
+  viewerState.fileSize = file.size;
+
+  // Show loading indicator
+  showLoading('Loading PDF...');
+
+  // Read file as ArrayBuffer
+  const fileReader = new FileReader();
+
+  fileReader.onload = function (e) {
+    const arrayBuffer = e.target.result;
+    loadPDF(arrayBuffer);
+  };
+
+  fileReader.onerror = function () {
+    hideLoading();
+    showError('Error reading file. Please try again.');
+  };
+
+  fileReader.readAsArrayBuffer(file);
+}
+
+/**
+ * Show error message
+ * @param {string} message - Error message to display
+ */
+function showError(message) {
+  alert(message); // Temporary - will be replaced in Task 12
+  console.error(message);
+}
+
+/**
+ * Show loading indicator
+ * @param {string} message - Loading message
+ */
+function showLoading(message) {
+  console.log('Loading:', message); // Temporary - will be replaced in Task 12
+}
+
+/**
+ * Hide loading indicator
+ */
+function hideLoading() {
+  console.log('Loading complete'); // Temporary - will be replaced in Task 12
 }
 
 // ==========================================================================
