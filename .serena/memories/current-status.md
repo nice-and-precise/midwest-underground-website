@@ -162,8 +162,15 @@ npm start             # Start production server
 - tests/README.md - Testing guide
 - src/lib/README-ADVANCED-FEATURES.md - KPIs, Photos, Offline
 - DATABASE-QUICK-START.md - Database setup
-- PROJECT_INDEX.md - Repository overview
+- **PROJECT_INDEX.md** - **Repository overview (UPDATED 2025-11-21)**
+- **PROJECT_INDEX.json** - **Machine-readable index (NEW)**
 - AGENT_COORDINATION.md - Development tracking
+
+**Index Files (95.6% Token Reduction):**
+- PROJECT_INDEX.md (16KB, 427 lines) - Human-readable comprehensive index
+- PROJECT_INDEX.json (12KB, 295 lines) - Machine-readable structured metadata
+- Replaces reading 58K tokens of files with 2.5K token index
+- Complete documentation of all 32 endpoints, 23 pages, 37 models, 133 tests
 
 **Serena Memories:** 17 files including:
 - final-completion-status
