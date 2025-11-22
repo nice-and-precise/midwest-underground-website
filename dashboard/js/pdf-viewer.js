@@ -118,11 +118,11 @@ function attachEventListeners() {
     }
   });
 
-  // Pan events (will be implemented in Task 11)
-  // elements.viewerContainer.addEventListener('mousedown', startPan);
-  // elements.viewerContainer.addEventListener('mousemove', pan);
-  // elements.viewerContainer.addEventListener('mouseup', endPan);
-  // elements.viewerContainer.addEventListener('mouseleave', endPan);
+  // Pan events
+  elements.viewerContainer.addEventListener('mousedown', startPan);
+  elements.viewerContainer.addEventListener('mousemove', pan);
+  elements.viewerContainer.addEventListener('mouseup', endPan);
+  elements.viewerContainer.addEventListener('mouseleave', endPan);
 }
 
 // ==========================================================================
@@ -503,6 +503,9 @@ function setZoom(zoom) {
   // Update zoom display
   updateZoomDisplay();
 
+  // Update pan cursor
+  updatePanCursor();
+
   // Re-render current page with new zoom
   renderPage(viewerState.currentPage);
 
@@ -568,10 +571,65 @@ function handlePageInput(event) {
 }
 
 // ==========================================================================
-// Pan Functionality (Stub - will be implemented in Task 11)
+// Pan Functionality
 // ==========================================================================
 
-// Pan functions will be implemented in Task 11
+/**
+ * Start panning on mousedown
+ * @param {MouseEvent} event - Mouse event
+ */
+function startPan(event) {
+  // Only enable pan when zoomed in
+  if (viewerState.zoom <= 1.0) return;
+
+  // Prevent text selection during pan
+  event.preventDefault();
+
+  viewerState.isPanning = true;
+  viewerState.panStart = {
+    x: event.clientX - elements.viewerContainer.scrollLeft,
+    y: event.clientY - elements.viewerContainer.scrollTop,
+  };
+
+  elements.viewerContainer.classList.add('panning');
+}
+
+/**
+ * Pan the viewer on mousemove
+ * @param {MouseEvent} event - Mouse event
+ */
+function pan(event) {
+  if (!viewerState.isPanning) return;
+
+  event.preventDefault();
+
+  const x = event.clientX - viewerState.panStart.x;
+  const y = event.clientY - viewerState.panStart.y;
+
+  elements.viewerContainer.scrollLeft = -x;
+  elements.viewerContainer.scrollTop = -y;
+}
+
+/**
+ * End panning on mouseup or mouseleave
+ */
+function endPan() {
+  if (viewerState.isPanning) {
+    viewerState.isPanning = false;
+    elements.viewerContainer.classList.remove('panning');
+  }
+}
+
+/**
+ * Update pan cursor based on zoom level
+ */
+function updatePanCursor() {
+  if (viewerState.zoom > 1.0) {
+    elements.viewerContainer.classList.add('pannable');
+  } else {
+    elements.viewerContainer.classList.remove('pannable');
+  }
+}
 
 // ==========================================================================
 // Loading Indicators & Error Handling (Stub - will be implemented in Task 12)
