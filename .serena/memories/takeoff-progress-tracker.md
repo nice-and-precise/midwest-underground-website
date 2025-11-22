@@ -1,18 +1,18 @@
 # Takeoff System - Progress Tracker
 
 **Last Updated:** 2025-11-22 (Current Session)
-**Current Module:** P0.3 - Sandbox and test harness wiring
-**Next Module:** 1.1 - PDF plan viewer
-**Last Completed:** P0.3 - Sandbox and test harness wiring ✅
+**Current Module:** 1.2 - Basic measurement tools
+**Next Module:** 1.2 - Basic measurement tools
+**Last Completed:** 1.1 - PDF plan viewer ✅
 
 ---
 
 ## Current Status
 
-**Module:** 1.1 - PDF plan viewer
-**Status:** tested
-**Next Role:** DOC
-**Blockers:** Deployment issue (files need to be in public/ directory)
+**Module:** 1.2 - Basic measurement tools
+**Status:** not_started
+**Next Role:** PLANNER
+**Blockers:** None
 
 ---
 
@@ -26,11 +26,11 @@
 | P0.2 | Serena memory wiring | completed ✅ | null |
 | P0.3 | Sandbox and test harness wiring | completed ✅ | null |
 
-### Phase 1: Takeoff Core (0/4 complete - 0%)
+### Phase 1: Takeoff Core (1/4 complete - 25%)
 
 | Module | Name | Status | Current Role |
 |--------|------|--------|--------------|
-| 1.1 | PDF plan viewer | tested | doc |
+| 1.1 | PDF plan viewer | completed ✅ | null |
 | 1.2 | Basic measurement tools | not_started | null |
 | 1.3 | Quantity calculator | not_started | null |
 | 1.4 | Data export and persistence | not_started | null |
@@ -58,16 +58,16 @@
 ## Overall Progress
 
 **Total Modules:** 15
-**Completed:** 3 (20%) ✅
+**Completed:** 4 (27%) ✅
 **In Progress:** 0
-**Not Started:** 12
+**Not Started:** 11
 
-**Current Phase:** Phase 1 (0% complete) - STARTING
+**Current Phase:** Phase 1 (25% complete) - IN PROGRESS
 **Phase 0:** 100% complete ✅
 **Phase 2:** 0%
 **Phase 3:** 0%
 
-**Overall System:** 20% complete (3/15 modules)
+**Overall System:** 27% complete (4/15 modules)
 
 ---
 
@@ -88,6 +88,16 @@
 ---
 
 ## Recent Activity
+
+### 2025-11-22 - Module 1.1 COMPLETED ✅
+- **Role:** DOC (final)
+- **Module:** 1.1 - PDF plan viewer
+- **Action:** Applied permanent deployment fix, verified tests, marked module complete
+- **Deployment Fix:** Removed duplicate files from dashboard/, kept public/dashboard/ versions (commit 97a29b5)
+- **Module Status:** tested → completed ✅
+- **Phase Progress:** Phase 1 now 25% complete (1/4 modules)
+- **Overall Progress:** 27% complete (4/15 modules)
+- **Next:** Module 1.2 - Basic Measurement Tools (PLANNER role)
 
 ### 2025-11-22 - Module 1.1 Testing Complete
 - **Role:** TESTER
