@@ -1,0 +1,320 @@
+{
+  "monthly_revenue": [
+    {
+      "month": "2022-11",
+      "revenue": 245000,
+      "expenses": 175000,
+      "profit": 70000,
+      "profit_margin": 28.6,
+      "projects_completed": 4,
+      "avg_project_value": 61250
+    },
+    {
+      "month": "2022-12",
+      "revenue": 198000,
+      "expenses": 145000,
+      "profit": 53000,
+      "profit_margin": 26.8,
+      "projects_completed": 3,
+      "avg_project_value": 66000
+    },
+    {
+      "month": "2023-01",
+      "revenue": 185000,
+      "expenses": 138000,
+      "profit": 47000,
+      "profit_margin": 25.4,
+      "projects_completed": 2,
+      "avg_project_value": 92500
+    },
+    {
+      "month": "2023-02",
+      "revenue": 220000,
+      "expenses": 162000,
+      "profit": 58000,
+      "profit_margin": 26.4,
+      "projects_completed": 3,
+      "avg_project_value": 73333
+    },
+    {
+      "month": "2023-03",
+      "revenue": 315000,
+      "expenses": 225000,
+      "profit": 90000,
+      "profit_margin": 28.6,
+      "projects_completed": 5,
+      "avg_project_value": 63000
+    },
+    {
+      "month": "2023-04",
+      "revenue": 385000,
+      "expenses": 275000,
+      "profit": 110000,
+      "profit_margin": 28.6,
+      "projects_completed": 6,
+      "avg_project_value": 64167
+    },
+    {
+      "month": "2023-05",
+      "revenue": 425000,
+      "expenses": 298000,
+      "profit": 127000,
+      "profit_margin": 29.9,
+      "projects_completed": 7,
+      "avg_project_value": 60714
+    },
+    {
+      "month": "2023-06",
+      "revenue": 445000,
+      "expenses": 310000,
+      "profit": 135000,
+      "profit_margin": 30.3,
+      "projects_completed": 8,
+      "avg_project_value": 55625
+    },
+    {
+      "month": "2023-07",
+      "revenue": 465000,
+      "expenses": 325000,
+      "profit": 140000,
+      "profit_margin": 30.1,
+      "projects_completed": 8,
+      "avg_project_value": 58125
+    },
+    {
+      "month": "2023-08",
+      "revenue": 448000,
+      "expenses": 318000,
+      "profit": 130000,
+      "profit_margin": 29.0,
+      "projects_completed": 7,
+      "avg_project_value": 64000
+    },
+    {
+      "month": "2023-09",
+      "revenue": 425000,
+      "expenses": 302000,
+      "profit": 123000,
+      "profit_margin": 28.9,
+      "projects_completed": 7,
+      "avg_project_value": 60714
+    },
+    {
+      "month": "2023-10",
+      "revenue": 395000,
+      "expenses": 285000,
+      "profit": 110000,
+      "profit_margin": 27.8,
+      "projects_completed": 6,
+      "avg_project_value": 65833
+    },
+    {
+      "month": "2023-11",
+      "revenue": 325000,
+      "expenses": 235000,
+      "profit": 90000,
+      "profit_margin": 27.7,
+      "projects_completed": 5,
+      "avg_project_value": 65000
+    },
+    {
+      "month": "2023-12",
+      "revenue": 265000,
+      "expenses": 195000,
+      "profit": 70000,
+      "profit_margin": 26.4,
+      "projects_completed": 4,
+      "avg_project_value": 66250
+    },
+    {
+      "month": "2024-01",
+      "revenue": 225000,
+      "expenses": 168000,
+      "profit": 57000,
+      "profit_margin": 25.3,
+      "projects_completed": 3,
+      "avg_project_value": 75000
+    },
+    {
+      "month": "2024-02",
+      "revenue": 285000,
+      "expenses": 205000,
+      "profit": 80000,
+      "profit_margin": 28.1,
+      "projects_completed": 4,
+      "avg_project_value": 71250
+    },
+    {
+      "month": "2024-03",
+      "revenue": 365000,
+      "expenses": 258000,
+      "profit": 107000,
+      "profit_margin": 29.3,
+      "projects_completed": 6,
+      "avg_project_value": 60833
+    },
+    {
+      "month": "2024-04",
+      "revenue": 425000,
+      "expenses": 295000,
+      "profit": 130000,
+      "profit_margin": 30.6,
+      "projects_completed": 7,
+      "avg_project_value": 60714
+    },
+    {
+      "month": "2024-05",
+      "revenue": 485000,
+      "expenses": 335000,
+      "profit": 150000,
+      "profit_margin": 30.9,
+      "projects_completed": 8,
+      "avg_project_value": 60625
+    },
+    {
+      "month": "2024-06",
+      "revenue": 515000,
+      "expenses": 355000,
+      "profit": 160000,
+      "profit_margin": 31.1,
+      "projects_completed": 9,
+      "avg_project_value": 57222
+    },
+    {
+      "month": "2024-07",
+      "revenue": 525000,
+      "expenses": 365000,
+      "profit": 160000,
+      "profit_margin": 30.5,
+      "projects_completed": 9,
+      "avg_project_value": 58333
+    },
+    {
+      "month": "2024-08",
+      "revenue": 505000,
+      "expenses": 352000,
+      "profit": 153000,
+      "profit_margin": 30.3,
+      "projects_completed": 8,
+      "avg_project_value": 63125
+    },
+    {
+      "month": "2024-09",
+      "revenue": 475000,
+      "expenses": 332000,
+      "profit": 143000,
+      "profit_margin": 30.1,
+      "projects_completed": 8,
+      "avg_project_value": 59375
+    },
+    {
+      "month": "2024-10",
+      "revenue": 445000,
+      "expenses": 315000,
+      "profit": 130000,
+      "profit_margin": 29.2,
+      "projects_completed": 7,
+      "avg_project_value": 63571
+    }
+  ],
+  "expense_categories": {
+    "labor": {
+      "name": "Labor & Payroll",
+      "percentage": 45,
+      "monthly_avg": 141750
+    },
+    "equipment": {
+      "name": "Equipment & Fuel",
+      "percentage": 18,
+      "monthly_avg": 56700
+    },
+    "materials": {
+      "name": "Materials & Supplies",
+      "percentage": 22,
+      "monthly_avg": 69300
+    },
+    "insurance": {
+      "name": "Insurance & Licensing",
+      "percentage": 5,
+      "monthly_avg": 15750
+    },
+    "overhead": {
+      "name": "Overhead & Admin",
+      "percentage": 10,
+      "monthly_avg": 31500
+    }
+  },
+  "accounts_receivable": [
+    {
+      "invoice_id": "INV-2024-0124",
+      "customer": "City of Willmar",
+      "amount": 95000,
+      "invoice_date": "2024-10-15",
+      "due_date": "2024-11-14",
+      "days_outstanding": 9,
+      "status": "Outstanding",
+      "aging_category": "Current"
+    },
+    {
+      "invoice_id": "INV-2024-0125",
+      "customer": "Midwest Fiber Networks",
+      "amount": 125000,
+      "invoice_date": "2024-10-10",
+      "due_date": "2024-11-24",
+      "days_outstanding": 14,
+      "status": "Outstanding",
+      "aging_category": "Current"
+    },
+    {
+      "invoice_id": "INV-2024-0126",
+      "customer": "Willmar Industrial Development",
+      "amount": 65000,
+      "invoice_date": "2024-10-20",
+      "due_date": "2024-11-19",
+      "days_outstanding": 4,
+      "status": "Outstanding",
+      "aging_category": "Current"
+    },
+    {
+      "invoice_id": "INV-2024-0119",
+      "customer": "Kandiyohi County Public Works",
+      "amount": 45000,
+      "invoice_date": "2024-09-15",
+      "due_date": "2024-11-14",
+      "days_outstanding": 39,
+      "status": "Outstanding",
+      "aging_category": "31-60 Days"
+    },
+    {
+      "invoice_id": "INV-2024-0112",
+      "customer": "Prairie View Developments",
+      "amount": 85000,
+      "invoice_date": "2024-08-20",
+      "due_date": "2024-10-19",
+      "days_outstanding": 65,
+      "status": "Overdue",
+      "aging_category": "61-90 Days"
+    }
+  ],
+  "cash_flow": {
+    "cash_on_hand": 385000,
+    "accounts_receivable_total": 415000,
+    "accounts_payable_total": 125000,
+    "net_position": 675000,
+    "operating_expenses_monthly": 315000,
+    "runway_months": 2.1
+  },
+  "year_to_date": {
+    "revenue": 4250000,
+    "expenses": 2975000,
+    "profit": 1275000,
+    "profit_margin": 30.0,
+    "projects_completed": 68,
+    "avg_project_value": 62500
+  },
+  "year_over_year": {
+    "revenue_growth": 18.5,
+    "profit_growth": 22.3,
+    "project_count_growth": 15.2
+  }
+}

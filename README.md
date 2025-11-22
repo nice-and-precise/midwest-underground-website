@@ -2,7 +2,37 @@
 
 Professional website for Midwest Underground of Minnesota Inc, a directional drilling and underground utilities contractor serving central Minnesota since 1991.
 
-## 🚀 QUICKSTART
+## 🚨 IMPORTANT: Next.js Migration in Progress
+
+**Branch:** `feat/nextjs-migration` (October 25, 2025)
+
+We're migrating from a static HTML site to a full-stack **Next.js application** to support advanced HDD (Horizontal Directional Drilling) field operations management.
+
+### Migration Status
+- ✅ **Infrastructure Complete** - Next.js 15.0.3 running at http://localhost:3000
+- ✅ **Database Ready** - Prisma + SQLite with 17+ HDD operational models
+- ✅ **Authentication Setup** - NextAuth.js with role-based access (OWNER, SUPER, CREW)
+- ✅ **Static Assets Migrated** - All CSS/JS/images preserved
+- 🔄 **Building Features** - API routes, dashboard pages, HDD functionality
+- 📚 **Full Documentation** - See [MIGRATION-TO-NEXTJS.md](MIGRATION-TO-NEXTJS.md)
+
+### For Developers
+```bash
+# Static site (current main branch)
+git checkout main
+open index.html  # or use http-server
+
+# Next.js app (migration branch)
+git checkout feat/nextjs-migration
+npm install
+npm run dev  # Visit http://localhost:3000
+```
+
+📖 **[Read Full Migration Documentation →](MIGRATION-TO-NEXTJS.md)**
+
+---
+
+## 🚀 QUICKSTART (Static Site)
 
 Get the website running in **under 60 seconds**:
 

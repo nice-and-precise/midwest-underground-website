@@ -1,0 +1,136 @@
+name: Test Suite
+
+on:
+  push:
+    branches: [ feat/nextjs-migration, main ]
+  pull_request:
+    branches: [ feat/nextjs-migration, main ]
+
+jobs:
+  unit-and-integration-tests:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x]
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Setup test database
+      run: |
+        export DATABASE_URL="file:./prisma/test.db"
+        export PRISMA_USER_CONSENT_FOR_DANGEROUS_AI_ACTION="yes this is a test database only"
+        npx prisma db push --force-reset
+        npx ts-node --project tsconfig.seed.json prisma/seed.ts
+      env:
+        DATABASE_URL: file:./prisma/test.db
+
+    - name: Run unit tests
+      run: npm run test:unit
+      env:
+        DATABASE_URL: file:./prisma/test.db
+
+    - name: Run integration tests
+      run: npm run test:integration
+      env:
+        DATABASE_URL: file:./prisma/test.db
+
+    - name: Generate coverage report
+      run: npm run test:coverage
+      env:
+        DATABASE_URL: file:./prisma/test.db
+
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v4
+      with:
+        files: ./coverage/coverage-final.json
+        flags: unittests
+        name: codecov-umbrella
+      if: matrix.node-version == '20.x'
+
+  e2e-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Use Node.js 20.x
+      uses: actions/setup-node@v4
+      with:
+        node-version: 20.x
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Install Playwright Browsers
+      run: npx playwright install --with-deps
+
+    - name: Setup database
+      run: |
+        export DATABASE_URL="file:./prisma/dev.db"
+        export PRISMA_USER_CONSENT_FOR_DANGEROUS_AI_ACTION="yes this is a test database only"
+        npx prisma db push --force-reset
+        npx ts-node --project tsconfig.seed.json prisma/seed.ts
+      env:
+        DATABASE_URL: file:./prisma/dev.db
+
+    - name: Run Playwright tests
+      run: npm run test:e2e
+      env:
+        DATABASE_URL: file:./prisma/dev.db
+        NEXTAUTH_SECRET: test-secret-key-for-ci
+        NEXTAUTH_URL: http://localhost:3000
+
+    - name: Upload Playwright Report
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: playwright-report
+        path: playwright-report/
+        retention-days: 30
+
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Use Node.js 20.x
+      uses: actions/setup-node@v4
+      with:
+        node-version: 20.x
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Generate Prisma Client
+      run: npx prisma generate
+
+    - name: Build Next.js app
+      run: npm run build
+      env:
+        DATABASE_URL: file:./prisma/dev.db
+        NEXTAUTH_SECRET: build-secret-key
+        NEXTAUTH_URL: http://localhost:3000
+
+    - name: Check for build errors
+      run: |
+        if [ -d ".next" ]; then
+          echo "Build successful!"
+        else
+          echo "Build failed - .next directory not found"
+          exit 1
+        fi
