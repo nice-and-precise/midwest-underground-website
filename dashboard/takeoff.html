@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Midwest Underground - Takeoff & Estimating System">
+    <title>Takeoff System - PDF Plan Viewer | Midwest Underground</title>
+
+    <!-- PDF.js Library (Mozilla) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <!-- Fallback CDN (for future reference): https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.min.js -->
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="css/takeoff.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="takeoff-header">
+        <div class="header-content">
+            <h1>📐 Takeoff System</h1>
+            <p class="subtitle">PDF Plan Viewer & Measurement Tools</p>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="takeoff-main">
+
+        <!-- PDF Upload Zone (visible initially, hidden after upload) -->
+        <section id="upload-zone" class="upload-section">
+            <div class="upload-container">
+                <!-- Upload content will be added in Task 2 -->
+            </div>
+        </section>
+
+        <!-- PDF Viewer Container (hidden initially, shown after upload) -->
+        <section id="viewer-section" class="viewer-section" style="display: none;">
+
+            <!-- Document Info Bar -->
+            <div id="doc-info" class="doc-info">
+                <!-- Document info will be added in Task 3 -->
+            </div>
+
+            <!-- Controls Panel -->
+            <div id="controls-panel" class="controls-panel">
+                <!-- Controls will be added in Task 3 -->
+            </div>
+
+            <!-- Canvas Container -->
+            <div id="viewer-container" class="viewer-container">
+                <canvas id="pdf-canvas"></canvas>
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="takeoff-footer">
+        <p>&copy; 2025 Midwest Underground of Minnesota Inc. | Takeoff System v1.0</p>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="js/pdf-viewer.js"></script>
+</body>
+</html>
