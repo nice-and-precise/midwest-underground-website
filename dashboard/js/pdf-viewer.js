@@ -518,22 +518,53 @@ function updateZoomDisplay() {
 }
 
 // ==========================================================================
-// Page Navigation (Stub - will be implemented in Task 10)
+// Page Navigation
 // ==========================================================================
 
+/**
+ * Navigate to previous page
+ */
 function previousPage() {
-  console.log('Previous page');
-  // Implementation in Task 10
+  if (viewerState.currentPage > 1) {
+    renderPage(viewerState.currentPage - 1);
+  }
 }
 
+/**
+ * Navigate to next page
+ */
 function nextPage() {
-  console.log('Next page');
-  // Implementation in Task 10
+  if (viewerState.currentPage < viewerState.totalPages) {
+    renderPage(viewerState.currentPage + 1);
+  }
 }
 
+/**
+ * Handle page input (jump to specific page)
+ * @param {Event} event - Input change event
+ */
 function handlePageInput(event) {
-  console.log('Jump to page:', event.target.value);
-  // Implementation in Task 10
+  const pageNum = parseInt(event.target.value, 10);
+
+  // Validate page number
+  if (isNaN(pageNum)) {
+    // Reset to current page if invalid
+    elements.pageInput.value = viewerState.currentPage;
+    return;
+  }
+
+  // Clamp to valid range
+  const clampedPage = Math.max(1, Math.min(viewerState.totalPages, pageNum));
+
+  // Update input if clamped
+  if (clampedPage !== pageNum) {
+    elements.pageInput.value = clampedPage;
+  }
+
+  // Render page if different from current
+  if (clampedPage !== viewerState.currentPage) {
+    renderPage(clampedPage);
+  }
 }
 
 // ==========================================================================
