@@ -801,17 +801,554 @@ npx playwright show-trace trace.zip
 
 ---
 
+## Playwright Setup and Usage
+
+### Installation and Configuration
+
+**Step 1: Install Playwright**
+
+```bash
+cd /c/Users/Owner/Desktop/midwest-underground-website
+
+# Install Playwright test package
+npm install -D @playwright/test
+
+# Install browsers (Chromium, Firefox, WebKit)
+npx playwright install
+
+# Or install specific browser only
+npx playwright install chromium
+```
+
+**Step 2: Verify Installation**
+
+```bash
+# Check Playwright version
+npx playwright --version
+
+# Run sample test
+npx playwright test --help
+```
+
+**Step 3: Project Structure**
+
+Ensure your project has this structure:
+
+```
+midwest-underground-website/
+├── playwright.config.js          # Playwright configuration
+├── package.json                  # Dependencies
+├── dashboard/                    # Static HTML files
+│   └── takeoff.html             # Main takeoff page
+└── tests/
+    └── takeoff/
+        ├── fixtures/             # Test data
+        ├── helpers/              # Reusable utilities
+        ├── phase-1/              # Phase 1 tests
+        ├── phase-2/              # Phase 2 tests
+        └── phase-3/              # Phase 3 tests
+```
+
+---
+
+### Configuration File
+
+The `playwright.config.js` file is already configured. Key settings:
+
+```javascript
+import { defineConfig } from '@playwright/test';
+
+export default defineConfig({
+  // Test directory
+  testDir: './tests/takeoff',
+
+  // Timeout for each test
+  timeout: 30000,
+
+  // Expect timeout
+  expect: {
+    timeout: 5000
+  },
+
+  // Run tests in parallel
+  fullyParallel: true,
+
+  // Fail build on CI if you accidentally left test.only
+  forbidOnly: !!process.env.CI,
+
+  // Retry failed tests on CI
+  retries: process.env.CI ? 2 : 0,
+
+  // Reporter configuration
+  reporter: 'html',
+
+  // Shared settings for all projects
+  use: {
+    // Base URL for page.goto()
+    baseURL: 'http://localhost:3000',
+
+    // Capture trace on first retry
+    trace: 'on-first-retry',
+
+    // Screenshot on failure
+    screenshot: 'only-on-failure',
+
+    // Video on failure
+    video: 'retain-on-failure'
+  },
+
+  // Browser projects
+  projects: [
+    {
+      name: 'chromium',
+      use: { browserName: 'chromium' }
+    }
+  ],
+
+  // Web server for tests
+  webServer: {
+    command: 'npx http-server dashboard -p 3000',
+    port: 3000,
+    timeout: 120000,
+    reuseExistingServer: !process.env.CI
+  }
+});
+```
+
+---
+
+### Basic Usage Examples
+
+**Example 1: Simple Navigation and Assertion**
+
+```javascript
+import { test, expect } from '@playwright/test';
+
+test('should load takeoff page', async ({ page }) => {
+  // Navigate to page
+  await page.goto('/dashboard/takeoff.html');
+
+  // Assert page title
+  await expect(page).toHaveTitle(/Takeoff/);
+
+  // Assert element is visible
+  await expect(page.locator('h1')).toBeVisible();
+});
+```
+
+---
+
+**Example 2: Form Interaction**
+
+```javascript
+test('should submit project form', async ({ page }) => {
+  await page.goto('/dashboard/takeoff.html');
+
+  // Fill form fields
+  await page.fill('#project-name', 'Test HDD Project');
+  await page.fill('#project-location', 'Willmar, MN');
+  await page.selectOption('#project-type', 'HDD');
+
+  // Submit form
+  await page.click('[data-testid="submit-btn"]');
+
+  // Verify success message
+  await expect(page.locator('.success-message')).toBeVisible();
+  await expect(page.locator('.success-message')).toContainText('Project created');
+});
+```
+
+---
+
+**Example 3: File Upload**
+
+```javascript
+import path from 'path';
+
+test('should upload PDF file', async ({ page }) => {
+  await page.goto('/dashboard/takeoff.html');
+
+  // Get file input element
+  const fileInput = page.locator('#pdf-upload');
+
+  // Upload file
+  const filePath = path.join(__dirname, '../fixtures/pdfs/sample-hdd-plan.pdf');
+  await fileInput.setInputFiles(filePath);
+
+  // Wait for upload to complete
+  await page.waitForSelector('#pdf-canvas', { state: 'visible' });
+
+  // Verify PDF is loaded
+  await expect(page.locator('#pdf-canvas')).toBeVisible();
+  await expect(page.locator('#pdf-page-info')).toContainText('Page 1');
+});
+```
+
+---
+
+**Example 4: Canvas Interaction**
+
+```javascript
+test('should draw measurement on canvas', async ({ page }) => {
+  await page.goto('/dashboard/takeoff.html');
+
+  // Upload PDF first
+  await page.setInputFiles('#pdf-upload', 'fixtures/pdfs/sample-hdd-plan.pdf');
+  await page.waitForSelector('#measurement-canvas', { state: 'visible' });
+
+  // Select measurement tool
+  await page.click('[data-testid="linear-tool-btn"]');
+
+  // Click on canvas to draw measurement
+  const canvas = page.locator('#measurement-canvas');
+  await canvas.click({ position: { x: 100, y: 100 } });
+  await canvas.click({ position: { x: 500, y: 100 } });
+
+  // Verify measurement was created
+  await expect(page.locator('.measurement-item')).toHaveCount(1);
+});
+```
+
+---
+
+**Example 5: Testing API Calls**
+
+```javascript
+test('should save takeoff data', async ({ page }) => {
+  await page.goto('/dashboard/takeoff.html');
+
+  // Set up response listener
+  const responsePromise = page.waitForResponse(
+    response => response.url().includes('/api/takeoff') && response.status() === 200
+  );
+
+  // Trigger save
+  await page.click('[data-testid="save-btn"]');
+
+  // Wait for and verify response
+  const response = await responsePromise;
+  const responseBody = await response.json();
+
+  expect(responseBody.success).toBe(true);
+  expect(responseBody.id).toBeDefined();
+});
+```
+
+---
+
+**Example 6: Visual Regression Testing**
+
+```javascript
+test('should match visual baseline', async ({ page }) => {
+  await page.goto('/dashboard/takeoff.html');
+
+  // Wait for page to fully load
+  await page.waitForLoadState('networkidle');
+
+  // Compare full page against baseline
+  await expect(page).toHaveScreenshot('takeoff-dashboard.png', {
+    maxDiffPixels: 100 // Allow minor differences
+  });
+
+  // Compare specific element
+  const canvas = page.locator('#pdf-canvas');
+  await expect(canvas).toHaveScreenshot('pdf-canvas-initial.png');
+});
+```
+
+---
+
+**Example 7: Mobile Testing**
+
+```javascript
+test('should work on mobile viewport', async ({ page }) => {
+  // Set mobile viewport
+  await page.setViewportSize({ width: 375, height: 667 });
+
+  await page.goto('/dashboard/takeoff.html');
+
+  // Verify mobile menu is visible
+  await expect(page.locator('[data-testid="mobile-menu-btn"]')).toBeVisible();
+
+  // Click mobile menu
+  await page.click('[data-testid="mobile-menu-btn"]');
+
+  // Verify menu opens
+  await expect(page.locator('[data-testid="mobile-nav"]')).toBeVisible();
+});
+```
+
+---
+
+**Example 8: Error Handling**
+
+```javascript
+test('should show error for invalid file', async ({ page }) => {
+  await page.goto('/dashboard/takeoff.html');
+
+  // Try to upload invalid file
+  await page.setInputFiles('#pdf-upload', 'fixtures/pdfs/invalid.txt');
+
+  // Wait for error message
+  await expect(page.locator('[data-testid="error-message"]')).toBeVisible();
+  await expect(page.locator('[data-testid="error-message"]')).toContainText('Invalid file type');
+
+  // Verify upload button is re-enabled
+  await expect(page.locator('#pdf-upload')).toBeEnabled();
+});
+```
+
+---
+
+### Running Tests
+
+**Basic Commands:**
+
+```bash
+# Run all tests
+npm test
+
+# Run specific test file
+npx playwright test tests/takeoff/phase-1/pdf-viewer.spec.js
+
+# Run tests in headed mode (see browser)
+npx playwright test --headed
+
+# Run tests in debug mode
+npx playwright test --debug
+
+# Run specific test by name
+npx playwright test -g "should upload PDF"
+```
+
+**Watch Mode:**
+
+```bash
+# Re-run tests on file change
+npx playwright test --watch
+```
+
+**Browser Selection:**
+
+```bash
+# Run in specific browser
+npx playwright test --project=chromium
+npx playwright test --project=firefox
+npx playwright test --project=webkit
+```
+
+**Parallel Execution:**
+
+```bash
+# Run tests in parallel (default)
+npx playwright test
+
+# Run tests serially
+npx playwright test --workers=1
+```
+
+---
+
+### Debugging Tests
+
+**1. Playwright Inspector**
+
+```bash
+# Open Playwright Inspector
+npx playwright test --debug
+
+# Debug specific test
+npx playwright test pdf-viewer.spec.js --debug
+```
+
+**2. Browser Developer Tools**
+
+```bash
+# Run with browser open
+npx playwright test --headed
+
+# Pause on failure
+npx playwright test --headed --timeout=0
+```
+
+**3. Screenshots and Videos**
+
+Automatically captured on failure (configured in `playwright.config.js`):
+
+```javascript
+use: {
+  screenshot: 'only-on-failure',
+  video: 'retain-on-failure'
+}
+```
+
+Access in test results:
+
+```bash
+npx playwright show-report
+```
+
+**4. Trace Viewer**
+
+```bash
+# Run with trace
+npx playwright test --trace on
+
+# View trace
+npx playwright show-trace trace.zip
+```
+
+**5. Console Logging**
+
+```javascript
+test('should log console messages', async ({ page }) => {
+  // Listen to console
+  page.on('console', msg => console.log('PAGE LOG:', msg.text()));
+
+  await page.goto('/dashboard/takeoff.html');
+
+  // Your test code
+});
+```
+
+---
+
+### Test Fixtures and Helpers
+
+**Creating Reusable Helpers:**
+
+**File:** `tests/takeoff/helpers/page-helpers.js`
+
+```javascript
+export async function uploadPDF(page, filename) {
+  const path = require('path');
+  const filePath = path.join(__dirname, `../fixtures/pdfs/${filename}`);
+  await page.setInputFiles('#pdf-upload', filePath);
+  await page.waitForSelector('#pdf-canvas', { state: 'visible' });
+}
+
+export async function setScale(page, distance, units) {
+  await page.click('#scale-tool-button');
+  const canvas = page.locator('#measurement-canvas');
+  await canvas.click({ position: { x: 100, y: 100 } });
+  await canvas.click({ position: { x: 300, y: 100 } });
+  await page.fill('#scale-real-world', distance.toString());
+  await page.selectOption('#scale-units', units);
+  await page.click('#set-scale-button');
+}
+
+export async function drawLinearMeasurement(page, start, end, category = 'HDD') {
+  await page.click('#linear-tool-button');
+  await page.selectOption('#measurement-category', category);
+
+  const canvas = page.locator('#measurement-canvas');
+  await canvas.click({ position: start });
+  await canvas.click({ position: end });
+}
+```
+
+**Using Helpers in Tests:**
+
+```javascript
+import { uploadPDF, setScale, drawLinearMeasurement } from '../helpers/page-helpers.js';
+
+test('should create complete takeoff', async ({ page }) => {
+  await page.goto('/dashboard/takeoff.html');
+
+  // Use helper functions
+  await uploadPDF(page, 'sample-hdd-plan.pdf');
+  await setScale(page, 100, 'feet');
+  await drawLinearMeasurement(page, { x: 100, y: 100 }, { x: 500, y: 100 }, 'HDD');
+
+  // Verify
+  await expect(page.locator('.measurement-item')).toHaveCount(1);
+});
+```
+
+---
+
+### CI/CD Integration
+
+**GitHub Actions Example:**
+
+```yaml
+name: Playwright Tests
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
+
+      - name: Run Playwright tests
+        run: npx playwright test
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 30
+```
+
+---
+
+### Best Practices Checklist
+
+**Before Writing Tests:**
+- [ ] Read `TESTING-CONVENTIONS.md` for standards
+- [ ] Review module specification
+- [ ] Identify critical user paths
+- [ ] Plan test data and fixtures
+
+**While Writing Tests:**
+- [ ] Use `data-testid` attributes for stable selectors
+- [ ] Make tests independent (no shared state)
+- [ ] Add descriptive test names ("should X when Y")
+- [ ] Use `beforeEach` for common setup
+- [ ] Handle async operations with await
+- [ ] Add meaningful assertions
+
+**After Writing Tests:**
+- [ ] Run tests locally (`npm test`)
+- [ ] Verify tests pass in isolation
+- [ ] Check test coverage
+- [ ] Update documentation
+- [ ] Commit test fixtures with code
+
+---
+
 ## Reference Documentation
 
 For related documentation, see:
 
 - **`.claude/takeoff-system.md`** - Complete system architecture
 - **`docs/takeoff/ARCHITECTURE.md`** - High-level system overview
+- **`docs/takeoff/TESTING-CONVENTIONS.md`** - Detailed testing conventions and standards
 - **`docs/takeoff/MEMORY.md`** - Serena memory structure
 - **`docs/takeoff/PROGRESS.md`** - Development progress log
 
 ---
 
-**Document Version:** 1.0
+**Document Version:** 1.1
 **Maintained By:** Autonomous Development Team
 **Review Frequency:** After each phase completion
+**Last Updated:** 2025-11-22
