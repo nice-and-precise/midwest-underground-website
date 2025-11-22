@@ -237,12 +237,82 @@ function hideLoading() {
 }
 
 // ==========================================================================
-// PDF Loading (Stub - will be implemented in Task 7)
+// PDF Document Loading
 // ==========================================================================
 
-function loadPDF(arrayBuffer) {
-  console.log('Loading PDF...');
-  // Implementation in Task 7
+/**
+ * Load PDF document from ArrayBuffer
+ * @param {ArrayBuffer} arrayBuffer - PDF file data
+ */
+async function loadPDF(arrayBuffer) {
+  try {
+    // Load PDF document using PDF.js
+    const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer });
+
+    const pdfDoc = await loadingTask.promise;
+
+    // Store document reference
+    viewerState.pdfDoc = pdfDoc;
+    viewerState.totalPages = pdfDoc.numPages;
+    viewerState.currentPage = 1;
+
+    // Update UI with document info
+    updateDocumentInfo();
+
+    // Hide upload zone, show viewer section
+    elements.uploadZone.style.display = 'none';
+    elements.viewerSection.style.display = 'flex';
+
+    // Render first page
+    await renderPage(1);
+
+    // Hide loading indicator
+    hideLoading();
+
+    console.log('PDF loaded successfully:', {
+      fileName: viewerState.fileName,
+      pages: viewerState.totalPages,
+      size: formatFileSize(viewerState.fileSize),
+    });
+  } catch (error) {
+    hideLoading();
+    console.error('Error loading PDF:', error);
+
+    // Handle specific PDF.js errors
+    if (error.name === 'PasswordException') {
+      showError('This PDF is encrypted. Encrypted PDFs are not supported.');
+    } else if (error.name === 'InvalidPDFException') {
+      showError('Unable to load PDF. The file may be corrupted or invalid.');
+    } else {
+      showError('Error loading PDF. Please try a different file.');
+    }
+  }
+}
+
+/**
+ * Update document information in UI
+ */
+function updateDocumentInfo() {
+  elements.fileName.textContent = viewerState.fileName;
+  elements.fileSize.textContent = formatFileSize(viewerState.fileSize);
+  elements.totalPages.textContent = viewerState.totalPages;
+  elements.pageCount.textContent = viewerState.totalPages;
+  elements.pageInput.max = viewerState.totalPages;
+}
+
+/**
+ * Format file size for display
+ * @param {number} bytes - File size in bytes
+ * @returns {string} Formatted file size (e.g., "2.5 MB")
+ */
+function formatFileSize(bytes) {
+  if (bytes === 0) return '0 Bytes';
+
+  const k = 1024;
+  const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+
+  return Math.round((bytes / Math.pow(k, i)) * 100) / 100 + ' ' + sizes[i];
 }
 
 // ==========================================================================
