@@ -77,6 +77,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Viewer container
     viewerContainer: document.getElementById('viewer-container'),
+
+    // Loading and error
+    loadingOverlay: document.getElementById('loading-overlay'),
+    loadingText: document.getElementById('loading-text'),
+    errorMessage: document.getElementById('error-message'),
+    errorText: document.getElementById('error-text'),
+    errorClose: document.getElementById('error-close'),
   };
 
   // Store canvas and context in state
@@ -123,6 +130,9 @@ function attachEventListeners() {
   elements.viewerContainer.addEventListener('mousemove', pan);
   elements.viewerContainer.addEventListener('mouseup', endPan);
   elements.viewerContainer.addEventListener('mouseleave', endPan);
+
+  // Error close button
+  elements.errorClose.addEventListener('click', hideError);
 }
 
 // ==========================================================================
@@ -217,23 +227,35 @@ function processFile(file) {
  * @param {string} message - Error message to display
  */
 function showError(message) {
-  alert(message); // Temporary - will be replaced in Task 12
+  elements.errorText.textContent = message;
+  elements.errorMessage.classList.add('show');
   console.error(message);
+
+  // Auto-hide after 5 seconds
+  setTimeout(hideError, 5000);
+}
+
+/**
+ * Hide error message
+ */
+function hideError() {
+  elements.errorMessage.classList.remove('show');
 }
 
 /**
  * Show loading indicator
  * @param {string} message - Loading message
  */
-function showLoading(message) {
-  console.log('Loading:', message); // Temporary - will be replaced in Task 12
+function showLoading(message = 'Loading...') {
+  elements.loadingText.textContent = message;
+  elements.loadingOverlay.style.display = 'flex';
 }
 
 /**
  * Hide loading indicator
  */
 function hideLoading() {
-  console.log('Loading complete'); // Temporary - will be replaced in Task 12
+  elements.loadingOverlay.style.display = 'none';
 }
 
 // ==========================================================================

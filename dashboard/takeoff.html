@@ -146,6 +146,23 @@
         <p>&copy; 2025 Midwest Underground of Minnesota Inc. | Takeoff System v1.0</p>
     </footer>
 
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay" style="display: none;">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <div id="loading-text" class="loading-text">Loading...</div>
+        </div>
+    </div>
+
+    <!-- Error Message -->
+    <div id="error-message" class="error-message">
+        <div class="error-content">
+            <span class="error-icon">⚠️</span>
+            <span id="error-text" class="error-text"></span>
+            <button id="error-close" class="error-close">&times;</button>
+        </div>
+    </div>
+
     <!-- JavaScript -->
     <script src="js/pdf-viewer.js"></script>
 </body>
