@@ -1,66 +1,58 @@
-# Operating System Files
-.DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
-Thumbs.db
-Desktop.ini
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
 
-# Editor Files
+# Testing
+coverage/
+playwright-report/
+test-results/
+*.log
+
+# Next.js
+.next/
+out/
+build/
+dist/
+
+# Production
+/build
+
+# Misc
+.DS_Store
+*.pem
+
+# Debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Local env files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Vercel
+.vercel
+
+# TypeScript
+*.tsbuildinfo
+next-env.d.ts
+
+# IDE
 .vscode/
 .idea/
 *.swp
 *.swo
 *~
-.sublime-project
-.sublime-workspace
 
-# Logs
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
+# Database
+*.db
+*.db-journal
+prisma/dev.db
+prisma/test.db
 
-# Environment Variables
-.env
-.env.local
-.env.development
-.env.test
-.env.production
-
-# Build directories (if you add build process later)
-dist/
-build/
-.cache/
-
-# Dependencies (if you add npm later)
-node_modules/
-package-lock.json
-yarn.lock
-
-# Next.js
-.next/
-out/
-next-env.d.ts
-
-# Prisma
-prisma/*.db
-prisma/*.db-journal
-prisma/migrations/
-
-# TypeScript
-*.tsbuildinfo
-
-# Backup files
-*.bak
-*.backup
-*.tmp
-
-# Local testing files
-.local/
-# Production Environment - DO NOT COMMIT
-.env.production
-nul
-prisma/prisma/test.db
+# Uploads
+public/uploads/
