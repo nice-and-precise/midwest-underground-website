@@ -316,12 +316,99 @@ function formatFileSize(bytes) {
 }
 
 // ==========================================================================
-// Page Rendering (Stub - will be implemented in Task 8)
+// Page Rendering
 // ==========================================================================
 
-function renderPage(pageNum) {
-  console.log('Rendering page:', pageNum);
-  // Implementation in Task 8
+/**
+ * Render a specific page to the canvas
+ * @param {number} pageNum - Page number to render (1-indexed)
+ */
+async function renderPage(pageNum) {
+  if (!viewerState.pdfDoc) {
+    console.error('No PDF document loaded');
+    return;
+  }
+
+  // Validate page number
+  if (pageNum < 1 || pageNum > viewerState.totalPages) {
+    console.error('Invalid page number:', pageNum);
+    return;
+  }
+
+  try {
+    // Cancel previous render task if exists
+    if (viewerState.renderTask) {
+      viewerState.renderTask.cancel();
+    }
+
+    // Get the page
+    const page = await viewerState.pdfDoc.getPage(pageNum);
+
+    // Calculate viewport with current zoom
+    const viewport = page.getViewport({ scale: viewerState.zoom });
+
+    // Get canvas and context
+    const canvas = viewerState.canvas;
+    const ctx = viewerState.ctx;
+
+    // Scale for high-DPI displays
+    const outputScale = window.devicePixelRatio || 1;
+
+    // Set canvas dimensions
+    canvas.width = Math.floor(viewport.width * outputScale);
+    canvas.height = Math.floor(viewport.height * outputScale);
+    canvas.style.width = Math.floor(viewport.width) + 'px';
+    canvas.style.height = Math.floor(viewport.height) + 'px';
+
+    // Scale context for high-DPI
+    ctx.scale(outputScale, outputScale);
+
+    // Clear canvas
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Render the page
+    const renderContext = {
+      canvasContext: ctx,
+      viewport: viewport,
+    };
+
+    viewerState.renderTask = page.render(renderContext);
+
+    await viewerState.renderTask.promise;
+
+    // Update current page state
+    viewerState.currentPage = pageNum;
+
+    // Update UI
+    updatePageControls();
+
+    console.log(`Rendered page ${pageNum} of ${viewerState.totalPages}`);
+  } catch (error) {
+    if (error.name === 'RenderingCancelledException') {
+      console.log('Rendering cancelled (new page requested)');
+    } else {
+      console.error('Error rendering page:', error);
+      showError('Error rendering page. Please try reloading the PDF.');
+    }
+  }
+}
+
+/**
+ * Update page navigation controls
+ */
+function updatePageControls() {
+  // Update page input value
+  elements.pageInput.value = viewerState.currentPage;
+
+  // Update previous button state
+  elements.prevPage.disabled = viewerState.currentPage === 1;
+
+  // Update next button state
+  elements.nextPage.disabled = viewerState.currentPage === viewerState.totalPages;
+
+  console.log(
+    `Page controls updated: ${viewerState.currentPage} of ${viewerState.totalPages}`
+  );
 }
 
 // ==========================================================================
