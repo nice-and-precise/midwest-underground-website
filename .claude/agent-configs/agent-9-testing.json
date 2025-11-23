@@ -1,0 +1,25 @@
+{
+  "filesystem": {
+    "denyRead": [".env.production"],
+    "allowWrite": [
+      "tests/**",
+      ".playwright/**",
+      "test-results/**",
+      "coverage/**",
+      "vitest.config.ts",
+      "playwright.config.ts",
+      ".serena/memories/agent-9-status.yml"
+    ],
+    "denyWrite": [
+      "src/**",
+      "prisma/schema.prisma"
+    ]
+  },
+  "network": {
+    "allowedDomains": [
+      "localhost",
+      "127.0.0.1",
+      "playwright.dev"
+    ]
+  }
+}
