@@ -126,6 +126,15 @@ function initMeasurementTools() {
     // Initialize status bar
     initStatusBar();
 
+    // Task 14: Add persistence buttons to toolbar
+    addPersistenceButtons();
+
+    // Task 14: Load measurements from localStorage
+    loadMeasurementsFromStorage();
+
+    // Task 15: Initialize scale indicator
+    updateScaleIndicator();
+
     console.log('[Measurement Tools] Module initialized successfully');
     return true;
 }
@@ -297,6 +306,9 @@ function handlePageChange(detail) {
         cleanupCurrentMeasurement();
         activateTool(null);
     }
+
+    // Task 15: Update scale indicator for new page
+    onPageChangeUpdateScale();
 }
 
 /**
@@ -941,6 +953,9 @@ function handleScaleFormSubmit() {
         // Update scale status in status bar
         updateScaleStatus(measurementState.scaleData[pageNumber]);
 
+        // Task 15: Update scale indicator
+        updateScaleIndicator();
+
         // Deactivate scale tool
         activateTool(null);
 
@@ -1342,6 +1357,9 @@ function finishLinearMeasurement() {
 
         // Task 13: Push to undo stack
         pushToUndoStack('create', measurementData);
+
+        // Task 14: Auto-save to localStorage
+        saveMeasurementsToStorage();
 
         // Keep linear tool active for next measurement
         // User can press ESC or click another tool to deactivate
@@ -1828,6 +1846,9 @@ function finishAreaMeasurement() {
         // Task 13: Push to undo stack
         pushToUndoStack('create', measurementData);
 
+        // Task 14: Auto-save to localStorage
+        saveMeasurementsToStorage();
+
         // Keep area tool active for next measurement
         console.log('[Measurement Tools] Area measurement complete. Tool remains active.');
 
@@ -2029,6 +2050,9 @@ function handleCountClick(pointer) {
 
         // Task 13: Push to undo stack
         pushToUndoStack('create', measurementData);
+
+        // Task 14: Auto-save to localStorage
+        saveMeasurementsToStorage();
 
         // Add double-click handler for editing (placeholder for Task 11)
         group.on('mousedblclick', () => {
@@ -2311,6 +2335,9 @@ function handleObjectModified(event) {
 
         // Task 13: Push to undo stack
         pushToUndoStack('update', measurementData, previousData);
+
+        // Task 14: Auto-save to localStorage
+        saveMeasurementsToStorage();
 
         console.log('[Measurement Tools] Task 9: Measurement updated:', measurementData);
 
@@ -2621,6 +2648,9 @@ function deleteSingleMeasurement(fabricObject, currentPage, measurements) {
 
     // Task 13: Push to undo stack
     pushToUndoStack('delete', measurementData);
+
+    // Task 14: Auto-save to localStorage
+    saveMeasurementsToStorage();
 
     console.log('[Measurement Tools] Task 9: Measurement deleted successfully');
 }
@@ -3269,6 +3299,544 @@ function clearUndoRedoStacks() {
 
 
 // ============================================
+// TASK 14: MEASUREMENT PERSISTENCE
+// ============================================
+
+/**
+ * Measurement Persistence System
+ *
+ * Provides localStorage auto-save and export/import functionality for measurements.
+ * All measurement data, scale data, and counters are persisted across sessions.
+ *
+ * Features:
+ * - Auto-save to localStorage after every CRUD operation
+ * - Load measurements on page load
+ * - Export all measurements to JSON file
+ * - Import measurements from JSON file
+ * - Clear all measurements with confirmation
+ *
+ * Storage Key: 'takeoff-measurements'
+ * Storage Format:
+ * {
+ *     measurements: { pageNum: { data: [...] } },
+ *     scaleData: { pageNum: {...} },
+ *     counters: { pageNum: { category: count } },
+ *     timestamp: 'ISO-8601',
+ *     version: '1.0'
+ * }
+ */
+
+const STORAGE_KEY = 'takeoff-measurements';
+const STORAGE_VERSION = '1.0';
+
+/**
+ * Save all measurements to localStorage
+ * Called automatically after every CRUD operation
+ */
+function saveMeasurementsToStorage() {
+    try {
+        const data = {
+            measurements: measurementState.measurements,
+            scaleData: measurementState.scaleData,
+            counters: measurementState.counters,
+            timestamp: new Date().toISOString(),
+            version: STORAGE_VERSION
+        };
+
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+
+        console.log('[Persistence] Measurements saved to localStorage:', {
+            pages: Object.keys(data.measurements).length,
+            totalMeasurements: Object.values(data.measurements).reduce(
+                (sum, page) => sum + (page.data?.length || 0), 0
+            )
+        });
+
+    } catch (error) {
+        console.error('[Persistence] Error saving to localStorage:', error);
+        // Handle quota exceeded error
+        if (error.name === 'QuotaExceededError') {
+            console.error('[Persistence] localStorage quota exceeded - consider clearing old data');
+        }
+    }
+}
+
+/**
+ * Load measurements from localStorage
+ * Called on initialization
+ */
+function loadMeasurementsFromStorage() {
+    try {
+        const stored = localStorage.getItem(STORAGE_KEY);
+        if (!stored) {
+            console.log('[Persistence] No stored measurements found');
+            return;
+        }
+
+        const data = JSON.parse(stored);
+
+        // Validate version
+        if (data.version !== STORAGE_VERSION) {
+            console.warn('[Persistence] Storage version mismatch - skipping load');
+            return;
+        }
+
+        // Restore measurements data
+        if (data.measurements) {
+            measurementState.measurements = data.measurements;
+        }
+
+        // Restore scale data
+        if (data.scaleData) {
+            measurementState.scaleData = data.scaleData;
+        }
+
+        // Restore counters
+        if (data.counters) {
+            measurementState.counters = data.counters;
+        }
+
+        console.log('[Persistence] Measurements loaded from localStorage:', {
+            pages: Object.keys(data.measurements || {}).length,
+            totalMeasurements: Object.values(data.measurements || {}).reduce(
+                (sum, page) => sum + (page.data?.length || 0), 0
+            ),
+            timestamp: data.timestamp
+        });
+
+        // Reload measurements for current page to display them
+        const currentPage = viewerState?.currentPage || 1;
+        loadMeasurementsForPage(currentPage);
+
+    } catch (error) {
+        console.error('[Persistence] Error loading from localStorage:', error);
+    }
+}
+
+/**
+ * Export all measurements to JSON file
+ * Downloads a file with all measurement data
+ */
+function exportMeasurementsToJSON() {
+    try {
+        const data = {
+            measurements: measurementState.measurements,
+            scaleData: measurementState.scaleData,
+            counters: measurementState.counters,
+            timestamp: new Date().toISOString(),
+            version: STORAGE_VERSION,
+            exportedBy: 'Midwest Underground Takeoff System',
+            pdfFile: viewerState?.pdfUrl || 'unknown'
+        };
+
+        // Create blob and download
+        const blob = new Blob([JSON.stringify(data, null, 2)], {
+            type: 'application/json'
+        });
+
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `takeoff-measurements-${Date.now()}.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+
+        console.log('[Persistence] Measurements exported to JSON file');
+
+        // Show success message
+        alert('Measurements exported successfully!');
+
+    } catch (error) {
+        console.error('[Persistence] Error exporting measurements:', error);
+        alert('Error exporting measurements. Check console for details.');
+    }
+}
+
+/**
+ * Import measurements from JSON file
+ * @param {File} file - JSON file to import
+ */
+function importMeasurementsFromJSON(file) {
+    if (!file) {
+        console.error('[Persistence] No file provided for import');
+        return;
+    }
+
+    const reader = new FileReader();
+
+    reader.onload = (e) => {
+        try {
+            const data = JSON.parse(e.target.result);
+
+            // Validate version
+            if (data.version !== STORAGE_VERSION) {
+                alert(`Warning: File version (${data.version}) does not match current version (${STORAGE_VERSION}). Import may fail.`);
+            }
+
+            // Confirm import
+            const totalMeasurements = Object.values(data.measurements || {}).reduce(
+                (sum, page) => sum + (page.data?.length || 0), 0
+            );
+
+            const confirmMessage = `Import ${totalMeasurements} measurements from file?\n\nThis will replace all current measurements.\n\nFile: ${file.name}\nExported: ${data.timestamp || 'unknown'}`;
+
+            if (!confirm(confirmMessage)) {
+                console.log('[Persistence] Import cancelled by user');
+                return;
+            }
+
+            // Clear current canvas
+            measurementState.fabricCanvas?.clear();
+
+            // Import data
+            if (data.measurements) {
+                measurementState.measurements = data.measurements;
+            }
+            if (data.scaleData) {
+                measurementState.scaleData = data.scaleData;
+            }
+            if (data.counters) {
+                measurementState.counters = data.counters;
+            }
+
+            // Save to localStorage
+            saveMeasurementsToStorage();
+
+            // Reload current page
+            const currentPage = viewerState?.currentPage || 1;
+            loadMeasurementsForPage(currentPage);
+
+            console.log('[Persistence] Measurements imported successfully:', {
+                pages: Object.keys(data.measurements || {}).length,
+                totalMeasurements: totalMeasurements
+            });
+
+            alert(`Successfully imported ${totalMeasurements} measurements!`);
+
+        } catch (error) {
+            console.error('[Persistence] Error importing measurements:', error);
+            alert('Error importing file. Please check that it is a valid measurement export file.');
+        }
+    };
+
+    reader.onerror = () => {
+        console.error('[Persistence] Error reading file');
+        alert('Error reading file. Please try again.');
+    };
+
+    reader.readAsText(file);
+}
+
+/**
+ * Clear all measurements with confirmation
+ * Removes all measurements from all pages and clears localStorage
+ */
+function clearAllMeasurements() {
+    const totalMeasurements = Object.values(measurementState.measurements).reduce(
+        (sum, page) => sum + (page.data?.length || 0), 0
+    );
+
+    const confirmMessage = `Delete ALL ${totalMeasurements} measurements?\n\nThis action cannot be undone!\n\n(Scale calibration data will be preserved)`;
+
+    if (!confirm(confirmMessage)) {
+        console.log('[Persistence] Clear all cancelled by user');
+        return;
+    }
+
+    try {
+        // Clear measurements (preserve scale data and counters)
+        measurementState.measurements = {};
+
+        // Clear canvas
+        measurementState.fabricCanvas?.clear();
+
+        // Clear undo/redo stacks
+        measurementState.undoStack = {};
+        measurementState.redoStack = {};
+
+        // Reset counters
+        measurementState.counters = {};
+
+        // Save to localStorage
+        saveMeasurementsToStorage();
+
+        console.log('[Persistence] All measurements cleared');
+        alert('All measurements have been cleared.');
+
+    } catch (error) {
+        console.error('[Persistence] Error clearing measurements:', error);
+        alert('Error clearing measurements. Check console for details.');
+    }
+}
+
+/**
+ * Add export/import/clear buttons to toolbar
+ * Called during initialization
+ */
+function addPersistenceButtons() {
+    const toolbar = document.querySelector('.measurement-toolbar');
+    if (!toolbar) {
+        console.warn('[Persistence] Toolbar not found - cannot add persistence buttons');
+        return;
+    }
+
+    // Create persistence controls container
+    const persistenceContainer = document.createElement('div');
+    persistenceContainer.className = 'persistence-controls';
+    persistenceContainer.style.cssText = 'margin-left: auto; display: flex; gap: 8px;';
+
+    // Export button
+    const exportBtn = document.createElement('button');
+    exportBtn.className = 'btn-persistence';
+    exportBtn.innerHTML = '📥 Export';
+    exportBtn.title = 'Export measurements to JSON file';
+    exportBtn.onclick = exportMeasurementsToJSON;
+
+    // Import button (with hidden file input)
+    const importBtn = document.createElement('button');
+    importBtn.className = 'btn-persistence';
+    importBtn.innerHTML = '📤 Import';
+    importBtn.title = 'Import measurements from JSON file';
+
+    const fileInput = document.createElement('input');
+    fileInput.type = 'file';
+    fileInput.accept = '.json';
+    fileInput.style.display = 'none';
+    fileInput.onchange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            importMeasurementsFromJSON(file);
+            fileInput.value = ''; // Reset input
+        }
+    };
+
+    importBtn.onclick = () => fileInput.click();
+
+    // Clear all button
+    const clearBtn = document.createElement('button');
+    clearBtn.className = 'btn-persistence btn-danger';
+    clearBtn.innerHTML = '🗑️ Clear All';
+    clearBtn.title = 'Delete all measurements';
+    clearBtn.onclick = clearAllMeasurements;
+
+    // Add to container
+    persistenceContainer.appendChild(exportBtn);
+    persistenceContainer.appendChild(importBtn);
+    persistenceContainer.appendChild(fileInput);
+    persistenceContainer.appendChild(clearBtn);
+
+    // Add to toolbar
+    toolbar.appendChild(persistenceContainer);
+
+    console.log('[Persistence] Persistence buttons added to toolbar');
+}
+
+
+// ============================================
+// TASK 15: SCALE INDICATOR UI
+// ============================================
+
+/**
+ * Scale Indicator UI System
+ *
+ * Displays current page scale information in the status bar and optionally
+ * as a visual scale bar on the canvas.
+ *
+ * Features:
+ * - Scale info in status bar (e.g., "Scale: 1:1.50" or "Scale: Not Set")
+ * - Visual scale bar on canvas (top-right corner) showing reference distance
+ * - Per-page scale display (updates on page change)
+ * - Warning indicator when scale not set
+ */
+
+/**
+ * Update scale indicator in status bar
+ * Shows current page scale ratio or "Not Set" warning
+ */
+function updateScaleIndicator() {
+    const currentPage = viewerState?.currentPage || 1;
+    const scaleData = measurementState.scaleData[currentPage];
+
+    // Find or create scale status element
+    let scaleStatus = document.getElementById('scale-status');
+    if (!scaleStatus) {
+        // Create scale status element if it doesn't exist
+        scaleStatus = document.createElement('span');
+        scaleStatus.id = 'scale-status';
+        scaleStatus.style.cssText = 'margin-left: 16px; font-weight: 500;';
+
+        // Try to add to status bar
+        const statusBar = document.querySelector('.measurement-status-bar');
+        if (statusBar) {
+            statusBar.appendChild(scaleStatus);
+        } else {
+            console.warn('[Scale Indicator] Status bar not found');
+            return;
+        }
+    }
+
+    if (scaleData && scaleData.ratio) {
+        // Calculate scale ratio (e.g., 1:1.50 means 1 pixel = 1.50 units)
+        const ratio = scaleData.ratio.toFixed(2);
+        scaleStatus.textContent = `Scale: 1:${ratio} (${scaleData.units})`;
+        scaleStatus.style.color = '#28a745'; // Green for set
+        scaleStatus.title = `1 pixel = ${ratio} ${scaleData.units}`;
+    } else {
+        scaleStatus.textContent = 'Scale: Not Set ⚠️';
+        scaleStatus.style.color = '#dc3545'; // Red for warning
+        scaleStatus.title = 'Please calibrate scale using the Scale tool';
+    }
+
+    console.log('[Scale Indicator] Scale status updated for page', currentPage);
+}
+
+/**
+ * Add visual scale bar to canvas (optional)
+ * Shows a reference distance in the top-right corner
+ */
+function addScaleBarToCanvas() {
+    if (!measurementState.fabricCanvas) {
+        console.warn('[Scale Indicator] Fabric canvas not initialized');
+        return;
+    }
+
+    const currentPage = viewerState?.currentPage || 1;
+    const scaleData = measurementState.scaleData[currentPage];
+
+    // Remove existing scale bar if present
+    removeScaleBarFromCanvas();
+
+    if (!scaleData || !scaleData.ratio) {
+        console.log('[Scale Indicator] No scale data for page', currentPage);
+        return;
+    }
+
+    try {
+        // Calculate scale bar dimensions (show 100 units worth)
+        const referenceUnits = 100;
+        const lineLength = referenceUnits * scaleData.ratio; // pixels
+
+        // Position in top-right corner with padding
+        const padding = 20;
+        const canvasWidth = measurementState.fabricCanvas.width;
+        const startX = canvasWidth - lineLength - padding;
+        const startY = padding;
+
+        // Create scale bar line
+        const scaleLine = new fabric.Line(
+            [startX, startY, startX + lineLength, startY],
+            {
+                stroke: '#003B5C',
+                strokeWidth: 3,
+                selectable: false,
+                evented: false,
+                objectType: 'scale-indicator-line',
+                excludeFromExport: true
+            }
+        );
+        scaleLine.id = 'scale-bar-line';
+
+        // Create scale bar text
+        const scaleText = new fabric.Text(
+            `${referenceUnits} ${scaleData.units}`,
+            {
+                left: startX + (lineLength / 2),
+                top: startY - 20,
+                fontSize: 14,
+                fill: '#003B5C',
+                fontWeight: 'bold',
+                backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                padding: 4,
+                originX: 'center',
+                selectable: false,
+                evented: false,
+                objectType: 'scale-indicator-text',
+                excludeFromExport: true
+            }
+        );
+        scaleText.id = 'scale-bar-text';
+
+        // Create tick marks at ends
+        const tickHeight = 10;
+        const startTick = new fabric.Line(
+            [startX, startY - tickHeight/2, startX, startY + tickHeight/2],
+            {
+                stroke: '#003B5C',
+                strokeWidth: 2,
+                selectable: false,
+                evented: false,
+                objectType: 'scale-indicator-tick',
+                excludeFromExport: true
+            }
+        );
+        startTick.id = 'scale-bar-tick-start';
+
+        const endTick = new fabric.Line(
+            [startX + lineLength, startY - tickHeight/2, startX + lineLength, startY + tickHeight/2],
+            {
+                stroke: '#003B5C',
+                strokeWidth: 2,
+                selectable: false,
+                evented: false,
+                objectType: 'scale-indicator-tick',
+                excludeFromExport: true
+            }
+        );
+        endTick.id = 'scale-bar-tick-end';
+
+        // Add to canvas
+        measurementState.fabricCanvas.add(scaleLine, scaleText, startTick, endTick);
+
+        // Ensure scale bar is on top
+        measurementState.fabricCanvas.bringToFront(scaleLine);
+        measurementState.fabricCanvas.bringToFront(scaleText);
+        measurementState.fabricCanvas.bringToFront(startTick);
+        measurementState.fabricCanvas.bringToFront(endTick);
+
+        measurementState.fabricCanvas.renderAll();
+
+        console.log('[Scale Indicator] Scale bar added to canvas');
+
+    } catch (error) {
+        console.error('[Scale Indicator] Error adding scale bar:', error);
+    }
+}
+
+/**
+ * Remove scale bar from canvas
+ */
+function removeScaleBarFromCanvas() {
+    if (!measurementState.fabricCanvas) return;
+
+    const objects = measurementState.fabricCanvas.getObjects();
+    const scaleObjects = objects.filter(obj =>
+        obj.objectType && obj.objectType.includes('scale-indicator')
+    );
+
+    scaleObjects.forEach(obj => {
+        measurementState.fabricCanvas.remove(obj);
+    });
+
+    if (scaleObjects.length > 0) {
+        measurementState.fabricCanvas.renderAll();
+        console.log('[Scale Indicator] Scale bar removed from canvas');
+    }
+}
+
+/**
+ * Update scale indicator when page changes
+ * Called by page change event handler
+ */
+function onPageChangeUpdateScale() {
+    updateScaleIndicator();
+    // Optional: Uncomment to show scale bar on canvas
+    // addScaleBarToCanvas();
+}
+
+
+// ============================================
 // TASK 11: MEASUREMENT PROPERTIES PANEL
 // ============================================
 
@@ -3597,6 +4165,9 @@ function handlePropertiesSave(event) {
 
     // Task 13: Push to undo stack
     pushToUndoStack('update', data, previousData);
+
+    // Task 14: Auto-save to localStorage
+    saveMeasurementsToStorage();
 
     console.log('[Properties Panel] Changes saved successfully');
 
