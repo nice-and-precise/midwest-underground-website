@@ -171,6 +171,26 @@
 
             </div>
 
+            <!-- Status Bar for Real-Time Measurements -->
+            <div id="measurement-status" class="measurement-status" style="display: none;">
+                <div class="status-item">
+                    <span class="status-label">Tool:</span>
+                    <span id="status-tool" class="status-value">None</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">Points:</span>
+                    <span id="status-points" class="status-value">0</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">Current:</span>
+                    <span id="status-current" class="status-value">-</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">Scale:</span>
+                    <span id="status-scale" class="status-value">Not Set</span>
+                </div>
+            </div>
+
             <!-- Canvas Container -->
             <div id="viewer-container" class="viewer-container">
                 <canvas id="pdf-canvas"></canvas>

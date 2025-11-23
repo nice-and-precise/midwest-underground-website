@@ -26,6 +26,30 @@ const measurementState = {
 };
 
 /**
+ * Status bar elements for real-time measurement display
+ */
+const statusBar = {
+    container: null,
+    tool: null,
+    points: null,
+    current: null,
+    scale: null
+};
+
+/**
+ * Initialize status bar elements
+ */
+function initStatusBar() {
+    statusBar.container = document.getElementById('measurement-status');
+    statusBar.tool = document.getElementById('status-tool');
+    statusBar.points = document.getElementById('status-points');
+    statusBar.current = document.getElementById('status-current');
+    statusBar.scale = document.getElementById('status-scale');
+
+    console.log('[Measurement Tools] Status bar initialized');
+}
+
+/**
  * Initialize measurement tools module
  * Called after DOM is loaded and PDF viewer is ready
  */
@@ -59,6 +83,9 @@ function initMeasurementTools() {
 
     // Attach event listeners for measurement tool buttons
     attachToolListeners();
+
+    // Initialize status bar
+    initStatusBar();
 
     console.log('[Measurement Tools] Module initialized successfully');
     return true;
@@ -366,6 +393,56 @@ function attachToolListeners() {
 }
 
 /**
+ * Update status bar scale display
+ * @param {Object} scaleData - Scale calibration data
+ */
+function updateScaleStatus(scaleData) {
+    if (!statusBar.scale) return;
+
+    if (scaleData && scaleData.ratio) {
+        statusBar.scale.textContent = `1:${scaleData.ratio.toFixed(2)} (${scaleData.units})`;
+    } else {
+        statusBar.scale.textContent = 'Not Set';
+    }
+}
+
+/**
+ * Update status bar display
+ * @param {string} toolName - Active tool name
+ */
+function updateStatusBar(toolName) {
+    if (!statusBar.container) return;
+
+    const currentPage = viewerState?.currentPage || 1;
+    const scaleData = measurementState.scaleData[currentPage];
+
+    if (toolName) {
+        // Show status bar
+        statusBar.container.style.display = 'flex';
+
+        // Update tool name
+        const toolNames = {
+            'scale': 'Scale Calibration',
+            'linear': 'Linear Measurement',
+            'area': 'Area Measurement',
+            'count': 'Count Marker'
+        };
+        statusBar.tool.textContent = toolNames[toolName] || 'None';
+
+        // Reset points and current values
+        statusBar.points.textContent = '0';
+        statusBar.current.textContent = '-';
+        statusBar.current.classList.remove('highlight');
+
+        // Update scale status
+        updateScaleStatus(scaleData);
+    } else {
+        // Hide status bar when no tool is active
+        statusBar.container.style.display = 'none';
+    }
+}
+
+/**
  * Activate a measurement tool
  * @param {string} toolName - Name of tool to activate ('scale', 'linear', 'area', 'count', or null)
  */
@@ -388,6 +465,9 @@ function activateTool(toolName) {
 
     // Update tool button states (enable/disable based on scale)
     updateToolButtonStates();
+
+    // Update status bar
+    updateStatusBar(toolName);
 
     // If count tool activated, prompt for category
     if (toolName === 'count') {
@@ -568,6 +648,11 @@ function handleScaleClick(pointer) {
 
         console.log('[Measurement Tools] Scale point 1 set:', pointer);
 
+        // Update status bar
+        if (statusBar.points) {
+            statusBar.points.textContent = '1';
+        }
+
         // Create temporary point marker
         const circle = new fabric.Circle({
             left: pointer.x - 3,
@@ -600,6 +685,15 @@ function handleScaleClick(pointer) {
         const pixelDistance = Math.sqrt(dx * dx + dy * dy);
 
         console.log('[Measurement Tools] Scale pixel distance:', pixelDistance);
+
+        // Update status bar
+        if (statusBar.points) {
+            statusBar.points.textContent = '2';
+        }
+        if (statusBar.current) {
+            statusBar.current.textContent = `${pixelDistance.toFixed(2)} px`;
+            statusBar.current.classList.add('highlight');
+        }
 
         // Create final line
         if (measurementState.tempObject) {
@@ -652,6 +746,15 @@ function updateScalePreview(pointer) {
     measurementState.tempObject = line;
     measurementState.fabricCanvas.add(line);
     measurementState.fabricCanvas.renderAll();
+
+    // Update status bar with preview pixel distance
+    if (statusBar.current) {
+        const dx = pointer.x - point1.x;
+        const dy = pointer.y - point1.y;
+        const pixelDistance = Math.sqrt(dx * dx + dy * dy);
+        statusBar.current.textContent = `${pixelDistance.toFixed(2)} px`;
+        statusBar.current.classList.add('highlight');
+    }
 }
 
 /**
@@ -791,6 +894,9 @@ function handleScaleFormSubmit() {
         // Clean up temporary objects
         cleanupCurrentMeasurement();
 
+        // Update scale status in status bar
+        updateScaleStatus(measurementState.scaleData[pageNumber]);
+
         // Deactivate scale tool
         activateTool(null);
 
@@ -836,6 +942,16 @@ function handleLinearClick(pointer) {
 
     console.log('[Measurement Tools] Linear point added:', pointToAdd,
         `(Total points: ${measurementState.currentPoints.length})`);
+
+    // Update status bar with point count
+    if (statusBar.points) {
+        statusBar.points.textContent = measurementState.currentPoints.length;
+    }
+
+    // Update real-time measurement display
+    if (measurementState.currentPoints.length >= 2) {
+        updateLinearStatusDisplay();
+    }
 
     // First click - create first point marker
     if (measurementState.currentPoints.length === 1) {
@@ -944,6 +1060,35 @@ function updateLinearPolyline() {
 }
 
 /**
+ * Update linear measurement status display
+ * Shows real-time length calculation in status bar
+ */
+function updateLinearStatusDisplay() {
+    const currentPage = viewerState?.currentPage || 1;
+    const scaleData = measurementState.scaleData[currentPage];
+
+    if (!statusBar.current || !scaleData) return;
+
+    const points = measurementState.currentPoints;
+    if (points.length < 2) return;
+
+    // Calculate total pixel length
+    let totalPixelLength = 0;
+    for (let i = 0; i < points.length - 1; i++) {
+        const dx = points[i + 1].x - points[i].x;
+        const dy = points[i + 1].y - points[i].y;
+        totalPixelLength += Math.sqrt(dx * dx + dy * dy);
+    }
+
+    // Convert to real-world units
+    const realLength = (totalPixelLength / scaleData.ratio).toFixed(2);
+
+    // Update status bar
+    statusBar.current.textContent = `${realLength} ${scaleData.units}`;
+    statusBar.current.classList.add('highlight');
+}
+
+/**
  * Update linear preview line
  * Shows preview line from last point to current mouse position
  */
@@ -982,6 +1127,22 @@ function updateLinearPreview(pointer) {
     measurementState.tempPreviewLine = previewLine;
     measurementState.fabricCanvas.add(previewLine);
     measurementState.fabricCanvas.renderAll();
+
+    // Update status bar with preview length
+    const currentPage = viewerState?.currentPage || 1;
+    const scaleData = measurementState.scaleData[currentPage];
+
+    if (statusBar.current && scaleData && previewPoints.length >= 2) {
+        let totalPixelLength = 0;
+        for (let i = 0; i < previewPoints.length - 1; i++) {
+            const dx = previewPoints[i + 1].x - previewPoints[i].x;
+            const dy = previewPoints[i + 1].y - previewPoints[i].y;
+            totalPixelLength += Math.sqrt(dx * dx + dy * dy);
+        }
+        const realLength = (totalPixelLength / scaleData.ratio).toFixed(2);
+        statusBar.current.textContent = `${realLength} ${scaleData.units}`;
+        statusBar.current.classList.add('highlight');
+    }
 
     // If snapped, show visual feedback
     if (snappedPoint) {
@@ -1278,6 +1439,16 @@ function handleAreaClick(pointer) {
     console.log('[Measurement Tools] Area vertex added:', pointer,
         `(Total vertices: ${measurementState.currentPoints.length})`);
 
+    // Update status bar with vertex count
+    if (statusBar.points) {
+        statusBar.points.textContent = measurementState.currentPoints.length;
+    }
+
+    // Update real-time area display (if we have at least 3 points)
+    if (measurementState.currentPoints.length >= 3) {
+        updateAreaStatusDisplay();
+    }
+
     // First click - create first vertex marker
     if (measurementState.currentPoints.length === 1) {
         measurementState.isDrawing = true;
@@ -1317,6 +1488,35 @@ function handleAreaClick(pointer) {
 }
 
 /**
+ * Update area measurement status display
+ * Shows real-time area calculation in status bar
+ */
+function updateAreaStatusDisplay() {
+    const currentPage = viewerState?.currentPage || 1;
+    const scaleData = measurementState.scaleData[currentPage];
+
+    if (!statusBar.current || !scaleData) return;
+
+    const vertices = measurementState.currentPoints;
+    if (vertices.length < 3) return;
+
+    // Calculate area using shoelace formula
+    const shoelaceArea = Math.abs(
+        vertices.reduce((sum, v, i, arr) => {
+            const next = arr[(i + 1) % arr.length];
+            return sum + (v.x * next.y - next.x * v.y);
+        }, 0) / 2
+    );
+
+    // Convert to real-world units
+    const realArea = (shoelaceArea / (scaleData.ratio * scaleData.ratio)).toFixed(2);
+
+    // Update status bar
+    statusBar.current.textContent = `${realArea} sq ${scaleData.units}`;
+    statusBar.current.classList.add('highlight');
+}
+
+/**
  * Update area preview polygon
  * Shows preview polygon edge from last vertex to cursor
  * Shows semi-transparent polygon fill with all current vertices + cursor point
@@ -1353,6 +1553,22 @@ function updateAreaPreview(pointer) {
         });
 
         measurementState.fabricCanvas.add(previewPolygon);
+
+        // Update status bar with preview area
+        const currentPage = viewerState?.currentPage || 1;
+        const scaleData = measurementState.scaleData[currentPage];
+
+        if (statusBar.current && scaleData) {
+            const shoelaceArea = Math.abs(
+                previewPoints.reduce((sum, v, i, arr) => {
+                    const next = arr[(i + 1) % arr.length];
+                    return sum + (v.x * next.y - next.x * v.y);
+                }, 0) / 2
+            );
+            const realArea = (shoelaceArea / (scaleData.ratio * scaleData.ratio)).toFixed(2);
+            statusBar.current.textContent = `${realArea} sq ${scaleData.units}`;
+            statusBar.current.classList.add('highlight');
+        }
     } else if (previewPoints.length === 2) {
         // If only 2 points, show dashed line
         const previewLine = new fabric.Line([
@@ -1685,6 +1901,12 @@ function handleCountClick(pointer) {
         // Increment counter
         measurementState.counters[currentPage][category]++;
         const count = measurementState.counters[currentPage][category];
+
+        // Update status bar
+        if (statusBar.current) {
+            statusBar.current.textContent = `#${count}`;
+            statusBar.current.classList.add('highlight');
+        }
 
         console.log('[Measurement Tools] Count marker:', {
             page: currentPage,
