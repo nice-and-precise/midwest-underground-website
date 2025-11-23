@@ -14,6 +14,12 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.0/fabric.min.js"></script>
     <!-- Fallback CDN: https://unpkg.com/fabric@5.3.0/dist/fabric.min.js -->
 
+    <!-- SheetJS Library (for Excel export) -->
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
+
+    <!-- Font Awesome (for icons) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <!-- Styles -->
     <link rel="stylesheet" href="css/takeoff.css">
 </head>
@@ -169,6 +175,28 @@
                     </button>
                 </div>
 
+                <!-- Export Controls -->
+                <div class="control-group export-controls">
+                    <button id="export-csv" class="btn-control btn-text" title="Export Measurements to CSV">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="7 10 12 15 17 10"></polyline>
+                            <line x1="12" y1="15" x2="12" y2="3"></line>
+                        </svg>
+                        <span class="btn-label">Export CSV</span>
+                    </button>
+                    <button id="export-excel" class="btn-control btn-text" title="Export Measurements to Excel">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                            <polyline points="14 2 14 8 20 8"></polyline>
+                            <line x1="16" y1="13" x2="8" y2="13"></line>
+                            <line x1="16" y1="17" x2="8" y2="17"></line>
+                            <polyline points="10 9 9 9 8 9"></polyline>
+                        </svg>
+                        <span class="btn-label">Export Excel</span>
+                    </button>
+                </div>
+
             </div>
 
             <!-- Status Bar for Real-Time Measurements -->
@@ -199,6 +227,69 @@
             </div>
 
         </section>
+
+        <!-- Task 16: Measurement List Panel -->
+        <div id="measurement-list-panel" class="measurement-list-panel collapsed">
+            <div class="panel-header">
+                <h3>Measurements</h3>
+                <button id="toggle-list-panel" class="btn-icon" title="Toggle List">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+            </div>
+
+            <div class="panel-controls">
+                <div class="filter-group">
+                    <label>Filter by Type:</label>
+                    <select id="filter-type">
+                        <option value="all">All Types</option>
+                        <option value="Linear">Linear</option>
+                        <option value="Area">Area</option>
+                        <option value="Count">Count</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label>Filter by Page:</label>
+                    <select id="filter-page">
+                        <option value="all">All Pages</option>
+                        <option value="current">Current Page Only</option>
+                    </select>
+                </div>
+
+                <div class="search-group">
+                    <input type="text" id="search-measurements" placeholder="Search measurements...">
+                </div>
+
+                <div class="sort-group">
+                    <label>Sort by:</label>
+                    <select id="sort-measurements">
+                        <option value="name">Name</option>
+                        <option value="value">Value</option>
+                        <option value="date">Date</option>
+                        <option value="page">Page</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="summary-stats">
+                <div class="stat-item">
+                    <span class="stat-label">Linear:</span>
+                    <span id="stat-linear-count">0</span> (<span id="stat-linear-total">0.00</span> ft)
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Area:</span>
+                    <span id="stat-area-count">0</span> (<span id="stat-area-total">0.00</span> sqft)
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Count:</span>
+                    <span id="stat-count-total">0</span> markers
+                </div>
+            </div>
+
+            <div id="measurement-list-container" class="measurement-list-container">
+                <!-- Dynamically populated with measurement items -->
+            </div>
+        </div>
 
     </main>
 

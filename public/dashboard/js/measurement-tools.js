@@ -135,6 +135,12 @@ function initMeasurementTools() {
     // Task 15: Initialize scale indicator
     updateScaleIndicator();
 
+    // Task 16: Initialize measurement list UI
+    initMeasurementList();
+
+    // Task 17: Attach export listeners
+    attachExportListeners();
+
     console.log('[Measurement Tools] Module initialized successfully');
     return true;
 }
@@ -4270,11 +4276,1083 @@ function updateMeasurementLabel(object, data, newLabel) {
     data.label = newLabel;
 }
 
+// ============================================
+// TASK 16: MEASUREMENT LIST UI
+// ============================================
+
+/**
+ * Measurement List Panel System
+ *
+ * Provides a collapsible panel to view, filter, search, and manage all measurements.
+ * Features filtering by type/page, search, sorting, and measurement actions.
+ */
+
+/**
+ * Initialize the measurement list panel
+ * Sets up event listeners and initial render
+ */
+function initMeasurementList() {
+    console.log('[Measurement List] Initializing measurement list panel...');
+
+    // Attach control listeners
+    attachListControlListeners();
+
+    // Render initial list
+    renderMeasurementList();
+
+    // Listen for measurement changes
+    window.addEventListener('measurement:created', handleMeasurementChange);
+    window.addEventListener('measurement:updated', handleMeasurementChange);
+    window.addEventListener('measurement:deleted', handleMeasurementChange);
+
+    console.log('[Measurement List] Measurement list panel initialized');
+}
+
+/**
+ * Get all measurements from all pages
+ * @returns {Array} Array of measurement objects with page number
+ */
+function getAllMeasurements() {
+    const allMeasurements = [];
+
+    for (const [pageNum, pageData] of Object.entries(measurementState.measurements)) {
+        const measurements = pageData.data || [];
+        measurements.forEach(measurement => {
+            allMeasurements.push({
+                ...measurement,
+                pageNumber: parseInt(pageNum)
+            });
+        });
+    }
+
+    return allMeasurements;
+}
+
+/**
+ * Get current filter state from UI controls
+ * @returns {Object} Filter settings
+ */
+function getFilterState() {
+    const typeFilter = document.getElementById('filter-type')?.value || 'all';
+    const pageFilter = document.getElementById('filter-page')?.value || 'all';
+    const searchQuery = document.getElementById('search-measurements')?.value || '';
+    const sortBy = document.getElementById('sort-measurements')?.value || 'name';
+
+    return {
+        type: typeFilter,
+        page: pageFilter,
+        search: searchQuery.toLowerCase().trim(),
+        sortBy: sortBy
+    };
+}
+
+/**
+ * Filter measurements based on current filter settings
+ * @param {Array} measurements - Array of measurement objects
+ * @param {Object} filters - Filter settings
+ * @returns {Array} Filtered measurements
+ */
+function filterMeasurements(measurements, filters) {
+    let filtered = [...measurements];
+
+    // Filter by type
+    if (filters.type !== 'all') {
+        filtered = filtered.filter(m => m.type === filters.type);
+    }
+
+    // Filter by page
+    if (filters.page === 'current' && viewerState.currentPage) {
+        filtered = filtered.filter(m => m.pageNumber === viewerState.currentPage);
+    }
+
+    // Filter by search query
+    if (filters.search) {
+        filtered = filtered.filter(m => {
+            const label = (m.label || '').toLowerCase();
+            const notes = (m.notes || '').toLowerCase();
+            const category = (m.category || '').toLowerCase();
+            return label.includes(filters.search) ||
+                   notes.includes(filters.search) ||
+                   category.includes(filters.search);
+        });
+    }
+
+    return filtered;
+}
+
+/**
+ * Sort measurements based on sort criteria
+ * @param {Array} measurements - Array of measurement objects
+ * @param {string} sortBy - Sort criteria (name/value/date/page)
+ * @returns {Array} Sorted measurements
+ */
+function sortMeasurements(measurements, sortBy) {
+    const sorted = [...measurements];
+
+    switch (sortBy) {
+        case 'name':
+            sorted.sort((a, b) => {
+                const aLabel = (a.label || 'Untitled').toLowerCase();
+                const bLabel = (b.label || 'Untitled').toLowerCase();
+                return aLabel.localeCompare(bLabel);
+            });
+            break;
+        case 'value':
+            sorted.sort((a, b) => (b.value || 0) - (a.value || 0));
+            break;
+        case 'date':
+            sorted.sort((a, b) => {
+                const aTime = a.timestamp ? new Date(a.timestamp).getTime() : 0;
+                const bTime = b.timestamp ? new Date(b.timestamp).getTime() : 0;
+                return bTime - aTime; // Newest first
+            });
+            break;
+        case 'page':
+            sorted.sort((a, b) => a.pageNumber - b.pageNumber);
+            break;
+    }
+
+    return sorted;
+}
+
+/**
+ * Render the complete measurement list
+ */
+function renderMeasurementList() {
+    console.log('[Measurement List] Rendering measurement list...');
+
+    // Get all measurements
+    const allMeasurements = getAllMeasurements();
+
+    // Get filters
+    const filters = getFilterState();
+
+    // Apply filters
+    let filteredMeasurements = filterMeasurements(allMeasurements, filters);
+
+    // Apply sorting
+    filteredMeasurements = sortMeasurements(filteredMeasurements, filters.sortBy);
+
+    // Update summary stats
+    updateSummaryStats(allMeasurements);
+
+    // Render list items
+    renderListItems(filteredMeasurements);
+
+    console.log('[Measurement List] Rendered', filteredMeasurements.length, 'of', allMeasurements.length, 'measurements');
+}
+
+/**
+ * Render measurement list items into container
+ * @param {Array} measurements - Array of filtered/sorted measurements
+ */
+function renderListItems(measurements) {
+    const container = document.getElementById('measurement-list-container');
+    if (!container) {
+        console.warn('[Measurement List] Container not found');
+        return;
+    }
+
+    // Clear container
+    container.innerHTML = '';
+
+    if (measurements.length === 0) {
+        container.innerHTML = `
+            <div class="measurement-list-empty">
+                <p>No measurements found</p>
+            </div>
+        `;
+        return;
+    }
+
+    // Create measurement items
+    measurements.forEach(measurement => {
+        const itemElement = createMeasurementItemElement(measurement);
+        container.appendChild(itemElement);
+    });
+}
+
+/**
+ * Create a measurement item DOM element
+ * @param {Object} measurement - Measurement object with pageNumber
+ * @returns {HTMLElement} Measurement item element
+ */
+function createMeasurementItemElement(measurement) {
+    const div = document.createElement('div');
+    div.className = 'measurement-item';
+    div.dataset.measurementId = measurement.id;
+    div.dataset.page = measurement.pageNumber;
+
+    const typeClass = measurement.type.toLowerCase();
+    const label = measurement.label || 'Untitled';
+    const value = measurement.value?.toFixed(2) || '0.00';
+    const units = measurement.units || '';
+    const notes = measurement.notes || '';
+
+    div.innerHTML = `
+        <div class="measurement-item-header">
+            <span class="measurement-type-badge ${typeClass}">${measurement.type}</span>
+            <span class="measurement-page">Page ${measurement.pageNumber}</span>
+        </div>
+        <div class="measurement-item-body">
+            <div class="measurement-label">${escapeHtml(label)}</div>
+            <div class="measurement-value">${value} ${units}</div>
+            ${notes ? `<div class="measurement-notes">${escapeHtml(notes)}</div>` : ''}
+        </div>
+        <div class="measurement-item-actions">
+            <button class="btn-icon" title="Zoom to Measurement" data-action="zoom">
+                <i class="fas fa-search-plus"></i>
+            </button>
+            <button class="btn-icon" title="Highlight" data-action="highlight">
+                <i class="fas fa-lightbulb"></i>
+            </button>
+            <button class="btn-icon btn-danger" title="Delete" data-action="delete">
+                <i class="fas fa-trash"></i>
+            </button>
+        </div>
+    `;
+
+    // Attach action listeners
+    div.querySelector('[data-action="zoom"]')?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        zoomToMeasurement(measurement.id, measurement.pageNumber);
+    });
+
+    div.querySelector('[data-action="highlight"]')?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        highlightMeasurement(measurement.id, measurement.pageNumber);
+    });
+
+    div.querySelector('[data-action="delete"]')?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        deleteMeasurementWithConfirm(measurement.id, measurement.pageNumber);
+    });
+
+    return div;
+}
+
+/**
+ * Update summary statistics display
+ * @param {Array} measurements - All measurements (unfiltered)
+ */
+function updateSummaryStats(measurements) {
+    let linearCount = 0;
+    let linearTotal = 0;
+    let areaCount = 0;
+    let areaTotal = 0;
+    let countTotal = 0;
+
+    measurements.forEach(m => {
+        if (m.type === 'Linear') {
+            linearCount++;
+            linearTotal += m.value || 0;
+        } else if (m.type === 'Area') {
+            areaCount++;
+            areaTotal += m.value || 0;
+        } else if (m.type === 'Count') {
+            countTotal += m.value || 0;
+        }
+    });
+
+    // Update DOM
+    const statLinearCount = document.getElementById('stat-linear-count');
+    const statLinearTotal = document.getElementById('stat-linear-total');
+    const statAreaCount = document.getElementById('stat-area-count');
+    const statAreaTotal = document.getElementById('stat-area-total');
+    const statCountTotal = document.getElementById('stat-count-total');
+
+    if (statLinearCount) statLinearCount.textContent = linearCount;
+    if (statLinearTotal) statLinearTotal.textContent = linearTotal.toFixed(2);
+    if (statAreaCount) statAreaCount.textContent = areaCount;
+    if (statAreaTotal) statAreaTotal.textContent = areaTotal.toFixed(2);
+    if (statCountTotal) statCountTotal.textContent = countTotal;
+}
+
+/**
+ * Toggle measurement list panel open/closed
+ */
+function toggleMeasurementListPanel() {
+    const panel = document.getElementById('measurement-list-panel');
+    if (!panel) return;
+
+    panel.classList.toggle('collapsed');
+
+    // Update icon
+    const icon = document.querySelector('#toggle-list-panel i');
+    if (icon) {
+        if (panel.classList.contains('collapsed')) {
+            icon.className = 'fas fa-chevron-left';
+        } else {
+            icon.className = 'fas fa-chevron-right';
+        }
+    }
+
+    console.log('[Measurement List] Panel toggled:', panel.classList.contains('collapsed') ? 'collapsed' : 'expanded');
+}
+
+/**
+ * Zoom canvas to center on a specific measurement
+ * @param {string} id - Measurement ID
+ * @param {number} pageNumber - Page number
+ */
+function zoomToMeasurement(id, pageNumber) {
+    console.log('[Measurement List] Zooming to measurement:', id, 'on page', pageNumber);
+
+    // Switch to correct page if needed
+    if (viewerState.currentPage !== pageNumber) {
+        console.log('[Measurement List] Switching to page', pageNumber);
+        if (typeof loadPage === 'function') {
+            loadPage(pageNumber);
+        }
+    }
+
+    // Find canvas object
+    setTimeout(() => {
+        const canvasObj = measurementState.fabricCanvas?.getObjects().find(obj => obj.data?.id === id);
+        if (!canvasObj) {
+            console.warn('[Measurement List] Canvas object not found for measurement:', id);
+            return;
+        }
+
+        // Get object bounds
+        const bounds = canvasObj.getBoundingRect();
+        const centerX = bounds.left + bounds.width / 2;
+        const centerY = bounds.top + bounds.height / 2;
+
+        // Get canvas viewport
+        const canvas = measurementState.fabricCanvas;
+        const canvasWidth = canvas.width;
+        const canvasHeight = canvas.height;
+
+        // Calculate pan to center object in viewport
+        const viewportCenterX = canvasWidth / 2;
+        const viewportCenterY = canvasHeight / 2;
+
+        const deltaX = viewportCenterX - centerX;
+        const deltaY = viewportCenterY - centerY;
+
+        // Apply transform
+        const currentTransform = canvas.viewportTransform.slice();
+        currentTransform[4] += deltaX;
+        currentTransform[5] += deltaY;
+
+        canvas.setViewportTransform(currentTransform);
+        canvas.requestRenderAll();
+
+        console.log('[Measurement List] Zoomed to measurement at', centerX, centerY);
+    }, 100);
+}
+
+/**
+ * Highlight measurement with flash effect
+ * @param {string} id - Measurement ID
+ * @param {number} pageNumber - Page number
+ */
+function highlightMeasurement(id, pageNumber) {
+    console.log('[Measurement List] Highlighting measurement:', id, 'on page', pageNumber);
+
+    // Switch to correct page if needed
+    if (viewerState.currentPage !== pageNumber) {
+        if (typeof loadPage === 'function') {
+            loadPage(pageNumber);
+        }
+    }
+
+    // Find canvas object and flash it
+    setTimeout(() => {
+        const canvasObj = measurementState.fabricCanvas?.getObjects().find(obj => obj.data?.id === id);
+        if (!canvasObj) {
+            console.warn('[Measurement List] Canvas object not found for measurement:', id);
+            return;
+        }
+
+        // Store original opacity and stroke
+        const originalOpacity = canvasObj.opacity || 1;
+        const originalStrokeWidth = canvasObj.strokeWidth || 2;
+
+        // Flash effect (3 pulses over 2 seconds)
+        let pulseCount = 0;
+        const pulseInterval = setInterval(() => {
+            if (pulseCount % 2 === 0) {
+                // Highlight
+                canvasObj.set({
+                    opacity: 1,
+                    strokeWidth: originalStrokeWidth * 2
+                });
+            } else {
+                // Normal
+                canvasObj.set({
+                    opacity: originalOpacity,
+                    strokeWidth: originalStrokeWidth
+                });
+            }
+            measurementState.fabricCanvas.requestRenderAll();
+
+            pulseCount++;
+            if (pulseCount >= 6) {
+                clearInterval(pulseInterval);
+                // Restore original state
+                canvasObj.set({
+                    opacity: originalOpacity,
+                    strokeWidth: originalStrokeWidth
+                });
+                measurementState.fabricCanvas.requestRenderAll();
+            }
+        }, 333); // 3 pulses in 2 seconds = 333ms per pulse
+
+        console.log('[Measurement List] Highlighting measurement with flash effect');
+    }, 100);
+}
+
+/**
+ * Delete measurement with confirmation dialog
+ * @param {string} id - Measurement ID
+ * @param {number} pageNumber - Page number
+ */
+function deleteMeasurementWithConfirm(id, pageNumber) {
+    console.log('[Measurement List] Delete requested for measurement:', id, 'on page', pageNumber);
+
+    // Find measurement for confirmation message
+    const pageData = measurementState.measurements[pageNumber];
+    if (!pageData) return;
+
+    const measurement = pageData.data?.find(m => m.id === id);
+    if (!measurement) return;
+
+    const label = measurement.label || 'Untitled';
+    const confirmMsg = `Delete measurement "${label}"?\n\nType: ${measurement.type}\nValue: ${measurement.value?.toFixed(2)} ${measurement.units || ''}\n\nThis action cannot be undone.`;
+
+    if (confirm(confirmMsg)) {
+        // Use existing deleteMeasurement function
+        if (typeof deleteMeasurement === 'function') {
+            deleteMeasurement(id, pageNumber);
+            console.log('[Measurement List] Measurement deleted:', id);
+        } else {
+            console.error('[Measurement List] deleteMeasurement function not found');
+        }
+    } else {
+        console.log('[Measurement List] Delete cancelled by user');
+    }
+}
+
+/**
+ * Attach event listeners to list controls
+ */
+function attachListControlListeners() {
+    console.log('[Measurement List] Attaching control listeners...');
+
+    // Toggle panel button
+    const toggleBtn = document.getElementById('toggle-list-panel');
+    const panelHeader = document.querySelector('.measurement-list-panel .panel-header');
+
+    if (toggleBtn) {
+        toggleBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            toggleMeasurementListPanel();
+        });
+    }
+
+    // Also toggle when clicking header
+    if (panelHeader) {
+        panelHeader.addEventListener('click', toggleMeasurementListPanel);
+    }
+
+    // Filter controls
+    const filterType = document.getElementById('filter-type');
+    const filterPage = document.getElementById('filter-page');
+    const sortSelect = document.getElementById('sort-measurements');
+
+    if (filterType) {
+        filterType.addEventListener('change', renderMeasurementList);
+    }
+
+    if (filterPage) {
+        filterPage.addEventListener('change', renderMeasurementList);
+    }
+
+    if (sortSelect) {
+        sortSelect.addEventListener('change', renderMeasurementList);
+    }
+
+    // Search with debounce
+    const searchInput = document.getElementById('search-measurements');
+    if (searchInput) {
+        let searchTimeout;
+        searchInput.addEventListener('input', () => {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                renderMeasurementList();
+            }, 300); // 300ms debounce
+        });
+    }
+
+    console.log('[Measurement List] Control listeners attached');
+}
+
+/**
+ * Handle measurement change events (auto-refresh list)
+ * @param {Event} event - Measurement event
+ */
+function handleMeasurementChange(event) {
+    console.log('[Measurement List] Measurement changed, refreshing list...');
+    renderMeasurementList();
+}
+
+/**
+ * Escape HTML to prevent XSS
+ * @param {string} text - Text to escape
+ * @returns {string} Escaped text
+ */
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
+// ============================================
+// TASK 17: CSV EXPORT
+// ============================================
+
+/**
+ * CSV Export System
+ *
+ * Provides CSV export functionality for all measurements across all pages.
+ * Generates a downloadable CSV file with comprehensive measurement data.
+ *
+ * Features:
+ * - Exports all measurements from all pages
+ * - Proper CSV escaping for special characters
+ * - Summary totals at bottom
+ * - Timestamp in filename
+ * - Opens correctly in Excel/Google Sheets
+ *
+ * CSV Format:
+ * Page,Type,Label,Category,Value,Unit,Points/Position,Created,Notes
+ */
+
+/**
+ * Escape CSV field to handle commas, quotes, and newlines
+ * @param {string} field - Field value to escape
+ * @returns {string} - Escaped field value
+ */
+function escapeCsvField(field) {
+    if (field == null) {
+        return '';
+    }
+
+    // Convert to string
+    const str = String(field);
+
+    // If field contains comma, quote, or newline, wrap in quotes and escape internal quotes
+    if (str.includes(',') || str.includes('"') || str.includes('\n')) {
+        return '"' + str.replace(/"/g, '""') + '"';
+    }
+
+    return str;
+}
+
+/**
+ * Export all measurements to CSV file
+ * Generates CSV with all measurement data and downloads it automatically
+ */
+function exportMeasurementsToCSV() {
+    console.log('[CSV Export] Starting export process...');
+
+    // Check if there are any measurements
+    const hasData = Object.keys(measurementState.measurements).some(
+        page => measurementState.measurements[page]?.data?.length > 0
+    );
+
+    if (!hasData) {
+        console.warn('[CSV Export] No measurements to export');
+        alert('No measurements to export. Please add some measurements first.');
+        return;
+    }
+
+    console.log('[CSV Export] Measurements found:', measurementState.measurements);
+
+    // CSV header
+    const headers = ['Page', 'Type', 'Label', 'Category', 'Value', 'Unit', 'Points/Position', 'Created', 'Notes'];
+    let csvContent = headers.join(',') + '\n';
+
+    // Track totals for summary
+    let totalLinear = 0;
+    let totalArea = 0;
+    let totalCount = 0;
+    let linearUnit = '';
+    let areaUnit = '';
+
+    // Iterate through all pages
+    const pageNumbers = Object.keys(measurementState.measurements).sort((a, b) => parseInt(a) - parseInt(b));
+
+    console.log('[CSV Export] Processing pages:', pageNumbers);
+
+    for (const pageNum of pageNumbers) {
+        const pageData = measurementState.measurements[pageNum];
+
+        if (!pageData || !pageData.data || pageData.data.length === 0) {
+            continue;
+        }
+
+        console.log(`[CSV Export] Processing page ${pageNum}, measurements:`, pageData.data.length);
+
+        // Process each measurement on this page
+        for (const measurement of pageData.data) {
+            const row = [];
+
+            // Page number
+            row.push(pageNum);
+
+            // Type
+            row.push(escapeCsvField(measurement.type));
+
+            // Label
+            row.push(escapeCsvField(measurement.label || ''));
+
+            // Category
+            row.push(escapeCsvField(measurement.category || ''));
+
+            // Value and Unit
+            if (measurement.type === 'linear') {
+                const value = measurement.realLength?.toFixed(2) || '0.00';
+                row.push(value);
+                row.push(escapeCsvField(measurement.units || ''));
+                totalLinear += parseFloat(value);
+                if (!linearUnit && measurement.units) {
+                    linearUnit = measurement.units;
+                }
+            } else if (measurement.type === 'area') {
+                const value = measurement.realArea?.toFixed(2) || '0.00';
+                row.push(value);
+                row.push(escapeCsvField(measurement.units + '²' || ''));
+                totalArea += parseFloat(value);
+                if (!areaUnit && measurement.units) {
+                    areaUnit = measurement.units + '²';
+                }
+            } else if (measurement.type === 'count') {
+                row.push(measurement.count || 1);
+                row.push('count');
+                totalCount += measurement.count || 1;
+            } else {
+                row.push('');
+                row.push('');
+            }
+
+            // Points/Position
+            if (measurement.type === 'linear') {
+                const pointsStr = measurement.points?.length
+                    ? `${measurement.points.length} points`
+                    : '';
+                row.push(escapeCsvField(pointsStr));
+            } else if (measurement.type === 'area') {
+                const verticesStr = measurement.vertices?.length
+                    ? `${measurement.vertices.length} vertices`
+                    : '';
+                row.push(escapeCsvField(verticesStr));
+            } else if (measurement.type === 'count') {
+                const posStr = measurement.position
+                    ? `(${measurement.position.x.toFixed(0)}, ${measurement.position.y.toFixed(0)})`
+                    : '';
+                row.push(escapeCsvField(posStr));
+            } else {
+                row.push('');
+            }
+
+            // Created timestamp
+            const createdDate = measurement.created
+                ? new Date(measurement.created).toLocaleString()
+                : '';
+            row.push(escapeCsvField(createdDate));
+
+            // Notes
+            row.push(escapeCsvField(measurement.notes || ''));
+
+            csvContent += row.join(',') + '\n';
+        }
+    }
+
+    // Add summary totals
+    csvContent += '\n';
+    csvContent += 'SUMMARY TOTALS\n';
+
+    if (totalLinear > 0) {
+        csvContent += `Total Linear,,,${totalLinear.toFixed(2)},${linearUnit}\n`;
+    }
+
+    if (totalArea > 0) {
+        csvContent += `Total Area,,,${totalArea.toFixed(2)},${areaUnit}\n`;
+    }
+
+    if (totalCount > 0) {
+        csvContent += `Total Count,,,${totalCount},markers\n`;
+    }
+
+    console.log('[CSV Export] CSV content generated, length:', csvContent.length);
+    console.log('[CSV Export] Summary - Linear:', totalLinear, 'Area:', totalArea, 'Count:', totalCount);
+
+    // Create blob and download
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+
+    // Generate filename with timestamp
+    const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, -5);
+    const filename = `takeoff-measurements-${timestamp}.csv`;
+
+    console.log('[CSV Export] Creating download with filename:', filename);
+
+    // Create download link
+    if (navigator.msSaveBlob) {
+        // IE 10+
+        navigator.msSaveBlob(blob, filename);
+    } else {
+        link.href = URL.createObjectURL(blob);
+        link.download = filename;
+        link.style.display = 'none';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+        // Clean up object URL
+        setTimeout(() => URL.revokeObjectURL(link.href), 100);
+    }
+
+    console.log('[CSV Export] Export completed successfully');
+
+    // Show success message
+    const message = `CSV exported successfully!\n\nFile: ${filename}\n\nTotal Measurements:\n` +
+        (totalLinear > 0 ? `- Linear: ${totalLinear.toFixed(2)} ${linearUnit}\n` : '') +
+        (totalArea > 0 ? `- Area: ${totalArea.toFixed(2)} ${areaUnit}\n` : '') +
+        (totalCount > 0 ? `- Count: ${totalCount} markers\n` : '');
+
+    alert(message);
+}
+
+/**
+ * Attach event listeners for export functionality
+ * Called once during initialization
+ */
+let exportListenersAttached = false;
+
+function attachExportListeners() {
+    if (exportListenersAttached) {
+        console.log('[CSV Export] Event listeners already attached');
+        return;
+    }
+
+    console.log('[CSV Export] Attaching event listeners...');
+
+    const exportCsvBtn = document.getElementById('export-csv');
+
+    if (!exportCsvBtn) {
+        console.error('[CSV Export] Export CSV button not found in DOM');
+        return;
+    }
+
+    // CSV Export button click
+    exportCsvBtn.addEventListener('click', () => {
+        console.log('[CSV Export] Export CSV button clicked');
+        exportMeasurementsToCSV();
+    });
+
+    // Excel Export button click
+    const exportExcelBtn = document.getElementById('export-excel');
+    if (!exportExcelBtn) {
+        console.error('[Excel Export] Export Excel button not found in DOM');
+    } else {
+        exportExcelBtn.addEventListener('click', () => {
+            console.log('[Excel Export] Export Excel button clicked');
+            exportMeasurementsToExcel();
+        });
+    }
+
+    exportListenersAttached = true;
+    console.log('[Export] Event listeners attached successfully (CSV + Excel)');
+}
+
+/* ============================================
+   TASK 18: EXCEL EXPORT
+   ============================================ */
+
+/**
+ * Export measurements to Excel (.xlsx) file using SheetJS
+ * Creates multi-sheet workbook with Summary and All Measurements
+ */
+function exportMeasurementsToExcel() {
+    try {
+        console.log('[Excel Export] Starting Excel export...');
+
+        // Verify SheetJS library is loaded
+        if (typeof XLSX === 'undefined') {
+            throw new Error('SheetJS library not loaded. Please refresh the page.');
+        }
+
+        // Check if there are any measurements to export
+        const totalMeasurements = getTotalMeasurementCount();
+        if (totalMeasurements === 0) {
+            alert('No measurements to export. Please create some measurements first.');
+            console.warn('[Excel Export] No measurements found');
+            return;
+        }
+
+        console.log(`[Excel Export] Exporting ${totalMeasurements} measurements...`);
+
+        // Create new workbook
+        const workbook = XLSX.utils.book_new();
+
+        // === SUMMARY SHEET ===
+        const summaryData = createSummarySheetData();
+        const summarySheet = XLSX.utils.aoa_to_sheet(summaryData);
+
+        // Style summary sheet with column widths
+        summarySheet['!cols'] = [
+            { wch: 25 },
+            { wch: 15 },
+            { wch: 15 },
+            { wch: 10 }
+        ];
+
+        XLSX.utils.book_append_sheet(workbook, summarySheet, 'Summary');
+        console.log('[Excel Export] Summary sheet created');
+
+        // === ALL MEASUREMENTS SHEET ===
+        const allMeasurementsData = createAllMeasurementsSheetData();
+        const allMeasurementsSheet = XLSX.utils.aoa_to_sheet(allMeasurementsData);
+
+        // Auto-width columns
+        allMeasurementsSheet['!cols'] = [
+            { wch: 8 },  // Page
+            { wch: 12 }, // Type
+            { wch: 25 }, // Label
+            { wch: 12 }, // Value
+            { wch: 8 },  // Units
+            { wch: 30 }, // Notes
+            { wch: 20 }  // Timestamp
+        ];
+
+        // Freeze header row
+        allMeasurementsSheet['!freeze'] = { xSplit: 0, ySplit: 1 };
+
+        XLSX.utils.book_append_sheet(workbook, allMeasurementsSheet, 'All Measurements');
+        console.log('[Excel Export] All Measurements sheet created');
+
+        // === PER-PAGE SHEETS (only if < 10 pages) ===
+        const pageCount = Object.keys(measurementState.measurements).length;
+        if (pageCount > 0 && pageCount < 10) {
+            createPerPageSheets(workbook);
+            console.log(`[Excel Export] Created ${pageCount} per-page sheets`);
+        } else {
+            console.log(`[Excel Export] Skipped per-page sheets (${pageCount} pages)`);
+        }
+
+        // === EXPORT FILE ===
+        const timestamp = Date.now();
+        const filename = `takeoff-measurements-${timestamp}.xlsx`;
+
+        XLSX.writeFile(workbook, filename);
+
+        console.log(`[Excel Export] Excel file exported successfully: ${filename}`);
+        alert('Excel file exported successfully!');
+
+    } catch (error) {
+        console.error('[Excel Export] Error:', error);
+        alert(`Error exporting Excel file: ${error.message}\n\nCheck console for details.`);
+    }
+}
+
+/**
+ * Create Summary sheet data array
+ * @returns {Array} 2D array for Summary sheet
+ */
+function createSummarySheetData() {
+    const stats = calculateMeasurementStatistics();
+    const pdfFileName = viewerState?.pdfUrl?.split('/').pop() || 'Unknown';
+
+    return [
+        ['Midwest Underground Takeoff System'],
+        ['Export Date', new Date().toLocaleString()],
+        ['PDF File', pdfFileName],
+        [],
+        ['Summary Statistics'],
+        ['Measurement Type', 'Count', 'Total Value', 'Units'],
+        ['Linear Measurements', stats.linearCount, stats.totalLinear.toFixed(2), 'feet'],
+        ['Area Measurements', stats.areaCount, stats.totalArea.toFixed(2), 'sqft'],
+        ['Count Markers', stats.countCount, stats.totalCount, 'count'],
+        [],
+        ['Total Measurements', stats.totalMeasurements],
+        ['Pages with Measurements', stats.pageCount]
+    ];
+}
+
+/**
+ * Create All Measurements sheet data array
+ * @returns {Array} 2D array for All Measurements sheet
+ */
+function createAllMeasurementsSheetData() {
+    const data = [
+        ['Page', 'Type', 'Label', 'Value', 'Units', 'Notes', 'Timestamp']
+    ];
+
+    // Sort pages numerically
+    const pageNumbers = Object.keys(measurementState.measurements)
+        .map(p => parseInt(p))
+        .sort((a, b) => a - b);
+
+    for (const pageNum of pageNumbers) {
+        const pageData = measurementState.measurements[pageNum];
+        const measurements = pageData.data || [];
+
+        for (const m of measurements) {
+            data.push([
+                pageNum,
+                m.type || 'Unknown',
+                m.label || 'Untitled',
+                parseFloat((m.value || 0).toFixed(2)),
+                m.units || '',
+                m.notes || '',
+                m.timestamp ? new Date(m.timestamp).toLocaleString() : ''
+            ]);
+        }
+    }
+
+    return data;
+}
+
+/**
+ * Create per-page sheets (only if < 10 pages)
+ * @param {Object} workbook - SheetJS workbook object
+ */
+function createPerPageSheets(workbook) {
+    // Sort pages numerically
+    const pageNumbers = Object.keys(measurementState.measurements)
+        .map(p => parseInt(p))
+        .sort((a, b) => a - b);
+
+    for (const pageNum of pageNumbers) {
+        const pageData = measurementState.measurements[pageNum];
+        const measurements = pageData.data || [];
+
+        if (measurements.length === 0) {
+            continue; // Skip empty pages
+        }
+
+        const sheetData = [
+            [`Page ${pageNum} Measurements`],
+            [],
+            ['Type', 'Label', 'Value', 'Units', 'Notes', 'Timestamp']
+        ];
+
+        for (const m of measurements) {
+            sheetData.push([
+                m.type || 'Unknown',
+                m.label || 'Untitled',
+                parseFloat((m.value || 0).toFixed(2)),
+                m.units || '',
+                m.notes || '',
+                m.timestamp ? new Date(m.timestamp).toLocaleString() : ''
+            ]);
+        }
+
+        // Add summary for this page
+        const linearTotal = measurements
+            .filter(m => m.type === 'Linear')
+            .reduce((sum, m) => sum + (m.value || 0), 0);
+        const areaTotal = measurements
+            .filter(m => m.type === 'Area')
+            .reduce((sum, m) => sum + (m.value || 0), 0);
+        const countTotal = measurements
+            .filter(m => m.type === 'Count')
+            .reduce((sum, m) => sum + (m.value || 0), 0);
+
+        sheetData.push([]);
+        sheetData.push(['Page Totals:']);
+        sheetData.push(['Linear:', '', linearTotal.toFixed(2), 'feet']);
+        sheetData.push(['Area:', '', areaTotal.toFixed(2), 'sqft']);
+        sheetData.push(['Count:', '', countTotal, 'count']);
+
+        const pageSheet = XLSX.utils.aoa_to_sheet(sheetData);
+
+        // Column widths
+        pageSheet['!cols'] = [
+            { wch: 12 },
+            { wch: 25 },
+            { wch: 12 },
+            { wch: 8 },
+            { wch: 30 },
+            { wch: 20 }
+        ];
+
+        // Freeze header row
+        pageSheet['!freeze'] = { xSplit: 0, ySplit: 3 };
+
+        XLSX.utils.book_append_sheet(workbook, pageSheet, `Page ${pageNum}`);
+    }
+}
+
+/**
+ * Calculate measurement statistics
+ * @returns {Object} Statistics object
+ */
+function calculateMeasurementStatistics() {
+    let linearCount = 0;
+    let areaCount = 0;
+    let countCount = 0;
+    let totalLinear = 0;
+    let totalArea = 0;
+    let totalCount = 0;
+    let totalMeasurements = 0;
+
+    for (const pageData of Object.values(measurementState.measurements)) {
+        const measurements = pageData.data || [];
+        totalMeasurements += measurements.length;
+
+        for (const m of measurements) {
+            if (m.type === 'Linear') {
+                linearCount++;
+                totalLinear += (m.value || 0);
+            } else if (m.type === 'Area') {
+                areaCount++;
+                totalArea += (m.value || 0);
+            } else if (m.type === 'Count') {
+                countCount++;
+                totalCount += (m.value || 0);
+            }
+        }
+    }
+
+    return {
+        linearCount,
+        areaCount,
+        countCount,
+        totalLinear,
+        totalArea,
+        totalCount,
+        totalMeasurements,
+        pageCount: Object.keys(measurementState.measurements).length
+    };
+}
+
+/**
+ * Get total measurement count across all pages
+ * @returns {number} Total count
+ */
+function getTotalMeasurementCount() {
+    let total = 0;
+    for (const pageData of Object.values(measurementState.measurements)) {
+        total += (pageData.data || []).length;
+    }
+    return total;
+}
+
 // Export for global access
 if (typeof window !== 'undefined') {
     window.measurementState = measurementState;
     window.initMeasurementTools = initMeasurementTools;
     window.syncCanvasDimensions = syncCanvasDimensions; // For debugging
+    window.exportMeasurementsToCSV = exportMeasurementsToCSV; // For debugging/testing
+    window.exportMeasurementsToExcel = exportMeasurementsToExcel; // For debugging/testing
+    window.zoomToMeasurement = zoomToMeasurement; // For debugging/testing
+    window.highlightMeasurement = highlightMeasurement; // For debugging/testing
+    window.renderMeasurementList = renderMeasurementList; // For debugging/testing
 }
 
 console.log('[Measurement Tools] Module script loaded');
