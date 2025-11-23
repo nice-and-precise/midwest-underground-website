@@ -1,3 +1,39 @@
+<!-- TOC -->
+
+## Table of Contents
+
+- [🎯 Quick Start for Autonomous Execution](#quick-start-for-autonomous-execution)
+  - [1. Read Architecture (< 2 minutes)](#1-read-architecture-2-minutes)
+  - [2. Query Serena for Current State (< 1 minute)](#2-query-serena-for-current-state-1-minute)
+  - [3. Determine Current Module and Role](#3-determine-current-module-and-role)
+  - [4. Load Role Instructions](#4-load-role-instructions)
+  - [5. Execute Your Role](#5-execute-your-role)
+  - [6. Update and Continue](#6-update-and-continue)
+- [📚 Essential Documents (Load These First)](#essential-documents-load-these-first)
+- [🔄 Autonomous Execution Cycle](#autonomous-execution-cycle)
+- [🧠 Serena Memory Structure](#serena-memory-structure)
+  - [Primary Memories](#primary-memories)
+- [📋 The 15 Modules](#the-15-modules)
+  - [Phase 0: Platform Scaffolding (3 modules)](#phase-0-platform-scaffolding-3-modules)
+  - [Phase 1: Takeoff Core (4 modules)](#phase-1-takeoff-core-4-modules)
+  - [Phase 2: Estimating Engine (4 modules)](#phase-2-estimating-engine-4-modules)
+  - [Phase 3: Advanced Features (4 modules)](#phase-3-advanced-features-4-modules)
+- [🛠️ MCP Tools Available](#mcp-tools-available)
+- [🎨 Development Environment](#development-environment)
+- [✅ Current Status](#current-status)
+- [🚫 Critical Constraints](#critical-constraints)
+- [💡 Best Practices for Autonomous Sessions](#best-practices-for-autonomous-sessions)
+  - [Token Management](#token-management)
+  - [Work Style](#work-style)
+  - [Role Transitions](#role-transitions)
+- [🆘 If You Get Stuck](#if-you-get-stuck)
+  - [Blocker Protocol](#blocker-protocol)
+- [{TIMESTAMP} - Blocker Encountered](#timestamp-blocker-encountered)
+- [📊 Success Metrics](#success-metrics)
+- [🎬 Ready to Begin?](#ready-to-begin)
+
+<!-- /TOC -->
+
 # 🚀 Takeoff System - Autonomous Session Entry Point
 
 **⚠️ START HERE for all takeoff system work**

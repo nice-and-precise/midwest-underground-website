@@ -23,7 +23,7 @@ body {
 
 /* Header */
 .takeoff-header {
-  background: linear-gradient(135deg, #003B5C 0%, #005580 100%);
+  background: linear-gradient(135deg, #23272A 0%, #4F5B66 100%);
   color: #ffffff;
   padding: 2rem 1.5rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
@@ -76,20 +76,20 @@ body {
 }
 
 .upload-container:hover {
-  border-color: #003B5C;
+  border-color: #23272A;
   background-color: #f9fafb;
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 59, 92, 0.1);
+  box-shadow: 0 4px 12px rgba(35, 39, 42, 0.1);
 }
 
 .upload-container.dragover {
-  border-color: #FF6B35;
+  border-color: #FF5A1F;
   background-color: #fff5f0;
   border-style: solid;
 }
 
 .upload-icon {
-  color: #003B5C;
+  color: #23272A;
   margin-bottom: 1.5rem;
 }
 
@@ -114,7 +114,7 @@ body {
 
 .btn-upload {
   display: inline-block;
-  background-color: #003B5C;
+  background-color: #23272A;
   color: #ffffff;
   padding: 0.75rem 2rem;
   border-radius: 6px;
@@ -126,9 +126,9 @@ body {
 }
 
 .btn-upload:hover {
-  background-color: #005580;
+  background-color: #4F5B66;
   transform: translateY(-1px);
-  box-shadow: 0 4px 8px rgba(0, 59, 92, 0.2);
+  box-shadow: 0 4px 8px rgba(35, 39, 42, 0.2);
 }
 
 .btn-upload:active {
@@ -206,8 +206,8 @@ body {
 
 .btn-control:hover:not(:disabled) {
   background-color: #e8e8e8;
-  border-color: #003B5C;
-  color: #003B5C;
+  border-color: #23272A;
+  color: #23272A;
 }
 
 .btn-control:active:not(:disabled) {
@@ -234,7 +234,7 @@ body {
   min-width: 50px;
   text-align: center;
   font-weight: 600;
-  color: #003B5C;
+  color: #23272A;
   font-size: 0.875rem;
 }
 
@@ -262,7 +262,7 @@ body {
 
 .page-input:focus {
   outline: none;
-  border-color: #003B5C;
+  border-color: #23272A;
 }
 
 .page-separator {
@@ -319,7 +319,7 @@ body {
   width: 50px;
   height: 50px;
   border: 4px solid rgba(255, 255, 255, 0.3);
-  border-top-color: #FF6B35;
+  border-top-color: #FF5A1F;
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
   margin: 0 auto;
@@ -450,13 +450,13 @@ body {
 }
 
 .status-value {
-  color: #003B5C;
+  color: #23272A;
   font-weight: 500;
   font-family: 'Courier New', monospace;
 }
 
 .status-value.highlight {
-  color: #FF6B35;
+  color: #FF5A1F;
   font-weight: 700;
 }
 
@@ -578,9 +578,9 @@ body {
 }
 
 .btn-tool.active {
-  background: var(--primary-color, #003B5C);
+  background: var(--primary-color, #23272A);
   color: white;
-  border-color: var(--primary-color, #003B5C);
+  border-color: var(--primary-color, #23272A);
 }
 
 .btn-tool:disabled {
@@ -617,7 +617,7 @@ body {
 
 .scale-modal h3 {
   margin: 0 0 1rem 0;
-  color: var(--primary-color, #003B5C);
+  color: var(--primary-color, #23272A);
   font-size: 1.25rem;
 }
 
@@ -650,8 +650,8 @@ body {
 .form-group input:focus,
 .form-group select:focus {
   outline: none;
-  border-color: var(--primary-color, #003B5C);
-  box-shadow: 0 0 0 2px rgba(0, 59, 92, 0.1);
+  border-color: var(--primary-color, #23272A);
+  box-shadow: 0 0 0 2px rgba(35, 39, 42, 0.1);
 }
 
 .modal-buttons {
@@ -671,7 +671,7 @@ body {
 }
 
 .btn-modal-primary {
-  background: var(--primary-color, #003B5C);
+  background: var(--primary-color, #23272A);
   color: white;
 }
 
@@ -729,7 +729,7 @@ body {
 
 .properties-header h3 {
   margin: 0;
-  color: var(--primary-color, #003B5C);
+  color: var(--primary-color, #23272A);
   font-size: 1.25rem;
   font-weight: 600;
 }
@@ -807,8 +807,8 @@ body {
 .form-input:focus,
 .form-textarea:focus {
   outline: none;
-  border-color: var(--accent-color, #FF6B35);
-  box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
+  border-color: var(--accent-color, #FF5A1F);
+  box-shadow: 0 0 0 3px rgba(255, 90, 31, 0.1);
 }
 
 .form-input-readonly {
@@ -845,7 +845,7 @@ body {
 }
 
 .form-input-color:hover {
-  border-color: var(--accent-color, #FF6B35);
+  border-color: var(--accent-color, #FF5A1F);
 }
 
 .color-preview {
@@ -891,13 +891,13 @@ body {
 }
 
 .btn-primary {
-  background: var(--accent-color, #FF6B35);
+  background: var(--accent-color, #FF5A1F);
   color: white;
 }
 
 .btn-primary:hover {
-  background: #E85A24;
-  box-shadow: 0 2px 8px rgba(255, 107, 53, 0.3);
+  background: #E85219;
+  box-shadow: 0 2px 8px rgba(255, 90, 31, 0.3);
 }
 
 .btn-secondary {
@@ -968,7 +968,7 @@ datalist {
 .form-input:focus-visible,
 .form-textarea:focus-visible,
 .form-input-color:focus-visible {
-  outline: 2px solid var(--accent-color, #FF6B35);
+  outline: 2px solid var(--accent-color, #FF5A1F);
   outline-offset: 2px;
 }
 
@@ -1002,7 +1002,7 @@ datalist {
     justify-content: space-between;
     align-items: center;
     padding: 12px 16px;
-    background: #003B5C;
+    background: #23272A;
     color: white;
     border-radius: 8px 0 0 0;
     cursor: pointer;
@@ -1063,8 +1063,8 @@ datalist {
 
 .filter-group select:focus, .sort-group select:focus, .search-group input:focus {
     outline: none;
-    border-color: #FF6B35;
-    box-shadow: 0 0 0 2px rgba(255, 107, 53, 0.1);
+    border-color: #FF5A1F;
+    box-shadow: 0 0 0 2px rgba(255, 90, 31, 0.1);
 }
 
 .summary-stats {
@@ -1123,8 +1123,8 @@ datalist {
 }
 
 .measurement-item:hover {
-    border-color: #FF6B35;
-    box-shadow: 0 2px 8px rgba(255,107,53,0.2);
+    border-color: #FF5A1F;
+    box-shadow: 0 2px 8px rgba(255,90,31,0.2);
 }
 
 .measurement-item-header {
@@ -1143,12 +1143,12 @@ datalist {
 }
 
 .measurement-type-badge.linear {
-    background: #FF6B35;
+    background: #FF5A1F;
     color: white;
 }
 
 .measurement-type-badge.area {
-    background: #003B5C;
+    background: #23272A;
     color: white;
 }
 
@@ -1171,7 +1171,7 @@ datalist {
 
 .measurement-value {
     font-size: 13px;
-    color: #FF6B35;
+    color: #FF5A1F;
     font-weight: 500;
 }
 

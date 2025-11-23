@@ -1,3 +1,54 @@
+<!-- TOC -->
+
+## Table of Contents
+
+- [Global Statistics](#global-statistics)
+  - [Overview](#overview)
+  - [Distribution by Directory](#distribution-by-directory)
+- [File-by-File Inventory](#file-by-file-inventory)
+  - [.claude/ Directory (AI Agent Coordination)](#claude-directory-ai-agent-coordination)
+  - [.serena/memories/ Directory (AI Session Tracking)](#serenamemories-directory-ai-session-tracking)
+  - [Root Directory (Handoffs & Reports)](#root-directory-handoffs-reports)
+  - [docs/ Directory (Organized Documentation)](#docs-directory-organized-documentation)
+  - [tests/ Directory (Test Documentation)](#tests-directory-test-documentation)
+  - [Other Locations](#other-locations)
+  - [test-results/ Directory (Playwright Error Context)](#test-results-directory-playwright-error-context)
+- [Analysis & Observations](#analysis-observations)
+  - [Documentation Growth Patterns](#documentation-growth-patterns)
+    - [Chronological Activity](#chronological-activity)
+    - [Most Active Dates](#most-active-dates)
+  - [Documentation Categories](#documentation-categories)
+    - [Session Tracking (Serena Memories)](#session-tracking-serena-memories)
+    - [Development Handoffs](#development-handoffs)
+    - [Feature Documentation](#feature-documentation)
+    - [Takeoff System Documentation](#takeoff-system-documentation)
+  - [Content Duplication Analysis](#content-duplication-analysis)
+    - [High Duplication Areas](#high-duplication-areas)
+  - [Files with Multiple Purposes](#files-with-multiple-purposes)
+    - [README-like Files](#readme-like-files)
+    - [ARCHITECTURE Files](#architecture-files)
+  - [Largest Files (Top 10)](#largest-files-top-10)
+  - [Files Recommended for Archival](#files-recommended-for-archival)
+    - [Immediate Candidates (Already Completed)](#immediate-candidates-already-completed)
+    - [Keep Active (Ongoing Reference)](#keep-active-ongoing-reference)
+  - [Orphaned or Unclear Files](#orphaned-or-unclear-files)
+    - [Root Directory Clutter](#root-directory-clutter)
+  - [Missing Documentation](#missing-documentation)
+- [Recommendations for Restructure](#recommendations-for-restructure)
+  - [Phase 1: Immediate Cleanup (Do Now)](#phase-1-immediate-cleanup-do-now)
+  - [Phase 2: Organization (Next Week)](#phase-2-organization-next-week)
+  - [Phase 3: Content Audit (Next Month)](#phase-3-content-audit-next-month)
+  - [Phase 4: Automation (Future)](#phase-4-automation-future)
+- [Directory Structure Recommendations](#directory-structure-recommendations)
+  - [Proposed New Structure](#proposed-new-structure)
+- [Priority Actions](#priority-actions)
+  - [Critical (Do This Week)](#critical-do-this-week)
+  - [High Priority (Do This Month)](#high-priority-do-this-month)
+  - [Medium Priority (Do Next Quarter)](#medium-priority-do-next-quarter)
+- [Document Control](#document-control)
+
+<!-- /TOC -->
+
 # Pre-Restructure Documentation Inventory
 
 **Generated:** 2025-11-23

@@ -1,3 +1,47 @@
+<!-- TOC -->
+
+## Table of Contents
+
+- [Quick Reference](#quick-reference)
+- [Before You Start](#before-you-start)
+  - [Tools You Need](#tools-you-need)
+  - [Important Rules](#important-rules)
+  - [How to Make a Backup](#how-to-make-a-backup)
+- [Common Content Updates](#common-content-updates)
+  - [1. Update Contact Information](#1-update-contact-information)
+  - [2. Update Business Hours](#2-update-business-hours)
+  - [3. Add a New Service](#3-add-a-new-service)
+  - [4. Update Company Story](#4-update-company-story)
+  - [5. Update Team Member Profiles](#5-update-team-member-profiles)
+  - [6. Add a New Project to Portfolio](#6-add-a-new-project-to-portfolio)
+  - [7. Add or Update Testimonials](#7-add-or-update-testimonials)
+  - [8. Update Service Statistics](#8-update-service-statistics)
+  - [9. Update Certifications and Licenses](#9-update-certifications-and-licenses)
+  - [10. Add Equipment to About Page](#10-add-equipment-to-about-page)
+- [Image Management](#image-management)
+  - [Image Requirements](#image-requirements)
+  - [How to Optimize Images](#how-to-optimize-images)
+  - [Uploading Images](#uploading-images)
+  - [Alt Text for Images](#alt-text-for-images)
+- [Testing Your Changes](#testing-your-changes)
+  - [Before Deployment Checklist](#before-deployment-checklist)
+- [Common Mistakes to Avoid](#common-mistakes-to-avoid)
+  - [❌ DON'T Do This:](#dont-do-this)
+- [Emergency Rollback](#emergency-rollback)
+  - [Option 1: Use Your Backup](#option-1-use-your-backup)
+  - [Option 2: Re-download from Hosting](#option-2-re-download-from-hosting)
+  - [Option 3: Use Git (If Available)](#option-3-use-git-if-available)
+- [Content Calendar & Strategy](#content-calendar-strategy)
+  - [Monthly Content Updates](#monthly-content-updates)
+  - [Content Ideas for Blog (Future)](#content-ideas-for-blog-future)
+- [Getting Help](#getting-help)
+  - [Internal Documentation](#internal-documentation)
+  - [Need Technical Help?](#need-technical-help)
+  - [Quick Questions?](#quick-questions)
+- [Summary Checklist](#summary-checklist)
+
+<!-- /TOC -->
+
 # Content Update Guide - Midwest Underground Website
 
 **Last Updated:** October 23, 2025

@@ -1,3 +1,37 @@
+<!-- TOC -->
+
+## Table of Contents
+
+- [Phase 1: Core Functionality (CURRENT PHASE)](#phase-1-core-functionality-current-phase)
+  - [✅ Completed:](#completed)
+  - [🔄 In Progress:](#in-progress)
+  - [⏳ Remaining:](#remaining)
+- [Phase 2: Essential Pages](#phase-2-essential-pages)
+  - [Pages to Create:](#pages-to-create)
+- [Phase 3: API Routes & Data Integration](#phase-3-api-routes-data-integration)
+  - [API Routes to Create:](#api-routes-to-create)
+- [Phase 4: Interactive Features](#phase-4-interactive-features)
+  - [Features to Implement:](#features-to-implement)
+- [Phase 5: Polish & Optimization](#phase-5-polish-optimization)
+  - [Improvements:](#improvements)
+- [Phase 6: Deployment](#phase-6-deployment)
+  - [Deployment Tasks:](#deployment-tasks)
+- [Immediate Next Steps (This Session)](#immediate-next-steps-this-session)
+  - [Priority 1: Mobile Menu (NOW)](#priority-1-mobile-menu-now)
+  - [Priority 2: Dashboard Module Pages (NEXT)](#priority-2-dashboard-module-pages-next)
+  - [Priority 3: Form Validation (THEN)](#priority-3-form-validation-then)
+- [Success Criteria](#success-criteria)
+  - [Phase 1 Complete When:](#phase-1-complete-when)
+  - [Phase 2 Complete When:](#phase-2-complete-when)
+  - [Phase 3 Complete When:](#phase-3-complete-when)
+  - [Phase 4 Complete When:](#phase-4-complete-when)
+  - [Phase 5 Complete When:](#phase-5-complete-when)
+  - [Phase 6 Complete When:](#phase-6-complete-when)
+- [Time Estimates](#time-estimates)
+- [Current Session Plan](#current-session-plan)
+
+<!-- /TOC -->
+
 # Next.js Migration Completion Roadmap
 **Created:** October 25, 2025
 **Current Branch:** feat/nextjs-migration

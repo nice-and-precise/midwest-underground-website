@@ -1,3 +1,50 @@
+<!-- TOC -->
+
+## Table of Contents
+
+- [📋 Table of Contents](#table-of-contents)
+- [📖 Executive Summary](#executive-summary)
+- [🎯 Why We Migrated](#why-we-migrated)
+  - [Business Drivers](#business-drivers)
+  - [Technical Requirements](#technical-requirements)
+- [🚀 Migration Approach](#migration-approach)
+  - [Strategy](#strategy)
+  - [Why Next.js?](#why-nextjs)
+- [🔄 What Changed](#what-changed)
+  - [Before: Static Site](#before-static-site)
+  - [After: Next.js Application](#after-nextjs-application)
+- [🛠️ Technical Stack Evolution](#technical-stack-evolution)
+  - [Before (Static Site)](#before-static-site)
+  - [After (Next.js App)](#after-nextjs-app)
+- [🏗️ Architecture Changes](#architecture-changes)
+  - [Old Architecture: Static Files](#old-architecture-static-files)
+  - [New Architecture: Full-Stack Application](#new-architecture-full-stack-application)
+- [🗄️ Database Schema](#database-schema)
+  - [Core HDD Operations Models](#core-hdd-operations-models)
+  - [Total Schema](#total-schema)
+- [🔐 Authentication System](#authentication-system)
+  - [NextAuth.js (Auth.js) v5](#nextauthjs-authjs-v5)
+- [📅 Migration Timeline](#migration-timeline)
+  - [Phase 0: Planning & Infrastructure (Oct 22-23, 2025)](#phase-0-planning-infrastructure-oct-22-23-2025)
+  - [Phase 1: Database & Schema (Oct 23-24, 2025)](#phase-1-database-schema-oct-23-24-2025)
+  - [Phase 2: Authentication (Oct 24-25, 2025)](#phase-2-authentication-oct-24-25-2025)
+  - [Phase 3: Core Pages (Oct 25-Nov 10, 2025)](#phase-3-core-pages-oct-25-nov-10-2025)
+  - [Phase 4: API Development (Nov 10-18, 2025)](#phase-4-api-development-nov-10-18-2025)
+  - [Phase 5: Testing & QA (Nov 18-22, 2025)](#phase-5-testing-qa-nov-18-22-2025)
+  - [Phase 6: Documentation & Deployment (Nov 22-23, 2025)](#phase-6-documentation-deployment-nov-22-23-2025)
+- [🎓 Lessons Learned](#lessons-learned)
+  - [What Went Well](#what-went-well)
+  - [Challenges Overcome](#challenges-overcome)
+  - [Best Practices Established](#best-practices-established)
+- [🚦 Future Roadmap](#future-roadmap)
+  - [Short Term (Q1 2026)](#short-term-q1-2026)
+  - [Medium Term (Q2-Q3 2026)](#medium-term-q2-q3-2026)
+  - [Long Term (Q4 2026+)](#long-term-q4-2026)
+- [📚 Related Documentation](#related-documentation)
+- [🎯 Success Metrics](#success-metrics)
+
+<!-- /TOC -->
+
 # Migration Guide: Static Site to Next.js
 
 **Midwest Underground Website - Migration Documentation**

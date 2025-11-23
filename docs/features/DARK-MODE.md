@@ -1,3 +1,27 @@
+<!-- TOC -->
+
+## Table of Contents
+
+  - [Overview](#overview)
+  - [Complete Feature Request](#complete-feature-request)
+- [FEATURE REQUEST: Dark Mode Toggle](#feature-request-dark-mode-toggle)
+  - [Context](#context)
+  - [Feature Requirements](#feature-requirements)
+  - [Color Specifications](#color-specifications)
+  - [Implementation Steps](#implementation-steps)
+    - [Phase 1: CSS Preparation (15 minutes)](#phase-1-css-preparation-15-minutes)
+    - [Phase 2: HTML Updates (10 minutes)](#phase-2-html-updates-10-minutes)
+    - [Phase 3: JavaScript Implementation (20 minutes)](#phase-3-javascript-implementation-20-minutes)
+    - [Phase 4: Testing (20 minutes)](#phase-4-testing-20-minutes)
+    - [Phase 5: Documentation (15 minutes)](#phase-5-documentation-15-minutes)
+    - [Dark Mode Toggle](#dark-mode-toggle)
+  - [Dark Mode Implementation](#dark-mode-implementation)
+  - [Maintaining Dark Mode](#maintaining-dark-mode)
+  - [Quality Gates](#quality-gates)
+  - [Troubleshooting](#troubleshooting)
+
+<!-- /TOC -->
+
 # Dark Mode Implementation Guide
 
 Complete guide for adding dark mode toggle to the Midwest Underground website.

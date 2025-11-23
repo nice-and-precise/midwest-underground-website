@@ -1,3 +1,55 @@
+<!-- TOC -->
+
+## Table of Contents
+
+- [Overview](#overview)
+- [Purpose](#purpose)
+- [Key Metrics & Features](#key-metrics-features)
+  - [1. Revenue Analytics](#1-revenue-analytics)
+  - [2. Project Management](#2-project-management)
+  - [3. Financial Overview](#3-financial-overview)
+  - [4. Customer Analytics](#4-customer-analytics)
+  - [5. Equipment & Resources](#5-equipment-resources)
+  - [6. Service Line Performance](#6-service-line-performance)
+  - [7. Geographic Analytics](#7-geographic-analytics)
+  - [8. Emergency Services](#8-emergency-services)
+- [Dashboard Layout](#dashboard-layout)
+  - [Main Dashboard (index)](#main-dashboard-index)
+- [Technology Stack](#technology-stack)
+  - [Frontend](#frontend)
+  - [Backend](#backend)
+  - [Data Storage](#data-storage)
+- [API Endpoints](#api-endpoints)
+  - [Dashboard API](#dashboard-api)
+  - [Authentication API](#authentication-api)
+  - [Projects API](#projects-api)
+  - [Reports API](#reports-api)
+- [Dummy Data Structure](#dummy-data-structure)
+  - [Projects](#projects)
+  - [Customers](#customers)
+  - [Financials](#financials)
+  - [Equipment](#equipment)
+  - [Employees](#employees)
+- [Security Features](#security-features)
+  - [Authentication](#authentication)
+  - [Access Control](#access-control)
+  - [Demo Credentials](#demo-credentials)
+- [Responsive Design](#responsive-design)
+- [Dark Mode](#dark-mode)
+- [Charts & Visualizations](#charts-visualizations)
+  - [Chart.js Integration](#chartjs-integration)
+- [Export Features](#export-features)
+- [Notifications](#notifications)
+- [Implementation Phases](#implementation-phases)
+  - [Phase 1: Core Dashboard (Now)](#phase-1-core-dashboard-now)
+  - [Phase 2: Enhanced Features (Future)](#phase-2-enhanced-features-future)
+  - [Phase 3: Production Ready (Future)](#phase-3-production-ready-future)
+- [Files Structure](#files-structure)
+- [Success Metrics](#success-metrics)
+- [Future Enhancements](#future-enhancements)
+
+<!-- /TOC -->
+
 # Business Dashboard Specification
 
 ## Overview

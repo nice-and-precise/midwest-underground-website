@@ -1,3 +1,38 @@
+<!-- TOC -->
+
+## Table of Contents
+
+- [🎯 Summary](#summary)
+- [✅ Issues Fixed](#issues-fixed)
+  - [1. Removed Outdated Migration Status Page](#1-removed-outdated-migration-status-page)
+  - [2. Enhanced Dark Mode Contrast](#2-enhanced-dark-mode-contrast)
+  - [3. Fixed Field Reports Navigation](#3-fixed-field-reports-navigation)
+  - [4. Fixed Next.js 15 Async Params Error](#4-fixed-nextjs-15-async-params-error)
+- [📊 Impact Summary](#impact-summary)
+  - [Accessibility](#accessibility)
+  - [User Experience](#user-experience)
+  - [Developer Experience](#developer-experience)
+  - [Performance](#performance)
+- [🌐 Website Status](#website-status)
+- [🎨 Visual Improvements](#visual-improvements)
+  - [Dark Mode Before & After](#dark-mode-before-after)
+  - [Homepage](#homepage)
+- [📁 Files Modified in This Session](#files-modified-in-this-session)
+- [🧪 Testing Performed](#testing-performed)
+  - [Manual Testing](#manual-testing)
+  - [Browser Testing](#browser-testing)
+  - [Code Quality](#code-quality)
+- [🚀 Next Steps (Optional Future Enhancements)](#next-steps-optional-future-enhancements)
+  - [Phase 8: Advanced Features](#phase-8-advanced-features)
+  - [Phase 9: Administration](#phase-9-administration)
+- [📝 Notes](#notes)
+  - [Login Credentials (Mock Users)](#login-credentials-mock-users)
+  - [Documentation](#documentation)
+  - [Key Repositories](#key-repositories)
+- [✅ Session Complete](#session-complete)
+
+<!-- /TOC -->
+
 # Session Fixes and Improvements - October 26, 2025
 
 ## 🎯 Summary

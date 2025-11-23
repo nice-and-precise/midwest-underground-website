@@ -1,3 +1,54 @@
+<!-- TOC -->
+
+## Table of Contents
+
+- [🎯 Core Philosophy](#core-philosophy)
+  - [Public Website (SEO & Business Development)](#public-website-seo-business-development)
+  - [Admin Dashboard (Internal Operations)](#admin-dashboard-internal-operations)
+- [📊 Content Matrix](#content-matrix)
+- [❌ CRITICAL MISTAKES TO AVOID](#critical-mistakes-to-avoid)
+  - [1. DON'T Show Dashboard Content on Public Pages](#1-dont-show-dashboard-content-on-public-pages)
+  - [2. DON'T Use Low-Contrast Buttons](#2-dont-use-low-contrast-buttons)
+  - [3. DON'T Put "System Status" on Public Homepage](#3-dont-put-system-status-on-public-homepage)
+- [🎨 Color & Contrast Best Practices](#color-contrast-best-practices)
+  - [WCAG 2.1 AA Requirements](#wcag-21-aa-requirements)
+  - [Our Color Palette with Contrast Ratios](#our-color-palette-with-contrast-ratios)
+  - [Button Color Guidelines](#button-color-guidelines)
+    - [Primary Buttons (CTAs)](#primary-buttons-ctas)
+    - [Secondary Buttons](#secondary-buttons)
+  - [Dark Mode Considerations](#dark-mode-considerations)
+    - [✅ DO:](#do)
+    - [❌ DON'T:](#dont)
+- [📝 Content Guidelines](#content-guidelines)
+  - [Public Homepage - What to Include](#public-homepage-what-to-include)
+    - [Hero Section](#hero-section)
+    - [Services Section](#services-section)
+    - [Why Choose Us Section](#why-choose-us-section)
+    - [Final CTA](#final-cta)
+  - [Dashboard Homepage - What to Include](#dashboard-homepage-what-to-include)
+    - [For Authenticated Users Only](#for-authenticated-users-only)
+- [🔍 SEO Optimization](#seo-optimization)
+  - [Public Pages MUST Have:](#public-pages-must-have)
+  - [Dashboard Pages SHOULD HAVE:](#dashboard-pages-should-have)
+- [🚫 Common Pitfalls](#common-pitfalls)
+  - [Pitfall #1: Confusing Audiences](#pitfall-1-confusing-audiences)
+  - [Pitfall #2: Poor Button Visibility](#pitfall-2-poor-button-visibility)
+  - [Pitfall #3: Dashboard Content in Search Results](#pitfall-3-dashboard-content-in-search-results)
+  - [Pitfall #4: Generic Content](#pitfall-4-generic-content)
+- [✅ Quality Checklist](#quality-checklist)
+  - [Before Launching Public Pages:](#before-launching-public-pages)
+  - [Before Launching Dashboard Pages:](#before-launching-dashboard-pages)
+- [📊 Analytics & Measurement](#analytics-measurement)
+  - [Public Website Metrics (Track These)](#public-website-metrics-track-these)
+  - [Dashboard Metrics (Track These)](#dashboard-metrics-track-these)
+- [🔧 Technical Implementation](#technical-implementation)
+  - [Route Structure](#route-structure)
+  - [Middleware Protection](#middleware-protection)
+- [📞 Need Help?](#need-help)
+- [🎯 Success Criteria](#success-criteria)
+
+<!-- /TOC -->
+
 # Website Structure Guide - Public vs Dashboard
 
 **Date:** October 26, 2025

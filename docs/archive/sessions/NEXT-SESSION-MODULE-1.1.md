@@ -1,3 +1,38 @@
+<!-- TOC -->
+
+## Table of Contents
+
+  - [📋 Quick Start (< 2 minutes)](#quick-start-2-minutes)
+- [Should show: On branch feat/takeoff-system](#should-show-on-branch-feattakeoff-system)
+  - [✅ What's Complete (Session Summary)](#whats-complete-session-summary)
+    - [Phase 0: Platform Scaffolding (100% Complete)](#phase-0-platform-scaffolding-100-complete)
+  - [🎯 Module 1.1 - PDF Plan Viewer (NEXT)](#module-11-pdf-plan-viewer-next)
+    - [Overview](#overview)
+    - [Key Components to Build](#key-components-to-build)
+    - [Technical Requirements](#technical-requirements)
+    - [Dependencies](#dependencies)
+    - [Enables](#enables)
+  - [🧠 Serena MCP State](#serena-mcp-state)
+  - [📚 Essential Documents (Load Order)](#essential-documents-load-order)
+  - [🔄 Autonomous Execution Workflow](#autonomous-execution-workflow)
+    - [Role: PLANNER (15-20 min)](#role-planner-15-20-min)
+    - [Role: IMPLEMENTER (60-90 min)](#role-implementer-60-90-min)
+    - [Role: TESTER (30-45 min)](#role-tester-30-45-min)
+    - [Role: DOC (15-20 min)](#role-doc-15-20-min)
+  - [🛠️ Development Environment](#development-environment)
+- [Opens http://localhost:3000](#opens-httplocalhost3000)
+- [Run all takeoff tests](#run-all-takeoff-tests)
+- [Run specific test](#run-specific-test)
+- [Debug mode](#debug-mode)
+  - [⚠️ Critical Constraints](#critical-constraints)
+  - [📊 Success Metrics](#success-metrics)
+  - [🚀 Multi-Agent Best Practices](#multi-agent-best-practices)
+  - [💡 Tips for Next Session](#tips-for-next-session)
+  - [🎬 Ready to Begin!](#ready-to-begin)
+  - [📞 Contact Info](#contact-info)
+
+<!-- /TOC -->
+
 # 🚀 Next Session - Module 1.1 PDF Plan Viewer
 
 **Last Updated:** 2025-11-22

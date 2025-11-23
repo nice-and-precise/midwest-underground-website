@@ -1,3 +1,55 @@
+<!-- TOC -->
+
+## Table of Contents
+
+- [Quick Launch Status](#quick-launch-status)
+- [🔴 CRITICAL BLOCKERS (Do Before Launch)](#critical-blockers-do-before-launch)
+  - [1. Company Logo](#1-company-logo)
+  - [2. Formspree Contact Form Configuration](#2-formspree-contact-form-configuration)
+  - [3. Production Domain URL](#3-production-domain-url)
+  - [4. Hero Background Images](#4-hero-background-images)
+  - [5. Verify Contact Information](#5-verify-contact-information)
+- [🟠 HIGH PRIORITY (Complete Within Week 1)](#high-priority-complete-within-week-1)
+  - [6. Open Graph Image](#6-open-graph-image)
+  - [7. Google Maps Embed](#7-google-maps-embed)
+  - [8. Professional Email Setup](#8-professional-email-setup)
+  - [9. Favicon (Browser Tab Icon)](#9-favicon-browser-tab-icon)
+  - [10. Test All Forms](#10-test-all-forms)
+  - [11. Mobile Responsiveness Check](#11-mobile-responsiveness-check)
+  - [12. Cross-Browser Testing](#12-cross-browser-testing)
+  - [13. Performance Optimization](#13-performance-optimization)
+- [🟡 MEDIUM PRIORITY (Week 1-2 Post-Launch)](#medium-priority-week-1-2-post-launch)
+  - [14. Add Project Photos](#14-add-project-photos)
+  - [15. Add Team Photos](#15-add-team-photos)
+  - [16. Update Company Story](#16-update-company-story)
+  - [17. Add Real Certifications](#17-add-real-certifications)
+  - [18. Request Customer Testimonials](#18-request-customer-testimonials)
+  - [19. Add Service Photos](#19-add-service-photos)
+  - [20. Equipment Showcase Photos](#20-equipment-showcase-photos)
+- [🟢 LOW PRIORITY (Post-Launch, Ongoing)](#low-priority-post-launch-ongoing)
+  - [21. Create Social Media Profiles](#21-create-social-media-profiles)
+  - [22. Set Up Google Analytics](#22-set-up-google-analytics)
+  - [23. Submit to Search Engines](#23-submit-to-search-engines)
+- [Deployment Checklist](#deployment-checklist)
+  - [Pre-Deployment Verification](#pre-deployment-verification)
+  - [Deployment Steps](#deployment-steps)
+  - [Post-Deployment Testing](#post-deployment-testing)
+- [Post-Launch Actions](#post-launch-actions)
+  - [Immediate (Day 1)](#immediate-day-1)
+  - [Week 1](#week-1)
+  - [Week 2-4](#week-2-4)
+- [Rollback Plan](#rollback-plan)
+  - [Minor Issues (styling, content)](#minor-issues-styling-content)
+  - [Critical Issues (site down, form broken)](#critical-issues-site-down-form-broken)
+  - [Emergency Contact](#emergency-contact)
+- [Resources](#resources)
+  - [Internal Documentation](#internal-documentation)
+  - [External Tools](#external-tools)
+- [Success Criteria](#success-criteria)
+- [Quick Reference: Critical Files to Update Before Launch](#quick-reference-critical-files-to-update-before-launch)
+
+<!-- /TOC -->
+
 # Pre-Launch Checklist - Midwest Underground Website
 
 **Last Updated:** October 23, 2025

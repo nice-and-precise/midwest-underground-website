@@ -1,3 +1,29 @@
+<!-- TOC -->
+
+## Table of Contents
+
+- [Purpose](#purpose)
+- [Progress Entries](#progress-entries)
+- [2025-11-22 - Module 1.1 Planning Complete](#2025-11-22-module-11-planning-complete)
+- [2025-11-22 19:30 UTC - Module P0.1 FULLY COMPLETE ✅🎉](#2025-11-22-1930-utc-module-p01-fully-complete)
+- [2025-11-22 (Current Session) - Module P0.2 COMPLETE ✅](#2025-11-22-current-session-module-p02-complete)
+- [2025-11-22 (Current Session) - Module P0.2 Implementation & Testing Complete](#2025-11-22-current-session-module-p02-implementation-testing-complete)
+- [2025-11-22 (Current Session) - Module P0.2 Planning Complete](#2025-11-22-current-session-module-p02-planning-complete)
+- [2025-11-22 19:15 UTC - Module P0.1 Implementation COMPLETE ✅](#2025-11-22-1915-utc-module-p01-implementation-complete)
+- [2025-11-22 19:00 UTC - Module P0.1 Tasks 4-5 Complete](#2025-11-22-1900-utc-module-p01-tasks-4-5-complete)
+- [2025-11-22 18:20 UTC - Module P0.1 Planning Complete](#2025-11-22-1820-utc-module-p01-planning-complete)
+- [2025-11-22 17:58 UTC - Infrastructure Setup Complete](#2025-11-22-1758-utc-infrastructure-setup-complete)
+- [Template for Future Entries](#template-for-future-entries)
+- [{TIMESTAMP} - {Title}](#timestamp-title)
+- [Module Completion Template](#module-completion-template)
+- [{TIMESTAMP} - Module {ID} COMPLETE ✅](#timestamp-module-id-complete)
+- [2025-11-22 - Module P0.3 Planning Complete](#2025-11-22-module-p03-planning-complete)
+- [2025-11-22 - Module P0.3 Implementation Complete (Multi-Agent)](#2025-11-22-module-p03-implementation-complete-multi-agent)
+- [2025-11-22 - Phase 0 Complete ✅](#2025-11-22-phase-0-complete)
+- [Session Transition Decision Point](#session-transition-decision-point)
+
+<!-- /TOC -->
+
 # Takeoff System - Progress Log
 
 **Project:** Midwest Underground Takeoff & Estimating System

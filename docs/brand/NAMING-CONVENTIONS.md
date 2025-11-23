@@ -1,3 +1,54 @@
+<!-- TOC -->
+
+## Table of Contents
+
+- [📁 File Naming](#file-naming)
+  - [Components](#components)
+  - [Utilities & Helpers](#utilities-helpers)
+  - [Test Files](#test-files)
+  - [Documentation](#documentation)
+  - [Style Files](#style-files)
+  - [Configuration Files](#configuration-files)
+- [💻 Code Naming](#code-naming)
+  - [Functions](#functions)
+  - [Variables](#variables)
+  - [Constants](#constants)
+  - [Types & Interfaces](#types-interfaces)
+  - [Enums](#enums)
+  - [React Components](#react-components)
+  - [React Hooks](#react-hooks)
+  - [Props Interfaces](#props-interfaces)
+- [🗄 Database Naming](#database-naming)
+  - [Table/Collection Names](#tablecollection-names)
+  - [Column/Field Names](#columnfield-names)
+  - [Primary Keys](#primary-keys)
+  - [Junction Tables](#junction-tables)
+  - [Indexes](#indexes)
+- [🌐 API Naming](#api-naming)
+  - [Endpoint Paths](#endpoint-paths)
+  - [Resource Actions](#resource-actions)
+  - [Query Parameters](#query-parameters)
+  - [Request/Response Bodies](#requestresponse-bodies)
+- [🔀 Git Conventions](#git-conventions)
+  - [Branch Names](#branch-names)
+  - [Commit Messages](#commit-messages)
+  - [Tag Names](#tag-names)
+- [📊 Quick Reference Tables](#quick-reference-tables)
+  - [File Naming Summary](#file-naming-summary)
+  - [Code Naming Summary](#code-naming-summary)
+  - [Database Naming Summary](#database-naming-summary)
+  - [API Naming Summary](#api-naming-summary)
+- [⚠️ Anti-Patterns to Avoid](#anti-patterns-to-avoid)
+  - [Don't Mix Naming Styles](#dont-mix-naming-styles)
+  - [Don't Use Abbreviations Unless Universal](#dont-use-abbreviations-unless-universal)
+  - [Don't Use Single-Letter Variables (Except Loops)](#dont-use-single-letter-variables-except-loops)
+  - [Don't Use Prefixes Like I or T](#dont-use-prefixes-like-i-or-t)
+  - [Don't Use Generic Names](#dont-use-generic-names)
+- [🎯 Enforcement](#enforcement)
+- [📝 Contributing](#contributing)
+
+<!-- /TOC -->
+
 # Naming Conventions - Midwest Underground of Minnesota Inc
 
 <!-- Last Updated: 2025-11-23 -->

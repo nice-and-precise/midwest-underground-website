@@ -1,3 +1,49 @@
+<!-- TOC -->
+
+## Table of Contents
+
+- [Project Overview](#project-overview)
+- [Design Research Summary](#design-research-summary)
+  - [Inspiration Site Analysis](#inspiration-site-analysis)
+  - [Key Takeaways for Our Build](#key-takeaways-for-our-build)
+- [Technical Decisions](#technical-decisions)
+  - [Why Static HTML/CSS/JS?](#why-static-htmlcssjs)
+  - [Color System](#color-system)
+  - [Typography System](#typography-system)
+  - [Responsive Breakpoints](#responsive-breakpoints)
+  - [Spacing System](#spacing-system)
+- [File Structure](#file-structure)
+- [Component Architecture](#component-architecture)
+  - [Reusable Components](#reusable-components)
+- [SEO Strategy](#seo-strategy)
+  - [On-Page Optimization](#on-page-optimization)
+  - [Target Keywords](#target-keywords)
+- [Performance Optimization](#performance-optimization)
+  - [Targets](#targets)
+  - [Strategies](#strategies)
+- [Accessibility Compliance (WCAG 2.1 AA)](#accessibility-compliance-wcag-21-aa)
+  - [Requirements Met](#requirements-met)
+- [JavaScript Functionality](#javascript-functionality)
+  - [Core Features (Vanilla ES6+)](#core-features-vanilla-es6)
+- [Security Considerations](#security-considerations)
+  - [Content Security Policy](#content-security-policy)
+  - [Form Security](#form-security)
+- [Deployment Strategy](#deployment-strategy)
+  - [Netlify (Recommended)](#netlify-recommended)
+  - [Alternative: Vercel or GitHub Pages](#alternative-vercel-or-github-pages)
+- [Future Enhancements (Phase 2+)](#future-enhancements-phase-2)
+  - [Near-term (Months 2-3)](#near-term-months-2-3)
+  - [Medium-term (Months 4-6)](#medium-term-months-4-6)
+  - [Long-term (Months 7-12)](#long-term-months-7-12)
+- [Maintenance Considerations](#maintenance-considerations)
+  - [Content Update Process](#content-update-process)
+  - [Documentation Requirements](#documentation-requirements)
+  - [Performance Monitoring](#performance-monitoring)
+- [Development Principles](#development-principles)
+- [Conclusion](#conclusion)
+
+<!-- /TOC -->
+
 # Technical Architecture Documentation
 
 ## Project Overview

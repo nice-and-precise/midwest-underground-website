@@ -37,7 +37,12 @@
     "agent:14": "srt --settings .claude/agent-configs/agent-14-performance.json 'npm run dev'",
     "agent:15": "srt --settings .claude/agent-configs/agent-15-security.json 'npm run dev'",
     "agent:16": "srt --settings .claude/agent-configs/agent-16-mobile.json 'npm run dev'",
-    "agent:17": "srt --settings .claude/agent-configs/agent-17-docs.json 'npm run dev'"
+    "agent:17": "srt --settings .claude/agent-configs/agent-17-docs.json 'npm run dev'",
+    "docs:audit": "bash scripts/docs/audit-docs.sh",
+    "docs:validate": "node scripts/docs/validate-links.js",
+    "docs:check-colors": "bash scripts/docs/check-brand-colors.sh",
+    "docs:generate-toc": "node scripts/docs/generate-toc.js",
+    "docs:check-all": "npm run docs:validate && npm run docs:check-colors"
   },
   "prisma": {
     "seed": "ts-node --project tsconfig.seed.json prisma/seed.ts"

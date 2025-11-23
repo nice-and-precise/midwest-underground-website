@@ -1,3 +1,52 @@
+<!-- TOC -->
+
+## Table of Contents
+
+- [Summary](#summary)
+- [Official Brand Colors](#official-brand-colors)
+  - [Primary Colors](#primary-colors)
+  - [Accent Colors](#accent-colors)
+  - [Neutral Colors](#neutral-colors)
+- [Color Replacements](#color-replacements)
+- [Files Modified](#files-modified)
+  - [CSS Files (1)](#css-files-1)
+  - [JavaScript Files (8)](#javascript-files-8)
+- [Color Usage Guidelines](#color-usage-guidelines)
+  - [Light Mode](#light-mode)
+  - [Dark Mode](#dark-mode)
+  - [Component-Specific Usage](#component-specific-usage)
+- [CSS Variables Reference](#css-variables-reference)
+  - [Light Mode (Default)](#light-mode-default)
+  - [Dark Mode](#dark-mode)
+- [Accessibility Compliance](#accessibility-compliance)
+  - [Light Mode Contrast Ratios](#light-mode-contrast-ratios)
+  - [Dark Mode Contrast Ratios](#dark-mode-contrast-ratios)
+- [Testing Checklist](#testing-checklist)
+  - [Visual Testing](#visual-testing)
+  - [Functional Testing](#functional-testing)
+  - [Cross-Browser Testing](#cross-browser-testing)
+  - [Responsive Testing](#responsive-testing)
+- [Brand Personality](#brand-personality)
+- [Future Considerations](#future-considerations)
+  - [Logo Integration](#logo-integration)
+  - [Marketing Materials](#marketing-materials)
+  - [Expansion](#expansion)
+- [Implementation Notes](#implementation-notes)
+  - [What Changed](#what-changed)
+  - [What Stayed the Same](#what-stayed-the-same)
+  - [Breaking Changes](#breaking-changes)
+- [Rollback Plan](#rollback-plan)
+- [Performance Impact](#performance-impact)
+  - [Metrics](#metrics)
+  - [Browser Compatibility](#browser-compatibility)
+- [Documentation Updates](#documentation-updates)
+- [Approval & Sign-off](#approval-sign-off)
+- [Questions & Support](#questions-support)
+  - [Common Questions](#common-questions)
+  - [Getting Help](#getting-help)
+
+<!-- /TOC -->
+
 # Brand Standards Update - October 23, 2025
 
 **Status:** ✅ Complete

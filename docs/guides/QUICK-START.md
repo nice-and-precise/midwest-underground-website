@@ -1,5 +1,62 @@
 # 🚀 Quick Start Guide
 
+<!-- TOC -->
+
+## Table of Contents
+
+  - [📍 You Are Here](#you-are-here)
+  - [⚡ 5-Minute Deployment](#5-minute-deployment)
+    - [Option 1: Netlify (Recommended)](#option-1-netlify-recommended)
+    - [Option 2: View Locally](#option-2-view-locally)
+  - [📖 Essential Documentation](#essential-documentation)
+    - [Start Here](#start-here)
+    - [When You Need To...](#when-you-need-to)
+  - [🎨 Ready-to-Implement Features](#ready-to-implement-features)
+    - [1. Dark Mode Toggle (~2 hours)](#1-dark-mode-toggle-2-hours)
+    - [2. Service Request Form (~3-4 hours)](#2-service-request-form-3-4-hours)
+    - [3. Invoice Payment System (~2-8 hours)](#3-invoice-payment-system-2-8-hours)
+  - [🔧 How to Add a Feature](#how-to-add-a-feature)
+    - [Using Claude Code](#using-claude-code)
+    - [Example Session](#example-session)
+- [1. Navigate to project](#1-navigate-to-project)
+- [2. Launch Claude Code](#2-launch-claude-code)
+- [3. In Claude Code, paste:](#3-in-claude-code-paste)
+- [4. Claude builds the feature](#4-claude-builds-the-feature)
+- [5. Test and deploy](#5-test-and-deploy)
+  - [📂 Project Structure](#project-structure)
+  - [⚠️ Before Launching](#before-launching)
+    - [High Priority](#high-priority)
+  - [🎯 Common Tasks](#common-tasks)
+    - [Update Phone Number](#update-phone-number)
+- [Search and replace in all files](#search-and-replace-in-all-files)
+- [Then replace globally](#then-replace-globally)
+    - [Add New Service](#add-new-service)
+    - [Add New Project](#add-new-project)
+  - [🚀 Git Workflow](#git-workflow)
+    - [Deploy Changes](#deploy-changes)
+- [1. Make changes to files](#1-make-changes-to-files)
+- [2. Test locally](#2-test-locally)
+- [Open index.html in browser](#open-indexhtml-in-browser)
+- [3. Commit](#3-commit)
+- [4. Push (auto-deploys on Netlify/Vercel)](#4-push-auto-deploys-on-netlifyvercel)
+- [5. Verify at live site](#5-verify-at-live-site)
+    - [View History](#view-history)
+    - [Rollback if Needed](#rollback-if-needed)
+  - [📞 Getting Help](#getting-help)
+    - [Documentation First](#documentation-first)
+    - [For Features](#for-features)
+    - [Ask Claude Code](#ask-claude-code)
+  - [📊 Project Stats](#project-stats)
+  - [✨ What Makes This Special](#what-makes-this-special)
+  - [🎉 Next Steps](#next-steps)
+    - [Right Now](#right-now)
+    - [This Week](#this-week)
+    - [This Month](#this-month)
+    - [Next Quarter](#next-quarter)
+
+<!-- /TOC -->
+
+
 **Midwest Underground Website - Complete Setup & Enhancement Guide**
 
 ---

@@ -1,3 +1,41 @@
+<!-- TOC -->
+
+## Table of Contents
+
+- [Session Overview](#session-overview)
+- [Issues Fixed](#issues-fixed)
+  - [1. Header Logo Too Large (Issue #1)](#1-header-logo-too-large-issue-1)
+  - [2. Parallax Positioning & Performance (Issue #2)](#2-parallax-positioning-performance-issue-2)
+  - [3. Missing Navigation Pages (Issue #3)](#3-missing-navigation-pages-issue-3)
+- [Features Implemented](#features-implemented)
+  - [1. Parallax Scrolling Effects](#1-parallax-scrolling-effects)
+  - [2. Dashboard Page](#2-dashboard-page)
+  - [3. Login Page](#3-login-page)
+- [Commits Summary](#commits-summary)
+- [Files Modified/Created](#files-modifiedcreated)
+  - [Modified:](#modified)
+  - [Created:](#created)
+- [Testing Results](#testing-results)
+  - [Compilation Status:](#compilation-status)
+  - [HTTP Status Codes:](#http-status-codes)
+  - [Navigation Links:](#navigation-links)
+  - [Parallax Effects:](#parallax-effects)
+  - [Header Logo:](#header-logo)
+- [Browser MCP Tools Usage](#browser-mcp-tools-usage)
+- [Session Statistics](#session-statistics)
+- [Current State](#current-state)
+  - [What's Working:](#whats-working)
+  - [Pending Implementation:](#pending-implementation)
+- [Recommendations for Next Session](#recommendations-for-next-session)
+  - [High Priority:](#high-priority)
+  - [Medium Priority:](#medium-priority)
+  - [Low Priority:](#low-priority)
+- [Key Decisions Made](#key-decisions-made)
+- [Links & Resources](#links-resources)
+- [Notes for Future Claude Sessions](#notes-for-future-claude-sessions)
+
+<!-- /TOC -->
+
 # Session Summary #2 - Parallax Implementation & Navigation Pages
 **Date:** October 25, 2025
 **Branch:** feat/nextjs-migration

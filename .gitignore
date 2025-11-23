@@ -57,3 +57,5 @@ prisma/test.db
 
 # Uploads
 public/uploads/
+tests/screenshots/nul
+nul

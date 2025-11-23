@@ -1,3 +1,57 @@
+<!-- TOC -->
+
+## Table of Contents
+
+- [📋 Table of Contents](#table-of-contents)
+- [🔧 Development Checklist](#development-checklist)
+  - [Before Starting Development](#before-starting-development)
+  - [During Development](#during-development)
+  - [Before Creating Pull Request](#before-creating-pull-request)
+- [🚀 Pre-Launch Checklist](#pre-launch-checklist)
+  - [Critical Blockers (Must Complete)](#critical-blockers-must-complete)
+    - [1. Environment Configuration](#1-environment-configuration)
+    - [2. Database](#2-database)
+    - [3. Authentication](#3-authentication)
+    - [4. Content](#4-content)
+  - [High Priority](#high-priority)
+    - [1. Performance](#1-performance)
+    - [2. SEO](#2-seo)
+    - [3. Security](#3-security)
+    - [4. Monitoring](#4-monitoring)
+  - [Medium Priority](#medium-priority)
+  - [Before Launch](#before-launch)
+- [✅ QA Testing Checklist](#qa-testing-checklist)
+  - [Functional Testing](#functional-testing)
+    - [Public Pages](#public-pages)
+    - [Dashboard (Authenticated)](#dashboard-authenticated)
+    - [API Endpoints](#api-endpoints)
+  - [Cross-Browser Testing](#cross-browser-testing)
+    - [Desktop Browsers](#desktop-browsers)
+    - [Mobile Browsers](#mobile-browsers)
+  - [Responsive Design Testing](#responsive-design-testing)
+  - [Accessibility Testing](#accessibility-testing)
+  - [Performance Testing](#performance-testing)
+  - [Security Testing](#security-testing)
+- [🚢 Deployment Checklist](#deployment-checklist)
+  - [Pre-Deployment](#pre-deployment)
+  - [Deployment Steps](#deployment-steps)
+  - [Vercel Deployment](#vercel-deployment)
+  - [Manual Server Deployment](#manual-server-deployment)
+- [✨ Post-Deployment Checklist](#post-deployment-checklist)
+  - [Immediate Verification (0-15 minutes)](#immediate-verification-0-15-minutes)
+  - [Short-Term Monitoring (15 minutes - 24 hours)](#short-term-monitoring-15-minutes-24-hours)
+  - [Medium-Term Validation (1-7 days)](#medium-term-validation-1-7-days)
+  - [Documentation Updates](#documentation-updates)
+- [📊 Quality Gates](#quality-gates)
+  - [Minimum Requirements for Production](#minimum-requirements-for-production)
+- [🔍 Testing Tools](#testing-tools)
+  - [Automated Testing](#automated-testing)
+  - [Manual Testing Tools](#manual-testing-tools)
+  - [Monitoring & Analytics](#monitoring-analytics)
+- [📝 Notes](#notes)
+
+<!-- /TOC -->
+
 # Development & QA Checklists
 
 **Midwest Underground Website - Comprehensive Checklists**

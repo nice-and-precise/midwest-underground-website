@@ -1,3 +1,49 @@
+<!-- TOC -->
+
+## Table of Contents
+
+- [Table of Contents](#table-of-contents)
+- [System Overview](#system-overview)
+  - [Architecture Philosophy](#architecture-philosophy)
+  - [Three Coexisting Systems](#three-coexisting-systems)
+- [Technology Stack](#technology-stack)
+  - [Core Libraries](#core-libraries)
+  - [Why These Libraries?](#why-these-libraries)
+  - [No Backend Requirements](#no-backend-requirements)
+- [File Structure](#file-structure)
+  - [New Files Created by Takeoff System](#new-files-created-by-takeoff-system)
+  - [Shared Files (Existing Dashboard)](#shared-files-existing-dashboard)
+- [Data Storage Strategy](#data-storage-strategy)
+  - [Client-Side JSON Files](#client-side-json-files)
+  - [Data Schemas](#data-schemas)
+    - [1. takeoffs.json](#1-takeoffsjson)
+    - [2. cost-items.json](#2-cost-itemsjson)
+    - [3. estimates.json](#3-estimatesjson)
+    - [4. proposals.json](#4-proposalsjson)
+    - [5. bore-paths.json](#5-bore-pathsjson)
+    - [6. change-orders.json](#6-change-ordersjson)
+  - [Data Persistence](#data-persistence)
+- [Integration Points](#integration-points)
+  - [1. Integration with Next.js HDD Operations App](#1-integration-with-nextjs-hdd-operations-app)
+  - [2. Integration with Legacy Dashboard](#2-integration-with-legacy-dashboard)
+  - [3. Cross-System Data Flow](#3-cross-system-data-flow)
+- [Development Phases](#development-phases)
+  - [Phase 0: Scaffolding (Modules P0.1, P0.2, P0.3)](#phase-0-scaffolding-modules-p01-p02-p03)
+  - [Phase 1: Takeoff Core (Modules 1.1, 1.2, 1.3, 1.4)](#phase-1-takeoff-core-modules-11-12-13-14)
+  - [Phase 2: Estimating Engine (Modules 2.1, 2.2, 2.3, 2.4)](#phase-2-estimating-engine-modules-21-22-23-24)
+  - [Phase 3: Advanced Features (Modules 3.1, 3.2, 3.3, 3.4)](#phase-3-advanced-features-modules-31-32-33-34)
+- [Design Principles](#design-principles)
+  - [1. Simplicity First](#1-simplicity-first)
+  - [2. Progressive Enhancement](#2-progressive-enhancement)
+  - [3. Separation of Concerns](#3-separation-of-concerns)
+  - [4. Integration Without Interference](#4-integration-without-interference)
+  - [5. Data Ownership](#5-data-ownership)
+  - [6. Performance](#6-performance)
+  - [7. Maintainability](#7-maintainability)
+- [Reference Documentation](#reference-documentation)
+
+<!-- /TOC -->
+
 # Takeoff System Architecture
 
 **Version:** 1.0

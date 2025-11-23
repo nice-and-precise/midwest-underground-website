@@ -1,3 +1,58 @@
+<!-- TOC -->
+
+## Table of Contents
+
+  - [Overview](#overview)
+  - [User Request](#user-request)
+  - [What Was Done](#what-was-done)
+    - [1. Comprehensive Dark Mode Contrast Audit ✅](#1-comprehensive-dark-mode-contrast-audit)
+    - [2. CSS Custom Properties Enhancement ✅](#2-css-custom-properties-enhancement)
+    - [3. Global Code Replacement ✅](#3-global-code-replacement)
+    - [4. Pages Fixed](#4-pages-fixed)
+      - [Main Dashboard Pages:](#main-dashboard-pages)
+      - [Detail Pages:](#detail-pages)
+      - [HDD Module Pages:](#hdd-module-pages)
+      - [Components:](#components)
+    - [5. Documentation Created ✅](#5-documentation-created)
+  - [Verification](#verification)
+    - [Automated Checks ✅](#automated-checks)
+- [Verify no hardcoded white backgrounds remain](#verify-no-hardcoded-white-backgrounds-remain)
+- [Result: 0 matches ✅](#result-0-matches)
+    - [Manual Testing ✅](#manual-testing)
+    - [Accessibility Improvements ✅](#accessibility-improvements)
+  - [Technical Summary](#technical-summary)
+    - [Files Modified: 28](#files-modified-28)
+    - [Lines Changed: ~150+](#lines-changed-150)
+    - [Approach Used](#approach-used)
+  - [Color System Comparison](#color-system-comparison)
+    - [Before (Broken in Dark Mode)](#before-broken-in-dark-mode)
+    - [After (Theme-Aware)](#after-theme-aware)
+  - [Impact on User Experience](#impact-on-user-experience)
+    - [Before](#before)
+    - [After](#after)
+  - [Semantic Colors Preserved](#semantic-colors-preserved)
+    - [Status Badges](#status-badges)
+    - [Text Colors](#text-colors)
+  - [Server Status](#server-status)
+  - [Best Practices Followed](#best-practices-followed)
+  - [Maintenance Guidelines](#maintenance-guidelines)
+    - [Adding New Cards](#adding-new-cards)
+    - [Adding New Text](#adding-new-text)
+  - [Files Created/Modified This Session](#files-createdmodified-this-session)
+    - [New Files Created:](#new-files-created)
+    - [Modified Files:](#modified-files)
+  - [Completion Status](#completion-status)
+    - [All Tasks Completed ✅](#all-tasks-completed)
+  - [Next Steps](#next-steps)
+  - [Technical Notes](#technical-notes)
+    - [Why This Approach Was Chosen](#why-this-approach-was-chosen)
+    - [Alternative Approaches Considered](#alternative-approaches-considered)
+  - [Related Documentation](#related-documentation)
+  - [Completion Time](#completion-time)
+  - [Session Outcome](#session-outcome)
+
+<!-- /TOC -->
+
 # Session Summary - October 25, 2025
 
 ## Overview

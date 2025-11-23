@@ -1,3 +1,52 @@
+<!-- TOC -->
+
+## Table of Contents
+
+  - [📋 QUICK START FOR NEW SESSION](#quick-start-for-new-session)
+    - [Step 1: Activate Project in Serena MCP](#step-1-activate-project-in-serena-mcp)
+    - [Step 2: Review Current State](#step-2-review-current-state)
+  - [🎯 MISSION: Complete Full Implementation](#mission-complete-full-implementation)
+    - [Overall Goal](#overall-goal)
+    - [Current Status](#current-status)
+  - [🤖 MULTI-AGENT DEVELOPMENT STRATEGY](#multi-agent-development-strategy)
+    - [Critical Instructions for Claude](#critical-instructions-for-claude)
+  - [📊 WAVE 2: READY TO LAUNCH (2 Parallel Agents)](#wave-2-ready-to-launch-2-parallel-agents)
+    - [Agent 2: Authentication Implementation](#agent-2-authentication-implementation)
+    - [Agent 3: Projects & Bores API](#agent-3-projects-bores-api)
+  - [📚 ESSENTIAL CONTEXT](#essential-context)
+    - [Database is Ready](#database-is-ready)
+    - [Test Credentials](#test-credentials)
+    - [Tech Stack](#tech-stack)
+    - [Project Structure](#project-structure)
+  - [🚦 EXECUTION PLAN FOR CLAUDE](#execution-plan-for-claude)
+    - [Step 1: Activate & Review (2 minutes)](#step-1-activate-review-2-minutes)
+    - [Step 2: Launch Wave 2 Agents (Parallel)](#step-2-launch-wave-2-agents-parallel)
+    - [Step 3: Monitor & Coordinate](#step-3-monitor-coordinate)
+    - [Step 4: Launch Wave 3 (4 Parallel Agents)](#step-4-launch-wave-3-4-parallel-agents)
+    - [Step 5: Launch Wave 4 (2 Parallel Agents)](#step-5-launch-wave-4-2-parallel-agents)
+    - [Step 6: Final Integration](#step-6-final-integration)
+  - [📝 DETAILED AGENT PROMPTS](#detailed-agent-prompts)
+    - [Agent 2: Authentication (Full Prompt)](#agent-2-authentication-full-prompt)
+    - [Agent 3: Projects & Bores API (Full Prompt)](#agent-3-projects-bores-api-full-prompt)
+  - [🔥 COMMANDS REFERENCE](#commands-reference)
+    - [Development](#development)
+    - [Database](#database)
+    - [Monitoring](#monitoring)
+- [Open progress dashboard](#open-progress-dashboard)
+- [View agent coordination](#view-agent-coordination)
+- [Check Serena memories](#check-serena-memories)
+- [(use Serena MCP list_memories and read_memory tools)](#use-serena-mcp-list_memories-and-read_memory-tools)
+  - [✅ SUCCESS CRITERIA](#success-criteria)
+    - [Wave 2 Complete When:](#wave-2-complete-when)
+    - [Final Project Complete When:](#final-project-complete-when)
+  - [🎯 START IMMEDIATELY](#start-immediately)
+  - [📞 SUPPORT](#support)
+    - [Key Files](#key-files)
+    - [Serena Memories (already written)](#serena-memories-already-written)
+    - [Test Credentials](#test-credentials)
+
+<!-- /TOC -->
+
 # 🚀 Midwest Underground Website - Resume Session Handoff
 
 **Date:** 2025-11-21

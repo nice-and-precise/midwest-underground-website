@@ -1,3 +1,42 @@
+<!-- TOC -->
+
+## Table of Contents
+
+  - [Executive Summary](#executive-summary)
+  - [Deliverables Created](#deliverables-created)
+    - [1. E2E Test Suite ✅](#1-e2e-test-suite)
+    - [2. Test Fixtures ✅](#2-test-fixtures)
+    - [3. Documentation ✅](#3-documentation)
+  - [Critical Issue Discovered](#critical-issue-discovered)
+    - [Deployment Blocker](#deployment-blocker)
+- [Files copied to public/dashboard/](#files-copied-to-publicdashboard)
+- [Option 1: Move files (recommended)](#option-1-move-files-recommended)
+- [Option 2: Configure Next.js rewrites (more complex)](#option-2-configure-nextjs-rewrites-more-complex)
+- [See TESTER-REPORT.md for details](#see-tester-reportmd-for-details)
+  - [Test Execution Status](#test-execution-status)
+    - [Ready to Run (After Deployment Fix)](#ready-to-run-after-deployment-fix)
+- [All 21 tests (Chromium only - fastest)](#all-21-tests-chromium-only-fastest)
+- [All tests, all browsers (comprehensive)](#all-tests-all-browsers-comprehensive)
+- [Debug mode](#debug-mode)
+  - [Git Commits](#git-commits)
+  - [Module State Updates](#module-state-updates)
+    - [Module 1.1 State](#module-11-state)
+    - [Progress Tracker](#progress-tracker)
+  - [Quality Metrics](#quality-metrics)
+  - [Next Steps](#next-steps)
+    - [Immediate (You/User)](#immediate-youuser)
+- [Recommended: Permanently move files to public/](#recommended-permanently-move-files-to-public)
+    - [Next Role (DOC)](#next-role-doc)
+  - [Session Statistics](#session-statistics)
+  - [Key Learnings](#key-learnings)
+    - [What Worked Well](#what-worked-well)
+    - [Challenges Overcome](#challenges-overcome)
+    - [Recommendations for Future Modules](#recommendations-for-future-modules)
+  - [Conclusion](#conclusion)
+  - [Quick Reference](#quick-reference)
+
+<!-- /TOC -->
+
 # TESTER Role Session Complete - Module 1.1
 
 **Date:** 2025-11-22

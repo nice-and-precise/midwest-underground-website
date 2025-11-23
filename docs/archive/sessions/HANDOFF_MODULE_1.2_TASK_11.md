@@ -1,3 +1,42 @@
+<!-- TOC -->
+
+## Table of Contents
+
+  - [Executive Summary](#executive-summary)
+  - [Critical Context](#critical-context)
+    - [What Has Been Completed (Tasks 1-10)](#what-has-been-completed-tasks-1-10)
+  - [Your Mission: Task 11 - Properties Panel](#your-mission-task-11-properties-panel)
+    - [Requirements](#requirements)
+    - [Implementation Details](#implementation-details)
+  - [File Locations](#file-locations)
+  - [SERENA MCP Configuration](#serena-mcp-configuration)
+- [SERENA MCP should auto-activate, verify with:](#serena-mcp-should-auto-activate-verify-with)
+- [If needed, manually activate:](#if-needed-manually-activate)
+  - [Git Workflow](#git-workflow)
+  - [Data Structures Reference](#data-structures-reference)
+    - [Measurement Data Structure](#measurement-data-structure)
+    - [Storage Structure](#storage-structure)
+  - [Remaining Tasks After Task 11](#remaining-tasks-after-task-11)
+  - [Success Criteria for Task 11](#success-criteria-for-task-11)
+  - [Quick Start Commands](#quick-start-commands)
+- [1. Navigate to project](#1-navigate-to-project)
+- [2. Verify SERENA MCP](#2-verify-serena-mcp)
+- [3. Read current state](#3-read-current-state)
+- [4. Check git status](#4-check-git-status)
+- [5. View recent commits](#5-view-recent-commits)
+- [6. Start Task 11 implementation](#6-start-task-11-implementation)
+- [Use symbolic tools to read specific functions in measurement-tools.js](#use-symbolic-tools-to-read-specific-functions-in-measurement-toolsjs)
+- [Add modal to takeoff.html](#add-modal-to-takeoffhtml)
+- [Add styles to takeoff.css](#add-styles-to-takeoffcss)
+- [Add JavaScript handlers](#add-javascript-handlers)
+  - [Important Notes](#important-notes)
+  - [Color Palette (For Reference)](#color-palette-for-reference)
+  - [Troubleshooting](#troubleshooting)
+  - [Expected Outcome](#expected-outcome)
+  - [Contact & Resources](#contact-resources)
+
+<!-- /TOC -->
+
 # HANDOFF: Module 1.2 - Task 11 Ready to Start
 
 **Date:** 2025-11-22

@@ -720,8 +720,8 @@ function handleScaleClick(pointer) {
             left: pointer.x - 3,
             top: pointer.y - 3,
             radius: 3,
-            fill: '#FF6B35',
-            stroke: '#003B5C',
+            fill: '#FF5A1F',
+            stroke: '#23272A',
             strokeWidth: 1,
             selectable: false,
             evented: false,
@@ -763,7 +763,7 @@ function handleScaleClick(pointer) {
         }
 
         const line = new fabric.Line([point1.x, point1.y, point2.x, point2.y], {
-            stroke: '#FF6B35',
+            stroke: '#FF5A1F',
             strokeWidth: 2,
             selectable: false,
             evented: false,
@@ -797,7 +797,7 @@ function updateScalePreview(pointer) {
 
     // Create new preview line
     const line = new fabric.Line([point1.x, point1.y, pointer.x, pointer.y], {
-        stroke: '#FF6B35',
+        stroke: '#FF5A1F',
         strokeWidth: 2,
         strokeDashArray: [5, 5],
         selectable: false,
@@ -1027,8 +1027,8 @@ function handleLinearClick(pointer) {
             left: pointToAdd.x - 4,
             top: pointToAdd.y - 4,
             radius: 4,
-            fill: '#FF6B35',
-            stroke: '#003B5C',
+            fill: '#FF5A1F',
+            stroke: '#23272A',
             strokeWidth: 2,
             selectable: false,
             evented: false,
@@ -1046,8 +1046,8 @@ function handleLinearClick(pointer) {
             left: pointToAdd.x - 4,
             top: pointToAdd.y - 4,
             radius: 4,
-            fill: '#FF6B35',
-            stroke: '#003B5C',
+            fill: '#FF5A1F',
+            stroke: '#23272A',
             strokeWidth: 2,
             selectable: false,
             evented: false,
@@ -1110,7 +1110,7 @@ function updateLinearPolyline() {
 
     // Create new polyline
     const polyline = new fabric.Polyline(points, {
-        stroke: '#FF6B35',
+        stroke: '#FF5A1F',
         strokeWidth: 2,
         fill: null,
         selectable: false,
@@ -1179,7 +1179,7 @@ function updateLinearPreview(pointer) {
 
     // Create preview polyline
     const previewLine = new fabric.Polyline(previewPoints, {
-        stroke: '#FF6B35',
+        stroke: '#FF5A1F',
         strokeWidth: 2,
         strokeDashArray: [5, 5],
         fill: null,
@@ -1413,7 +1413,7 @@ function promptForCategory() {
  */
 function getCategoryColor(category) {
     const colors = {
-        'HDD': '#FF6B35',      // Orange
+        'HDD': '#FF5A1F',      // Orange
         'Fiber': '#0066CC',    // Blue
         'Trench': '#8B4513',   // Brown
         'Other': '#666666'     // Gray
@@ -1527,8 +1527,8 @@ function handleAreaClick(pointer) {
             left: pointer.x - 5,
             top: pointer.y - 5,
             radius: 5,
-            fill: '#FF6B35',
-            stroke: '#003B5C',
+            fill: '#FF5A1F',
+            stroke: '#23272A',
             strokeWidth: 2,
             selectable: false,
             evented: false,
@@ -1543,8 +1543,8 @@ function handleAreaClick(pointer) {
             left: pointer.x - 5,
             top: pointer.y - 5,
             radius: 5,
-            fill: '#FF6B35',
-            stroke: '#003B5C',
+            fill: '#FF5A1F',
+            stroke: '#23272A',
             strokeWidth: 2,
             selectable: false,
             evented: false,
@@ -1612,7 +1612,7 @@ function updateAreaPreview(pointer) {
     if (previewPoints.length >= 3) {
         const previewPolygon = new fabric.Polygon(previewPoints, {
             fill: 'rgba(255, 107, 53, 0.15)', // Very light orange
-            stroke: '#FF6B35',
+            stroke: '#FF5A1F',
             strokeWidth: 2,
             strokeDashArray: [5, 5],
             selectable: false,
@@ -1644,7 +1644,7 @@ function updateAreaPreview(pointer) {
             previewPoints[0].x, previewPoints[0].y,
             previewPoints[1].x, previewPoints[1].y
         ], {
-            stroke: '#FF6B35',
+            stroke: '#FF5A1F',
             strokeWidth: 2,
             strokeDashArray: [5, 5],
             selectable: false,
@@ -1911,7 +1911,7 @@ function getAreaCategoryColors(category) {
         },
         'Bore Zone': {
             fill: 'rgba(255, 107, 53, 0.3)',  // Orange with transparency
-            stroke: '#FF6B35'                  // Orange
+            stroke: '#FF5A1F'                  // Orange
         },
         'Other': {
             fill: 'rgba(102, 102, 102, 0.3)', // Gray with transparency
@@ -1994,7 +1994,7 @@ function handleCountClick(pointer) {
         const circle = new fabric.Circle({
             radius: 15,
             fill: categoryColor,
-            stroke: '#003B5C',
+            stroke: '#23272A',
             strokeWidth: 2,
             originX: 'center',
             originY: 'center'
@@ -2111,7 +2111,7 @@ function promptForCountCategory() {
  */
 function getCountCategoryColor(category) {
     const colors = {
-        'Pits': '#FF6B35',        // Safety Orange
+        'Pits': '#FF5A1F',        // Safety Orange
         'Splices': '#0066CC',     // Blue
         'Poles': '#8B4513',       // Brown
         'Equipment': '#666666',   // Gray
@@ -2728,7 +2728,7 @@ function emitMeasurementEvent(eventName, measurementData) {
             id: measurementData.id,
             label: measurementData.label || '',
             category: measurementData.category || '',
-            color: measurementData.color || '#003B5C',
+            color: measurementData.color || '#23272A',
             timestamp: measurementData.modified || measurementData.created || new Date().toISOString(),
             page: measurementData.page || viewerState?.currentPage || 1
         };
@@ -3127,7 +3127,7 @@ function recreateLinearMeasurement(data) {
 
     // Create polyline
     const polyline = new fabric.Polyline(fabricPoints, {
-        stroke: data.color || '#003B5C',
+        stroke: data.color || '#23272A',
         strokeWidth: 3,
         fill: 'transparent',
         selectable: true,
@@ -3144,7 +3144,7 @@ function recreateLinearMeasurement(data) {
         left: midpoint.x,
         top: midpoint.y - 15,
         fontSize: 14,
-        fill: data.color || '#003B5C',
+        fill: data.color || '#23272A',
         backgroundColor: 'rgba(255, 255, 255, 0.8)',
         selectable: false,
         objectType: 'measurement-text'
@@ -3167,7 +3167,7 @@ function recreateAreaMeasurement(data) {
     // Create polygon
     const polygon = new fabric.Polygon(fabricPoints, {
         fill: `${data.color}33` || 'rgba(0, 59, 92, 0.2)',
-        stroke: data.color || '#003B5C',
+        stroke: data.color || '#23272A',
         strokeWidth: 2,
         selectable: true,
         hasControls: true,
@@ -3183,7 +3183,7 @@ function recreateAreaMeasurement(data) {
         left: centroid.x,
         top: centroid.y - 15,
         fontSize: 14,
-        fill: data.color || '#003B5C',
+        fill: data.color || '#23272A',
         backgroundColor: 'rgba(255, 255, 255, 0.8)',
         selectable: false,
         objectType: 'measurement-text'
@@ -3201,7 +3201,7 @@ function recreateAreaMeasurement(data) {
  * @returns {Array} Array of Fabric object IDs
  */
 function recreateCountMarker(data) {
-    const color = data.color || '#003B5C';
+    const color = data.color || '#23272A';
 
     // Create circle
     const circle = new fabric.Circle({
@@ -3734,7 +3734,7 @@ function addScaleBarToCanvas() {
         const scaleLine = new fabric.Line(
             [startX, startY, startX + lineLength, startY],
             {
-                stroke: '#003B5C',
+                stroke: '#23272A',
                 strokeWidth: 3,
                 selectable: false,
                 evented: false,
@@ -3751,7 +3751,7 @@ function addScaleBarToCanvas() {
                 left: startX + (lineLength / 2),
                 top: startY - 20,
                 fontSize: 14,
-                fill: '#003B5C',
+                fill: '#23272A',
                 fontWeight: 'bold',
                 backgroundColor: 'rgba(255, 255, 255, 0.9)',
                 padding: 4,
@@ -3769,7 +3769,7 @@ function addScaleBarToCanvas() {
         const startTick = new fabric.Line(
             [startX, startY - tickHeight/2, startX, startY + tickHeight/2],
             {
-                stroke: '#003B5C',
+                stroke: '#23272A',
                 strokeWidth: 2,
                 selectable: false,
                 evented: false,
@@ -3782,7 +3782,7 @@ function addScaleBarToCanvas() {
         const endTick = new fabric.Line(
             [startX + lineLength, startY - tickHeight/2, startX + lineLength, startY + tickHeight/2],
             {
-                stroke: '#003B5C',
+                stroke: '#23272A',
                 strokeWidth: 2,
                 selectable: false,
                 evented: false,
@@ -3991,7 +3991,7 @@ function populatePropertiesForm(data) {
     const colorInput = document.getElementById('prop-color');
     const colorPreview = document.getElementById('prop-color-preview');
     if (colorInput) {
-        const currentColor = data.color || '#FF6B35';
+        const currentColor = data.color || '#FF5A1F';
         colorInput.value = currentColor;
         if (colorPreview) {
             colorPreview.textContent = currentColor;

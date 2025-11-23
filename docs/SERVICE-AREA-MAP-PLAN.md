@@ -1,3 +1,35 @@
+<!-- TOC -->
+
+## Table of Contents
+
+- [Overview](#overview)
+- [Phase 1: Public-Facing Map (Homepage/Services Page)](#phase-1-public-facing-map-homepageservices-page)
+  - [Technology Choice: Leaflet.js](#technology-choice-leafletjs)
+  - [Map Features - Public View](#map-features-public-view)
+  - [HTML Structure](#html-structure)
+  - [CSS Styling](#css-styling)
+  - [JavaScript Implementation](#javascript-implementation)
+- [Phase 2: Data Storage (JSON File)](#phase-2-data-storage-json-file)
+  - [Service Area Data File](#service-area-data-file)
+- [Phase 3: Dashboard Admin Controls](#phase-3-dashboard-admin-controls)
+  - [Dashboard Page: Service Area Editor](#dashboard-page-service-area-editor)
+  - [Dashboard HTML Structure](#dashboard-html-structure)
+  - [Dashboard JavaScript](#dashboard-javascript)
+- [Phase 4: Implementation Steps](#phase-4-implementation-steps)
+  - [Step 1: Add Leaflet Library (Week 1)](#step-1-add-leaflet-library-week-1)
+  - [Step 2: Public Map Integration (Week 1-2)](#step-2-public-map-integration-week-1-2)
+  - [Step 3: Dashboard Page (Week 2-3)](#step-3-dashboard-page-week-2-3)
+  - [Step 4: Backend Integration (Week 3-4)](#step-4-backend-integration-week-3-4)
+  - [Step 5: Testing & Polish (Week 4)](#step-5-testing-polish-week-4)
+- [Required Libraries](#required-libraries)
+  - [Leaflet.js (Map Display)](#leafletjs-map-display)
+  - [Leaflet.Editable (Dashboard Only)](#leafleteditable-dashboard-only)
+- [Future Enhancements](#future-enhancements)
+- [Estimated Timeline](#estimated-timeline)
+- [Next Steps](#next-steps)
+
+<!-- /TOC -->
+
 # Service Area Map Implementation Plan
 
 ## Overview

@@ -1,3 +1,49 @@
+<!-- TOC -->
+
+## Table of Contents
+
+- [🎯 Session Objectives](#session-objectives)
+- [✅ Work Completed](#work-completed)
+  - [1. Production Build Verification (CRITICAL)](#1-production-build-verification-critical)
+  - [2. Image Optimization Analysis](#2-image-optimization-analysis)
+  - [3. QA Audit Checklist Creation](#3-qa-audit-checklist-creation)
+  - [4. GitHub PR #1 Evaluation and Merge](#4-github-pr-1-evaluation-and-merge)
+  - [5. Development Server Stability](#5-development-server-stability)
+  - [6. Documentation Updates](#6-documentation-updates)
+- [📊 Current Project Status](#current-project-status)
+  - [✅ What's Complete](#whats-complete)
+  - [⚠️ What Needs Attention (Pre-Launch)](#what-needs-attention-pre-launch)
+    - [CRITICAL (Must Fix Before Launch)](#critical-must-fix-before-launch)
+    - [HIGH PRIORITY (Should Do Soon)](#high-priority-should-do-soon)
+- [🔧 Technical Details](#technical-details)
+  - [Production Build Stats](#production-build-stats)
+  - [Server Configuration](#server-configuration)
+  - [Git Status](#git-status)
+- [📋 Recommendations](#recommendations)
+  - [Immediate Next Steps (Before Launch)](#immediate-next-steps-before-launch)
+  - [Post-Launch Enhancements](#post-launch-enhancements)
+- [🎓 Lessons Learned](#lessons-learned)
+  - [What Went Well](#what-went-well)
+  - [What Could Be Improved](#what-could-be-improved)
+  - [Technical Debt](#technical-debt)
+- [📈 Success Metrics](#success-metrics)
+  - [Code Quality](#code-quality)
+  - [Performance](#performance)
+  - [Completeness](#completeness)
+- [🚀 Deployment Checklist](#deployment-checklist)
+  - [Pre-Deployment](#pre-deployment)
+  - [Deployment](#deployment)
+  - [Post-Deployment](#post-deployment)
+- [📞 Support & Maintenance](#support-maintenance)
+  - [Key Files for Future Developers](#key-files-for-future-developers)
+  - [Common Tasks](#common-tasks)
+  - [Troubleshooting](#troubleshooting)
+- [🎉 Achievements This Session](#achievements-this-session)
+- [📅 Timeline](#timeline)
+- [💡 Final Notes](#final-notes)
+
+<!-- /TOC -->
+
 # Development Session Summary - October 25, 2025
 
 **Branch:** `feat/nextjs-migration`

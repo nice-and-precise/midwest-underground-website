@@ -1,3 +1,44 @@
+<!-- TOC -->
+
+## Table of Contents
+
+  - [Quick Diagnostics Checklist](#quick-diagnostics-checklist)
+  - [Common Issues](#common-issues)
+    - [Issue 1: "Memory not found" Error](#issue-1-memory-not-found-error)
+    - [Issue 2: Serena Connection Timeout](#issue-2-serena-connection-timeout)
+- [Check if Serena MCP is running](#check-if-serena-mcp-is-running)
+- [(This depends on your Serena setup - check Serena docs)](#this-depends-on-your-serena-setup-check-serena-docs)
+- [Check Claude Code MCP configuration](#check-claude-code-mcp-configuration)
+- [or on Windows:](#or-on-windows)
+- [Look for Serena server entry](#look-for-serena-server-entry)
+- [Option 1: Restart Serena MCP server](#option-1-restart-serena-mcp-server)
+- [(Restart process - check Serena documentation)](#restart-process-check-serena-documentation)
+- [Option 2: Reconnect in Claude Code](#option-2-reconnect-in-claude-code)
+- [Close and reopen Claude Code](#close-and-reopen-claude-code)
+- [Option 3: Check configuration](#option-3-check-configuration)
+- [Ensure Serena MCP is properly configured in mcp.json](#ensure-serena-mcp-is-properly-configured-in-mcpjson)
+- [Option 4: Reinstall Serena MCP](#option-4-reinstall-serena-mcp)
+- [Follow Serena MCP installation guide](#follow-serena-mcp-installation-guide)
+    - [Issue 3: Memory Write Failures](#issue-3-memory-write-failures)
+    - [Issue 4: Session State Loss](#issue-4-session-state-loss)
+    - [Issue 5: Memory Read Returns Null](#issue-5-memory-read-returns-null)
+    - [Issue 6: Serena MCP Not Connected](#issue-6-serena-mcp-not-connected)
+- [1. Check MCP configuration](#1-check-mcp-configuration)
+- [On macOS/Linux:](#on-macoslinux)
+- [On Windows:](#on-windows)
+- [2. Verify Serena is listed](#2-verify-serena-is-listed)
+- [3. Check project is registered](#3-check-project-is-registered)
+- [Look for project in known projects list](#look-for-project-in-known-projects-list)
+  - [Prevention Strategies](#prevention-strategies)
+    - [Strategy 1: Defensive Memory Operations](#strategy-1-defensive-memory-operations)
+    - [Strategy 2: Include Metadata](#strategy-2-include-metadata)
+- [Memory Name](#memory-name)
+    - [Strategy 3: Regular Validation](#strategy-3-regular-validation)
+  - [Getting Help](#getting-help)
+  - [Related Documentation](#related-documentation)
+
+<!-- /TOC -->
+
 # Serena MCP Troubleshooting Guide
 
 **Purpose:** Common issues, diagnostic steps, and solutions for Serena MCP memory operations

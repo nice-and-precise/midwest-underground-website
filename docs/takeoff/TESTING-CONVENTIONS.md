@@ -1,3 +1,58 @@
+<!-- TOC -->
+
+## Table of Contents
+
+  - [File Naming Standards](#file-naming-standards)
+  - [Test Structure](#test-structure)
+    - [Describe Blocks](#describe-blocks)
+    - [Setup and Teardown](#setup-and-teardown)
+    - [Test Naming](#test-naming)
+  - [Element Selectors](#element-selectors)
+    - [Preference Order](#preference-order)
+    - [Selector Best Practices](#selector-best-practices)
+  - [Fixtures and Test Data](#fixtures-and-test-data)
+    - [Location and Organization](#location-and-organization)
+    - [Fixture Naming Conventions](#fixture-naming-conventions)
+    - [Using Fixtures in Tests](#using-fixtures-in-tests)
+    - [Fixture Maintenance](#fixture-maintenance)
+  - [Screenshot Naming](#screenshot-naming)
+    - [Auto-Generated Screenshots](#auto-generated-screenshots)
+    - [Manual Screenshots](#manual-screenshots)
+    - [Screenshot Naming Pattern](#screenshot-naming-pattern)
+    - [Screenshot Assertions](#screenshot-assertions)
+- [Update all screenshot baselines](#update-all-screenshot-baselines)
+- [Update specific test](#update-specific-test)
+  - [Async/Await Patterns](#asyncawait-patterns)
+    - [Always Await Page Interactions](#always-await-page-interactions)
+    - [Error Handling](#error-handling)
+    - [Promise Handling](#promise-handling)
+    - [Common Async Patterns](#common-async-patterns)
+  - [Assertions](#assertions)
+    - [Page Assertions](#page-assertions)
+    - [Element Assertions](#element-assertions)
+    - [Custom Assertions](#custom-assertions)
+  - [Test Independence](#test-independence)
+    - [Rule: Each Test Should Be Completely Independent](#rule-each-test-should-be-completely-independent)
+    - [Why Test Independence Matters](#why-test-independence-matters)
+    - [Achieving Independence](#achieving-independence)
+  - [Resources](#resources)
+    - [Playwright Documentation](#playwright-documentation)
+    - [Guides and Tutorials](#guides-and-tutorials)
+    - [Advanced Topics](#advanced-topics)
+    - [Community Resources](#community-resources)
+  - [Quick Reference](#quick-reference)
+    - [Common Commands](#common-commands)
+- [Run all tests](#run-all-tests)
+- [Run specific file](#run-specific-file)
+- [Run in headed mode (see browser)](#run-in-headed-mode-see-browser)
+- [Debug mode](#debug-mode)
+- [Update screenshots](#update-screenshots)
+- [Show test report](#show-test-report)
+- [Generate tests](#generate-tests)
+    - [Common Patterns](#common-patterns)
+
+<!-- /TOC -->
+
 # Takeoff System - Testing Conventions
 
 **Created:** 2025-11-22

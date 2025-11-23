@@ -1,3 +1,39 @@
+<!-- TOC -->
+
+## Table of Contents
+
+  - [Overview](#overview)
+  - [Memory Operations](#memory-operations)
+    - [Writing Memory](#writing-memory)
+  - [Example 1: Update System Context](#example-1-update-system-context)
+  - [Current State](#current-state)
+  - [Integration Points](#integration-points)
+  - [Example 2: Update Progress Tracker](#example-2-update-progress-tracker)
+  - [Module Progress Map](#module-progress-map)
+    - [Phase 1: Takeoff Core (2/4 complete - 50%)](#phase-1-takeoff-core-24-complete-50)
+  - [Recent Activity](#recent-activity)
+    - [${new Date().toISOString()} - Module 1.2 COMPLETED ✅](#new-datetoisostring-module-12-completed)
+  - [Example 3: Update Module State](#example-3-update-module-state)
+  - [Implementation Status](#implementation-status)
+  - [Files Modified](#files-modified)
+  - [Commits](#commits)
+  - [Blockers](#blockers)
+  - [Example 4: Reading Memory](#example-4-reading-memory)
+  - [Common Patterns](#common-patterns)
+    - [Pattern 1: Update After Each Task](#pattern-1-update-after-each-task)
+    - [Pattern 2: Check Module Status](#pattern-2-check-module-status)
+    - [Pattern 3: Mark Module Complete](#pattern-3-mark-module-complete)
+  - [Best Practices](#best-practices)
+    - [When to Write](#when-to-write)
+    - [Content Format](#content-format)
+    - [Error Handling](#error-handling)
+    - [Memory Size](#memory-size)
+  - [Testing Memory Operations](#testing-memory-operations)
+- [This is conceptual - actual execution via Claude Code](#this-is-conceptual-actual-execution-via-claude-code)
+  - [Related Documentation](#related-documentation)
+
+<!-- /TOC -->
+
 # Serena MCP Memory Usage Guide
 
 **Purpose:** Comprehensive guide for using Serena MCP memory operations in the takeoff system
