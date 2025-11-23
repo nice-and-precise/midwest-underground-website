@@ -20,20 +20,99 @@
     <!-- Font Awesome (for icons) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <!-- Styles -->
+    <!-- Main site styles -->
+    <link rel="stylesheet" href="../css/styles.css">
+
+    <!-- Dashboard-specific styles -->
+    <link rel="stylesheet" href="css/dashboard.css">
+
+    <!-- Takeoff-specific styles -->
     <link rel="stylesheet" href="css/takeoff.css">
 </head>
-<body>
-    <!-- Header -->
-    <header class="takeoff-header">
-        <div class="header-content">
-            <h1>📐 Takeoff System</h1>
-            <p class="subtitle">PDF Plan Viewer & Measurement Tools</p>
-        </div>
-    </header>
+<body class="dashboard-body">
 
-    <!-- Main Content -->
-    <main class="takeoff-main">
+  <!-- Dashboard Header -->
+  <header class="dashboard-header">
+    <div class="dashboard-header-left">
+      <button class="sidebar-toggle" id="sidebar-toggle" aria-label="Toggle sidebar">
+        <span class="hamburger"></span>
+      </button>
+      <a href="../index.html" class="dashboard-logo">
+        <img src="../images/logo_horizontal_official.png?v=6" alt="Midwest Underground of Minnesota" class="logo-image">
+      </a>
+    </div>
+
+    <div class="dashboard-header-right">
+      <button
+        id="dark-mode-toggle"
+        class="dark-mode-toggle"
+        aria-label="Toggle dark mode"
+        aria-pressed="false"
+        title="Toggle dark/light mode"
+      >
+        <span class="toggle-circle"></span>
+        <span class="sun-icon">☀️</span>
+        <span class="moon-icon">🌙</span>
+      </button>
+
+      <div class="header-user">
+        <span class="user-name">John Anderson</span>
+        <span class="user-role">Administrator</span>
+      </div>
+
+      <button class="btn-logout" id="logout-btn">Logout</button>
+    </div>
+  </header>
+
+  <div class="dashboard-layout">
+    <!-- Sidebar Navigation -->
+    <aside class="dashboard-sidebar" id="dashboard-sidebar">
+      <nav class="sidebar-nav">
+        <a href="index.html" class="nav-item">
+          <span class="nav-icon">📊</span>
+          <span class="nav-label">Dashboard</span>
+        </a>
+        <a href="projects.html" class="nav-item">
+          <span class="nav-icon">🚧</span>
+          <span class="nav-label">Projects</span>
+        </a>
+        <a href="bore-logs.html" class="nav-item">
+          <span class="nav-icon">🎯</span>
+          <span class="nav-label">Bore Logs</span>
+        </a>
+        <a href="field-reports.html" class="nav-item">
+          <span class="nav-icon">📝</span>
+          <span class="nav-label">Field Reports</span>
+        </a>
+        <a href="takeoff.html" class="nav-item active">
+          <span class="nav-icon">📐</span>
+          <span class="nav-label">Takeoff & Estimating</span>
+        </a>
+        <a href="equipment.html" class="nav-item">
+          <span class="nav-icon">🚜</span>
+          <span class="nav-label">Equipment</span>
+        </a>
+        <a href="financials.html" class="nav-item">
+          <span class="nav-icon">💰</span>
+          <span class="nav-label">Financials</span>
+        </a>
+        <a href="customers.html" class="nav-item">
+          <span class="nav-icon">👥</span>
+          <span class="nav-label">Customers</span>
+        </a>
+        <a href="reports.html" class="nav-item">
+          <span class="nav-icon">📈</span>
+          <span class="nav-label">Reports</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <a href="../index.html" class="sidebar-link">← Back to Website</a>
+      </div>
+    </aside>
+
+    <!-- Main Dashboard Content -->
+    <main class="dashboard-main takeoff-main">
 
         <!-- PDF Upload Zone (visible initially, hidden after upload) -->
         <section id="upload-zone" class="upload-section">
@@ -508,7 +587,12 @@
         </div>
     </div>
 
+    </main>
+  </div>
+
     <!-- JavaScript -->
+    <script src="../js/main.js"></script>
+    <script src="js/dashboard.js"></script>
     <script src="js/pdf-viewer.js"></script>
     <script src="js/measurement-tools.js"></script>
 </body>
