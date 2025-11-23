@@ -5,6 +5,45 @@
  * Provides interactive measurement capabilities using Fabric.js canvas overlay
  * over PDF.js viewer. Supports linear, area, and count measurements with
  * scale calibration for accurate real-world measurements.
+ *
+ * EVENT SYSTEM (Task 12):
+ * -----------------------
+ * This module emits CustomEvents for all measurement lifecycle operations:
+ *
+ * 1. measurement:created - Emitted when a new measurement is created
+ *    - Linear measurement (Task 6)
+ *    - Area measurement (Task 7)
+ *    - Count marker (Task 8)
+ *
+ * 2. measurement:updated - Emitted when a measurement is modified
+ *    - Property changes via properties panel (Task 11)
+ *    - Visual edits (move, reshape) (Task 9)
+ *
+ * 3. measurement:deleted - Emitted when a measurement is deleted (Task 9)
+ *
+ * 4. measurement:selected - Emitted when a measurement is selected (Task 12)
+ *
+ * 5. measurement:deselected - Emitted when selection is cleared (Task 12)
+ *
+ * Event Detail Structure:
+ * {
+ *     type: 'linear|area|count',
+ *     id: 'unique-id',
+ *     label: 'Measurement Label',
+ *     category: 'Category Name',
+ *     color: '#HEX',
+ *     value: number (for linear/area),
+ *     unit: 'ft|ft²' (for linear/area),
+ *     points: [...] (coordinates),
+ *     timestamp: 'ISO-8601',
+ *     page: number
+ * }
+ *
+ * Usage Example (Module 1.3 - Measurement List):
+ * document.addEventListener('measurement:created', (e) => {
+ *     console.log('New measurement:', e.detail);
+ *     // Update measurement list UI
+ * });
  */
 
 // Module state
@@ -1298,10 +1337,8 @@ function finishLinearMeasurement() {
 
         console.log('[Measurement Tools] Linear measurement created:', measurementData);
 
-        // Emit event for future integration (Task 12 - placeholder)
-        document.dispatchEvent(new CustomEvent('measurement:created', {
-            detail: measurementData
-        }));
+        // Task 12: Emit standardized creation event
+        emitMeasurementEvent('measurement:created', measurementData);
 
         // Keep linear tool active for next measurement
         // User can press ESC or click another tool to deactivate
@@ -1782,10 +1819,8 @@ function finishAreaMeasurement() {
             console.warn('[Measurement Tools] Warning: Very small area detected. Polygon may be self-intersecting or very small.');
         }
 
-        // Emit event for future integration (Task 12 - placeholder)
-        document.dispatchEvent(new CustomEvent('measurement:created', {
-            detail: measurementData
-        }));
+        // Task 12: Emit standardized creation event
+        emitMeasurementEvent('measurement:created', measurementData);
 
         // Keep area tool active for next measurement
         console.log('[Measurement Tools] Area measurement complete. Tool remains active.');
@@ -1983,10 +2018,8 @@ function handleCountClick(pointer) {
 
         console.log('[Measurement Tools] Count marker created:', measurementData);
 
-        // Emit event for future integration (Task 12 - placeholder)
-        document.dispatchEvent(new CustomEvent('measurement:created', {
-            detail: measurementData
-        }));
+        // Task 12: Emit standardized creation event
+        emitMeasurementEvent('measurement:created', measurementData);
 
         // Add double-click handler for editing (placeholder for Task 11)
         group.on('mousedblclick', () => {
@@ -2245,10 +2278,8 @@ function handleObjectModified(event) {
                 break;
         }
 
-        // Emit event for future integration
-        document.dispatchEvent(new CustomEvent('measurement:updated', {
-            detail: measurementData
-        }));
+        // Task 12: Emit standardized update event
+        emitMeasurementEvent('measurement:updated', measurementData);
 
         console.log('[Measurement Tools] Task 9: Measurement updated:', measurementData);
 
@@ -2459,14 +2490,16 @@ function updateTextLabelPosition(measurementData, movedObject) {
  */
 function handleSelectionCreated(event) {
     const selectedObject = event.selected[0];
-    
+
     console.log('[Measurement Tools] Task 9: Object selected:', {
         type: selectedObject?.objectType,
         id: selectedObject?.id
     });
 
-    // Optional: Add visual feedback or show properties panel
-    // This is a placeholder for future enhancements
+    // Task 12: Emit measurement:selected event if this is a measurement object
+    if (selectedObject && selectedObject.measurementData) {
+        emitMeasurementSelected(selectedObject.measurementData);
+    }
 }
 
 /**
@@ -2475,8 +2508,8 @@ function handleSelectionCreated(event) {
 function handleSelectionCleared(event) {
     console.log('[Measurement Tools] Task 9: Selection cleared');
 
-    // Optional: Hide properties panel or remove visual feedback
-    // This is a placeholder for future enhancements
+    // Task 12: Emit measurement:deselected event
+    emitMeasurementDeselected();
 }
 
 /**
@@ -2552,12 +2585,152 @@ function deleteSingleMeasurement(fabricObject, currentPage, measurements) {
     // Remove from measurements array
     measurements.splice(measurementIndex, 1);
 
-    // Emit event for future integration
-    document.dispatchEvent(new CustomEvent('measurement:deleted', {
-        detail: measurementData
-    }));
+    // Task 12: Emit standardized delete event
+    emitMeasurementEvent('measurement:deleted', measurementData);
 
     console.log('[Measurement Tools] Task 9: Measurement deleted successfully');
+}
+
+
+// ============================================
+// TASK 12: EVENT EMISSION SYSTEM
+// ============================================
+
+/**
+ * Event Emission System for Measurement Lifecycle
+ *
+ * This system provides a standardized way to emit events for all measurement
+ * CRUD operations, enabling Module 1.3 (Measurement List) and other components
+ * to react to measurement changes.
+ *
+ * Supported Events:
+ * - measurement:created - When a new measurement is created
+ * - measurement:updated - When a measurement is modified
+ * - measurement:deleted - When a measurement is removed
+ * - measurement:selected - When a measurement is selected
+ * - measurement:deselected - When selection is cleared
+ *
+ * Event Detail Structure:
+ * {
+ *     type: 'linear|area|count',
+ *     id: 'unique-id',
+ *     label: 'Measurement Label',
+ *     category: 'Category Name',
+ *     color: '#HEX',
+ *     value: number (for linear/area),
+ *     unit: 'ft|ft²' (for linear/area),
+ *     points: [...] (coordinates),
+ *     timestamp: 'ISO-8601',
+ *     page: number
+ * }
+ */
+
+/**
+ * Emit a measurement lifecycle event
+ * @param {string} eventName - Name of event (measurement:created, etc.)
+ * @param {Object} measurementData - Full measurement data object
+ */
+function emitMeasurementEvent(eventName, measurementData) {
+    try {
+        // Validate event name
+        const validEvents = [
+            'measurement:created',
+            'measurement:updated',
+            'measurement:deleted',
+            'measurement:selected',
+            'measurement:deselected'
+        ];
+
+        if (!validEvents.includes(eventName)) {
+            console.warn(`[Event System] Invalid event name: ${eventName}`);
+            return;
+        }
+
+        // Validate measurement data
+        if (!measurementData || typeof measurementData !== 'object') {
+            console.warn(`[Event System] Invalid measurement data for ${eventName}`);
+            return;
+        }
+
+        // Create standardized event detail
+        const eventDetail = {
+            type: measurementData.type,
+            id: measurementData.id,
+            label: measurementData.label || '',
+            category: measurementData.category || '',
+            color: measurementData.color || '#003B5C',
+            timestamp: measurementData.modified || measurementData.created || new Date().toISOString(),
+            page: measurementData.page || viewerState?.currentPage || 1
+        };
+
+        // Add type-specific fields
+        switch (measurementData.type) {
+            case 'linear':
+                eventDetail.value = measurementData.length;
+                eventDetail.unit = measurementData.unit;
+                eventDetail.points = measurementData.points;
+                break;
+            case 'area':
+                eventDetail.value = measurementData.area;
+                eventDetail.unit = measurementData.unit;
+                eventDetail.points = measurementData.points;
+                break;
+            case 'count':
+                eventDetail.count = measurementData.count;
+                eventDetail.x = measurementData.x;
+                eventDetail.y = measurementData.y;
+                break;
+        }
+
+        // Add notes if present
+        if (measurementData.notes) {
+            eventDetail.notes = measurementData.notes;
+        }
+
+        // Dispatch event
+        const customEvent = new CustomEvent(eventName, {
+            detail: eventDetail,
+            bubbles: true,
+            cancelable: false
+        });
+
+        document.dispatchEvent(customEvent);
+
+        console.log(`[Event System] ${eventName} emitted:`, {
+            type: eventDetail.type,
+            id: eventDetail.id,
+            label: eventDetail.label
+        });
+
+    } catch (error) {
+        console.error(`[Event System] Error emitting ${eventName}:`, error);
+    }
+}
+
+/**
+ * Emit measurement selected event
+ * @param {Object} measurementData - Measurement data object
+ */
+function emitMeasurementSelected(measurementData) {
+    emitMeasurementEvent('measurement:selected', measurementData);
+}
+
+/**
+ * Emit measurement deselected event
+ */
+function emitMeasurementDeselected() {
+    // Create minimal event detail for deselection
+    const eventDetail = {
+        timestamp: new Date().toISOString()
+    };
+
+    document.dispatchEvent(new CustomEvent('measurement:deselected', {
+        detail: eventDetail,
+        bubbles: true,
+        cancelable: false
+    }));
+
+    console.log('[Event System] measurement:deselected emitted');
 }
 
 
@@ -2882,18 +3055,8 @@ function handlePropertiesSave(event) {
     // Render canvas to show changes
     measurementState.fabricCanvas.renderAll();
 
-    // Emit measurement:updated event
-    document.dispatchEvent(new CustomEvent('measurement:updated', {
-        detail: {
-            type: data.type,
-            id: data.id,
-            label: data.label,
-            category: data.category,
-            color: data.color,
-            notes: data.notes,
-            modified: data.modified
-        }
-    }));
+    // Task 12: Emit standardized update event
+    emitMeasurementEvent('measurement:updated', data);
 
     console.log('[Properties Panel] Changes saved successfully');
 
