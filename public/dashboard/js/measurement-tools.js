@@ -343,6 +343,14 @@ function attachToolListeners() {
         measurementState.fabricCanvas.on('mouse:down', handleCanvasMouseDown);
         measurementState.fabricCanvas.on('mouse:move', handleCanvasMouseMove);
         measurementState.fabricCanvas.on('mouse:up', handleCanvasMouseUp);
+        
+        // Task 9: Attach event listeners for selection and editing
+        measurementState.fabricCanvas.on('object:modified', handleObjectModified);
+        measurementState.fabricCanvas.on('selection:created', handleSelectionCreated);
+        measurementState.fabricCanvas.on('selection:cleared', handleSelectionCleared);
+        measurementState.fabricCanvas.on('object:moving', handleObjectMoving);
+        
+        console.log('[Measurement Tools] Task 9: Selection and editing event listeners attached');
     }
 
     // Attach keyboard event listeners
@@ -1050,26 +1058,30 @@ function finishLinearMeasurement() {
         // Get category color
         const categoryColor = getCategoryColor(category);
 
-        // Create final polyline
+        // Create final polyline - Task 9: Enable selection and editing
         const fabricPoints = points.map(p => ({ x: p.x, y: p.y }));
         const polyline = new fabric.Polyline(fabricPoints, {
             stroke: categoryColor,
             strokeWidth: 3,
             fill: null,
-            selectable: true,
+            selectable: true,         // Enable selection (Task 9)
             evented: true,
             objectType: 'linear-measurement',
             objectCaching: false,
-            hasControls: false,
+            hasControls: true,        // Enable vertex control points (Task 9)
             hasBorders: true,
-            lockMovementX: true,
-            lockMovementY: true
+            lockMovementX: false,     // Allow movement (Task 9)
+            lockMovementY: false,     // Allow movement (Task 9)
+            cornerStyle: 'circle',    // Visual style for control points
+            cornerSize: 6,
+            transparentCorners: false,
+            cornerColor: '#00ff00'
         });
 
         // Calculate midpoint for text label
         const midpoint = calculatePolylineMidpoint(points);
 
-        // Create text label
+        // Create text label - Task 9: Make text moveable with measurement
         const labelText = `${realLength.toFixed(1)} ${scaleData.units}`;
         const text = new fabric.Text(labelText, {
             left: midpoint.x,
@@ -1079,13 +1091,11 @@ function finishLinearMeasurement() {
             fill: '#FFFFFF',
             backgroundColor: 'rgba(0, 0, 0, 0.7)',
             padding: 4,
-            selectable: true,
-            evented: true,
+            selectable: false,        // Text not independently selectable (Task 9)
+            evented: false,
             objectType: 'linear-text',
             hasControls: false,
-            hasBorders: true,
-            lockMovementX: true,
-            lockMovementY: true
+            hasBorders: false
         });
 
         // Clean up temporary objects
@@ -1463,20 +1473,24 @@ function finishAreaMeasurement() {
         // Get category colors
         const categoryColors = getAreaCategoryColors(category);
 
-        // Create final polygon
+        // Create final polygon - Task 9: Enable selection and editing
         const fabricPoints = vertices.map(p => ({ x: p.x, y: p.y }));
         const polygon = new fabric.Polygon(fabricPoints, {
             fill: categoryColors.fill,
             stroke: categoryColors.stroke,
             strokeWidth: 3,
-            selectable: true,
+            selectable: true,         // Enable selection (Task 9)
             evented: true,
             objectType: 'area-measurement',
             objectCaching: false,
-            hasControls: false,
+            hasControls: true,        // Enable vertex control points (Task 9)
             hasBorders: true,
-            lockMovementX: true,
-            lockMovementY: true
+            lockMovementX: false,     // Allow movement (Task 9)
+            lockMovementY: false,     // Allow movement (Task 9)
+            cornerStyle: 'circle',    // Visual style for control points
+            cornerSize: 6,
+            transparentCorners: false,
+            cornerColor: '#00ff00'
         });
 
         // Calculate centroid for text label
@@ -1488,7 +1502,7 @@ function finishAreaMeasurement() {
             maximumFractionDigits: 1
         });
 
-        // Create text label
+        // Create text label - Task 9: Make text moveable with measurement
         const labelText = `${formattedArea} sq ${scaleData.units}`;
         const text = new fabric.Text(labelText, {
             left: centroid.x,
@@ -1500,13 +1514,11 @@ function finishAreaMeasurement() {
             padding: 4,
             originX: 'center',
             originY: 'center',
-            selectable: true,
-            evented: true,
+            selectable: false,        // Text not independently selectable (Task 9)
+            evented: false,
             objectType: 'area-text',
             hasControls: false,
-            hasBorders: true,
-            lockMovementX: true,
-            lockMovementY: true
+            hasBorders: false
         });
 
         // Clean up temporary objects
@@ -1703,13 +1715,13 @@ function handleCountClick(pointer) {
             originY: 'center'
         });
 
-        // Create group (circle + text)
+        // Create group (circle + text) - Task 9: Enable selection and movement
         const group = new fabric.Group([circle, text], {
             left: pointer.x,
             top: pointer.y,
-            selectable: true,     // Can be moved
+            selectable: true,     // Can be selected and moved (Task 9)
             hasControls: false,   // No resize handles
-            hasBorders: false,    // No border when selected
+            hasBorders: true,     // Show border when selected (Task 9)
             lockRotation: true,   // Can't rotate
             objectType: 'count-marker',
             countCategory: category,
@@ -1730,7 +1742,7 @@ function handleCountClick(pointer) {
             position: { x: pointer.x, y: pointer.y },
             count: count,
             created: new Date().toISOString(),
-            fabricObjects: [group]
+            fabricObjects: [group.id]
         };
 
         // Store measurement data
@@ -1845,6 +1857,47 @@ function handleKeyDown(event) {
             finishAreaMeasurement();
         }
     }
+
+    // Task 9: Delete or Backspace key - delete selected measurement(s)
+    if (event.key === 'Delete' || event.key === 'Backspace') {
+        // Only delete if no tool is active (not in drawing mode)
+        if (!measurementState.activeTool || measurementState.activeTool === null) {
+            const activeObject = measurementState.fabricCanvas?.getActiveObject();
+            
+            if (activeObject) {
+                // Prevent default backspace behavior (navigation)
+                event.preventDefault();
+                
+                // Only delete measurement objects
+                const isMeasurement = activeObject.objectType && (
+                    activeObject.objectType.includes('measurement') || 
+                    activeObject.objectType === 'count-marker'
+                );
+                
+                // For multiple selection
+                const isMultipleSelection = activeObject.type === 'activeSelection';
+                const hasMeasurements = isMultipleSelection && 
+                    activeObject.getObjects().some(obj => 
+                        obj.objectType && (
+                            obj.objectType.includes('measurement') || 
+                            obj.objectType === 'count-marker'
+                        )
+                    );
+
+                if (isMeasurement || hasMeasurements) {
+                    // Show confirmation dialog
+                    const confirmMessage = isMultipleSelection 
+                        ? 'Delete selected measurements?' 
+                        : 'Delete this measurement?';
+                    
+                    if (confirm(confirmMessage)) {
+                        console.log('[Measurement Tools] Task 9: Deleting selected measurement(s)');
+                        handleDeleteMeasurement(activeObject);
+                    }
+                }
+            }
+        }
+    }
 }
 
 /**
@@ -1880,6 +1933,404 @@ function cleanupCurrentMeasurement() {
     measurementState.fabricCanvas.renderAll();
 
     console.log('[Measurement Tools] Cleanup complete');
+}
+
+
+// ============================================================================
+// Task 9: Selection and Editing Event Handlers
+// ============================================================================
+
+/**
+ * Handle object moving event - update text label position during drag
+ * This provides real-time feedback as measurements are moved
+ */
+function handleObjectMoving(event) {
+    const movedObject = event.target;
+    
+    // Only process measurement objects
+    if (!movedObject.objectType || 
+        (!movedObject.objectType.includes('measurement') && 
+         movedObject.objectType !== 'count-marker')) {
+        return;
+    }
+
+    // Update associated text label position in real-time
+    const currentPage = viewerState?.currentPage || 1;
+    const measurements = measurementState.measurements[currentPage]?.data || [];
+    
+    // Find the measurement data associated with this object
+    for (const measurement of measurements) {
+        if (measurement.fabricObjects.includes(movedObject.id)) {
+            updateTextLabelPosition(measurement, movedObject);
+            break;
+        }
+    }
+}
+
+/**
+ * Handle object modified event - recalculate measurements after drag or reshape
+ * Fires when user finishes dragging or reshaping a measurement
+ */
+function handleObjectModified(event) {
+    try {
+        const modifiedObject = event.target;
+        
+        console.log('[Measurement Tools] Task 9: Object modified:', {
+            type: modifiedObject.objectType,
+            id: modifiedObject.id
+        });
+
+        // Only process measurement objects
+        if (!modifiedObject.objectType || 
+            (!modifiedObject.objectType.includes('measurement') && 
+             modifiedObject.objectType !== 'count-marker')) {
+            return;
+        }
+
+        const currentPage = viewerState?.currentPage || 1;
+        const scaleData = measurementState.scaleData[currentPage];
+        const measurements = measurementState.measurements[currentPage]?.data || [];
+
+        // Find the measurement data associated with this modified object
+        let measurementData = null;
+        for (const measurement of measurements) {
+            if (measurement.fabricObjects.includes(modifiedObject.id)) {
+                measurementData = measurement;
+                break;
+            }
+        }
+
+        if (!measurementData) {
+            console.warn('[Measurement Tools] Could not find measurement data for modified object');
+            return;
+        }
+
+        // Handle different measurement types
+        switch (measurementData.type) {
+            case 'linear':
+                updateLinearMeasurement(measurementData, modifiedObject, scaleData);
+                break;
+            case 'area':
+                updateAreaMeasurement(measurementData, modifiedObject, scaleData);
+                break;
+            case 'count':
+                updateCountMeasurement(measurementData, modifiedObject);
+                break;
+        }
+
+        // Emit event for future integration
+        document.dispatchEvent(new CustomEvent('measurement:updated', {
+            detail: measurementData
+        }));
+
+        console.log('[Measurement Tools] Task 9: Measurement updated:', measurementData);
+
+    } catch (error) {
+        console.error('[Measurement Tools] Error handling object modification:', error);
+    }
+}
+
+/**
+ * Update linear measurement after modification
+ */
+function updateLinearMeasurement(measurementData, polyline, scaleData) {
+    try {
+        // Extract updated points from polyline
+        const fabricPoints = polyline.points;
+        const matrix = polyline.calcTransformMatrix();
+        
+        // Transform points to canvas coordinates
+        const updatedPoints = fabricPoints.map(pt => {
+            const point = fabric.util.transformPoint(
+                { x: pt.x, y: pt.y },
+                matrix
+            );
+            return { x: point.x, y: point.y };
+        });
+
+        // Recalculate length
+        let totalPixelLength = 0;
+        for (let i = 0; i < updatedPoints.length - 1; i++) {
+            const dx = updatedPoints[i + 1].x - updatedPoints[i].x;
+            const dy = updatedPoints[i + 1].y - updatedPoints[i].y;
+            totalPixelLength += Math.sqrt(dx * dx + dy * dy);
+        }
+
+        const realLength = totalPixelLength / scaleData.ratio;
+
+        // Update measurement data
+        measurementData.points = updatedPoints;
+        measurementData.pixelLength = totalPixelLength;
+        measurementData.realLength = realLength;
+
+        // Update text label
+        const textObject = findTextObjectForMeasurement(measurementData);
+        if (textObject) {
+            const labelText = `${realLength.toFixed(1)} ${scaleData.units}`;
+            textObject.set('text', labelText);
+            
+            // Reposition text at midpoint
+            const midpoint = calculatePolylineMidpoint(updatedPoints);
+            textObject.set({
+                left: midpoint.x,
+                top: midpoint.y - 20
+            });
+        }
+
+        measurementState.fabricCanvas.renderAll();
+        
+        console.log('[Measurement Tools] Linear measurement updated:', {
+            realLength: realLength.toFixed(2),
+            units: scaleData.units
+        });
+
+    } catch (error) {
+        console.error('[Measurement Tools] Error updating linear measurement:', error);
+    }
+}
+
+/**
+ * Update area measurement after modification
+ */
+function updateAreaMeasurement(measurementData, polygon, scaleData) {
+    try {
+        // Extract updated vertices from polygon
+        const fabricPoints = polygon.points;
+        const matrix = polygon.calcTransformMatrix();
+        
+        // Transform points to canvas coordinates
+        const updatedVertices = fabricPoints.map(pt => {
+            const point = fabric.util.transformPoint(
+                { x: pt.x, y: pt.y },
+                matrix
+            );
+            return { x: point.x, y: point.y };
+        });
+
+        // Recalculate area using shoelace formula
+        const shoelaceArea = Math.abs(
+            updatedVertices.reduce((sum, v, i, arr) => {
+                const next = arr[(i + 1) % arr.length];
+                return sum + (v.x * next.y - next.x * v.y);
+            }, 0) / 2
+        );
+
+        const pixelArea = shoelaceArea;
+        const realArea = pixelArea / (scaleData.ratio * scaleData.ratio);
+
+        // Recalculate perimeter
+        let perimeter = 0;
+        for (let i = 0; i < updatedVertices.length; i++) {
+            const next = updatedVertices[(i + 1) % updatedVertices.length];
+            const dx = next.x - updatedVertices[i].x;
+            const dy = next.y - updatedVertices[i].y;
+            perimeter += Math.sqrt(dx * dx + dy * dy);
+        }
+        const realPerimeter = perimeter / scaleData.ratio;
+
+        // Update measurement data
+        measurementData.vertices = updatedVertices;
+        measurementData.pixelArea = pixelArea;
+        measurementData.realArea = realArea;
+        measurementData.perimeter = realPerimeter;
+
+        // Update text label
+        const textObject = findTextObjectForMeasurement(measurementData);
+        if (textObject) {
+            const formattedArea = realArea.toLocaleString('en-US', {
+                minimumFractionDigits: 1,
+                maximumFractionDigits: 1
+            });
+            const labelText = `${formattedArea} sq ${scaleData.units}`;
+            textObject.set('text', labelText);
+            
+            // Reposition text at centroid
+            const centroid = calculatePolygonCentroid(updatedVertices);
+            textObject.set({
+                left: centroid.x,
+                top: centroid.y
+            });
+        }
+
+        measurementState.fabricCanvas.renderAll();
+        
+        console.log('[Measurement Tools] Area measurement updated:', {
+            realArea: realArea.toFixed(2),
+            units: `sq ${scaleData.units}`
+        });
+
+    } catch (error) {
+        console.error('[Measurement Tools] Error updating area measurement:', error);
+    }
+}
+
+/**
+ * Update count measurement after modification (position only)
+ */
+function updateCountMeasurement(measurementData, group) {
+    try {
+        // Update position
+        measurementData.position = {
+            x: group.left,
+            y: group.top
+        };
+
+        console.log('[Measurement Tools] Count marker position updated:', measurementData.position);
+
+    } catch (error) {
+        console.error('[Measurement Tools] Error updating count measurement:', error);
+    }
+}
+
+/**
+ * Find text label object associated with a measurement
+ */
+function findTextObjectForMeasurement(measurementData) {
+    const textObjectId = measurementData.fabricObjects[1]; // Text is always second in array
+    const objects = measurementState.fabricCanvas.getObjects();
+    return objects.find(obj => obj.id === textObjectId);
+}
+
+/**
+ * Update text label position during object movement
+ */
+function updateTextLabelPosition(measurementData, movedObject) {
+    const textObject = findTextObjectForMeasurement(measurementData);
+    if (!textObject) return;
+
+    if (measurementData.type === 'linear') {
+        // For linear, text follows polyline movement
+        const fabricPoints = movedObject.points;
+        const matrix = movedObject.calcTransformMatrix();
+        const transformedPoints = fabricPoints.map(pt => {
+            return fabric.util.transformPoint({ x: pt.x, y: pt.y }, matrix);
+        });
+        const midpoint = calculatePolylineMidpoint(transformedPoints);
+        textObject.set({
+            left: midpoint.x,
+            top: midpoint.y - 20
+        });
+    } else if (measurementData.type === 'area') {
+        // For area, text follows polygon movement
+        const fabricPoints = movedObject.points;
+        const matrix = movedObject.calcTransformMatrix();
+        const transformedPoints = fabricPoints.map(pt => {
+            return fabric.util.transformPoint({ x: pt.x, y: pt.y }, matrix);
+        });
+        const centroid = calculatePolygonCentroid(transformedPoints);
+        textObject.set({
+            left: centroid.x,
+            top: centroid.y
+        });
+    }
+    
+    measurementState.fabricCanvas.renderAll();
+}
+
+/**
+ * Handle selection created event
+ */
+function handleSelectionCreated(event) {
+    const selectedObject = event.selected[0];
+    
+    console.log('[Measurement Tools] Task 9: Object selected:', {
+        type: selectedObject?.objectType,
+        id: selectedObject?.id
+    });
+
+    // Optional: Add visual feedback or show properties panel
+    // This is a placeholder for future enhancements
+}
+
+/**
+ * Handle selection cleared event
+ */
+function handleSelectionCleared(event) {
+    console.log('[Measurement Tools] Task 9: Selection cleared');
+
+    // Optional: Hide properties panel or remove visual feedback
+    // This is a placeholder for future enhancements
+}
+
+/**
+ * Delete selected measurement(s)
+ * Called when Delete or Backspace key is pressed
+ */
+function handleDeleteMeasurement(fabricObject) {
+    try {
+        const currentPage = viewerState?.currentPage || 1;
+        const measurements = measurementState.measurements[currentPage]?.data || [];
+
+        // Handle multiple selection (ActiveSelection)
+        if (fabricObject.type === 'activeSelection') {
+            const objects = fabricObject.getObjects();
+            console.log('[Measurement Tools] Task 9: Deleting multiple selections:', objects.length);
+            
+            // Delete each selected measurement
+            for (const obj of objects) {
+                deleteSingleMeasurement(obj, currentPage, measurements);
+            }
+        } else {
+            // Single object deletion
+            deleteSingleMeasurement(fabricObject, currentPage, measurements);
+        }
+
+        measurementState.fabricCanvas.discardActiveObject();
+        measurementState.fabricCanvas.renderAll();
+
+    } catch (error) {
+        console.error('[Measurement Tools] Error deleting measurement:', error);
+        showError('Failed to delete measurement. Please try again.');
+    }
+}
+
+/**
+ * Delete a single measurement object
+ */
+function deleteSingleMeasurement(fabricObject, currentPage, measurements) {
+    // Only delete measurement objects
+    if (!fabricObject.objectType || 
+        (!fabricObject.objectType.includes('measurement') && 
+         fabricObject.objectType !== 'count-marker')) {
+        return;
+    }
+
+    // Find the measurement data
+    const measurementIndex = measurements.findIndex(m => 
+        m.fabricObjects.includes(fabricObject.id)
+    );
+
+    if (measurementIndex === -1) {
+        console.warn('[Measurement Tools] Could not find measurement data for object');
+        return;
+    }
+
+    const measurementData = measurements[measurementIndex];
+    
+    console.log('[Measurement Tools] Task 9: Deleting measurement:', {
+        type: measurementData.type,
+        id: measurementData.id,
+        label: measurementData.label
+    });
+
+    // Remove all associated Fabric objects
+    const allObjects = measurementState.fabricCanvas.getObjects();
+    for (const objId of measurementData.fabricObjects) {
+        const obj = allObjects.find(o => o.id === objId);
+        if (obj) {
+            measurementState.fabricCanvas.remove(obj);
+        }
+    }
+
+    // Remove from measurements array
+    measurements.splice(measurementIndex, 1);
+
+    // Emit event for future integration
+    document.dispatchEvent(new CustomEvent('measurement:deleted', {
+        detail: measurementData
+    }));
+
+    console.log('[Measurement Tools] Task 9: Measurement deleted successfully');
 }
 
 // Export for global access
