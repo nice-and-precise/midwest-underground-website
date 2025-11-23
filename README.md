@@ -708,14 +708,21 @@ A comprehensive business intelligence dashboard providing real-time insights int
 - **Visualization:** Progress bars, status badges
 - **Export:** CSV/PDF export functionality
 
-#### 3. Financial Management ([dashboard/financials.html](dashboard/financials.html))
+#### 3. Takeoff & Estimating System ([dashboard/takeoff.html](public/dashboard/takeoff.html))
+- **PDF Viewer:** Upload and view construction plan PDFs
+- **Measurement Tools:** Linear, area, and count measurements
+- **Quantity Calculations:** Real-time quantity takeoffs
+- **Export:** CSV and Excel export with multi-page support
+- **Status:** ✅ Production Ready (93.5% complete, Module 1.3 tested)
+
+#### 4. Financial Management ([dashboard/financials.html](dashboard/financials.html))
 - **KPIs:** Revenue, Profit, Margin, Cash, A/R Outstanding
 - **Charts:** Revenue & Profit trend (12-month), Expense breakdown
 - **Cash Flow:** Current position with runway calculation
 - **A/R Aging:** Outstanding invoices with aging categories
 - **Date Filtering:** Preset periods + custom date ranges
 
-#### 4. Customer Management ([dashboard/customers.html](dashboard/customers.html))
+#### 5. Customer Management ([dashboard/customers.html](dashboard/customers.html))
 - **KPIs:** 13 customers, $14.5M lifetime value, 4.8 avg satisfaction
 - **Charts:** Customer type distribution, Top 5 by LTV
 - **Filtering:** Type, credit rating, search
@@ -723,7 +730,7 @@ A comprehensive business intelligence dashboard providing real-time insights int
 - **Contact Info:** Full customer details and project history
 - **CMS Editing:** Full CRUD operations (Create, Read, Update, Delete customers)
 
-#### 5. Equipment Tracking ([dashboard/equipment.html](dashboard/equipment.html))
+#### 6. Equipment Tracking ([dashboard/equipment.html](dashboard/equipment.html))
 - **KPIs:** 8 equipment items, 78% average utilization, $2.1M total value
 - **Charts:** Utilization rates, Equipment value breakdown
 - **Filtering:** Status, type, search
@@ -731,7 +738,7 @@ A comprehensive business intelligence dashboard providing real-time insights int
 - **Status Badges:** Active, Under Maintenance, Available indicators
 - **CMS Editing:** Full CRUD operations for equipment management
 
-#### 6. Reports & Analytics ([dashboard/reports.html](dashboard/reports.html))
+#### 7. Reports & Analytics ([dashboard/reports.html](dashboard/reports.html))
 - **Report Types:** Financial, Project, Customer, Equipment reports
 - **Date Filtering:** Flexible date range selection
 - **Export:** CSV and PDF export options
@@ -757,12 +764,13 @@ A comprehensive business intelligence dashboard providing real-time insights int
 ### Quick Access
 
 ```
-Dashboard:  http://localhost:8000/dashboard/
-Projects:   http://localhost:8000/dashboard/projects.html
-Financials: http://localhost:8000/dashboard/financials.html
-Customers:  http://localhost:8000/dashboard/customers.html
-Equipment:  http://localhost:8000/dashboard/equipment.html
-Reports:    http://localhost:8000/dashboard/reports.html
+Dashboard:  http://localhost:8000/public/dashboard/
+Projects:   http://localhost:8000/public/dashboard/projects.html
+Takeoff:    http://localhost:8000/public/dashboard/takeoff.html
+Financials: http://localhost:8000/public/dashboard/financials.html
+Customers:  http://localhost:8000/public/dashboard/customers.html
+Equipment:  http://localhost:8000/public/dashboard/equipment.html
+Reports:    http://localhost:8000/public/dashboard/reports.html
 
 Demo Login:
 - Admin: admin / MidwestUnderground2025!

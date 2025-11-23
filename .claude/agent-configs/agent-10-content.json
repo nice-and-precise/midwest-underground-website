@@ -1,0 +1,26 @@
+{
+  "filesystem": {
+    "allowWrite": [
+      "src/content/**",
+      "src/app/api/content/**",
+      "src/components/admin/ContentEditor.tsx",
+      "public/images/**",
+      "public/uploads/**",
+      "prisma/seed-data/**",
+      ".serena/memories/agent-10-status.yml"
+    ],
+    "denyWrite": [
+      "src/app/(auth)/**",
+      "src/lib/auth/**",
+      "prisma/schema.prisma",
+      ".env*"
+    ]
+  },
+  "network": {
+    "allowedDomains": [
+      "localhost",
+      "supabase.co",
+      "*.supabase.co"
+    ]
+  }
+}

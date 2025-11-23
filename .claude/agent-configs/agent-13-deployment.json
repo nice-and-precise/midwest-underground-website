@@ -1,0 +1,29 @@
+{
+  "filesystem": {
+    "allowWrite": [
+      ".github/workflows/**",
+      "netlify.toml",
+      "vercel.json",
+      "scripts/deploy/**",
+      "scripts/migrate/**",
+      ".serena/memories/agent-13-status.yml"
+    ],
+    "denyWrite": [
+      "src/**",
+      "prisma/schema.prisma",
+      ".env"
+    ]
+  },
+  "network": {
+    "allowedDomains": [
+      "github.com",
+      "api.github.com",
+      "netlify.com",
+      "api.netlify.com",
+      "vercel.com",
+      "api.vercel.com",
+      "supabase.com",
+      "api.supabase.com"
+    ]
+  }
+}

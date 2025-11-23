@@ -1,0 +1,98 @@
+{
+  "network": {
+    "allowedDomains": [
+      "github.com",
+      "*.github.com",
+      "api.github.com",
+      "raw.githubusercontent.com",
+      "supabase.co",
+      "*.supabase.co",
+      "netlify.com",
+      "*.netlify.app",
+      "npmjs.org",
+      "registry.npmjs.org",
+      "playwright.dev",
+      "fonts.googleapis.com",
+      "fonts.gstatic.com",
+      "cdnjs.cloudflare.com",
+      "unpkg.com",
+      "localhost",
+      "127.0.0.1",
+      "google.com",
+      "google-analytics.com",
+      "googletagmanager.com",
+      "pagespeed.web.dev"
+    ],
+    "deniedDomains": [],
+    "allowUnixSockets": [],
+    "allowLocalBinding": true
+  },
+  "filesystem": {
+    "denyRead": [
+      "~/.ssh",
+      "~/.aws",
+      "~/.config",
+      ".env.local",
+      ".env.production",
+      "node_modules/**/.env*",
+      ".git/config"
+    ],
+    "allowWrite": [
+      ".",
+      "src/**",
+      "prisma/migrations/**",
+      "prisma/dev.db",
+      "prisma/test.db",
+      "prisma/seed-data/**",
+      "public/**",
+      ".claude/**",
+      ".serena/**",
+      "tests/**",
+      "docs/**",
+      "*.md",
+      ".github/workflows/**",
+      "scripts/**"
+    ],
+    "denyWrite": [
+      ".env",
+      ".env.production",
+      "package.json",
+      "package-lock.json",
+      "tsconfig.json",
+      ".git/**"
+    ]
+  },
+  "ignoreViolations": {
+    "*": [
+      "/usr/bin",
+      "/usr/local/bin",
+      "/System",
+      "/Library",
+      "/private/tmp",
+      "/tmp"
+    ],
+    "npm": [
+      "/private/tmp",
+      "node_modules",
+      ".npm"
+    ],
+    "playwright": [
+      "/tmp/playwright*",
+      "~/.cache/ms-playwright"
+    ],
+    "prisma": [
+      "node_modules/.prisma",
+      "node_modules/@prisma"
+    ],
+    "browsermcp": [
+      "/System/Library/Fonts",
+      "/Library/Fonts",
+      "~/Library/Caches"
+    ],
+    "git": [
+      ".git/objects",
+      ".git/refs"
+    ]
+  },
+  "enableWeakerNestedSandbox": false
+}
