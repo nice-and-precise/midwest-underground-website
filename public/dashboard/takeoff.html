@@ -134,6 +134,41 @@
                     </button>
                 </div>
 
+                <!-- Measurement Tools Controls -->
+                <div class="control-group measurement-tools">
+                    <button id="tool-scale" class="btn-control btn-tool" title="Set Scale - Calibrate measurements" data-tool="scale">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="3" y1="12" x2="21" y2="12"></line>
+                            <line x1="3" y1="8" x2="3" y2="16"></line>
+                            <line x1="21" y1="8" x2="21" y2="16"></line>
+                        </svg>
+                        <span class="btn-label">Scale</span>
+                    </button>
+                    <button id="tool-linear" class="btn-control btn-tool" title="Linear Measurement - Measure distances" data-tool="linear" disabled>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="4 20 20 4"></polyline>
+                            <circle cx="4" cy="20" r="2"></circle>
+                            <circle cx="20" cy="4" r="2"></circle>
+                        </svg>
+                        <span class="btn-label">Linear</span>
+                    </button>
+                    <button id="tool-area" class="btn-control btn-tool" title="Area Measurement - Measure areas" data-tool="area" disabled>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+                            <polyline points="2 17 12 22 22 17"></polyline>
+                            <polyline points="2 12 12 17 22 12"></polyline>
+                        </svg>
+                        <span class="btn-label">Area</span>
+                    </button>
+                    <button id="tool-count" class="btn-control btn-tool" title="Count Marker - Add numbered markers" data-tool="count">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <text x="12" y="16" text-anchor="middle" font-size="12" fill="currentColor" stroke="none">1</text>
+                        </svg>
+                        <span class="btn-label">Count</span>
+                    </button>
+                </div>
+
             </div>
 
             <!-- Canvas Container -->
@@ -166,6 +201,49 @@
             <span class="error-icon">⚠️</span>
             <span id="error-text" class="error-text"></span>
             <button id="error-close" class="error-close">&times;</button>
+        </div>
+    </div>
+
+    <!-- Scale Calibration Modal -->
+    <div id="scale-modal" class="scale-modal">
+        <div class="scale-modal-content">
+            <h3>Set Scale</h3>
+            <p style="margin: 0 0 1rem 0; color: #666; font-size: 0.875rem;">
+                Click two points on the PDF to measure the distance, then enter the real-world measurement.
+            </p>
+            <form id="scale-form" class="scale-modal-form">
+                <div class="form-group">
+                    <label for="scale-distance">Real-World Distance *</label>
+                    <input
+                        type="number"
+                        id="scale-distance"
+                        min="0.01"
+                        step="0.01"
+                        required
+                        placeholder="e.g., 100"
+                        aria-label="Enter real-world distance"
+                    />
+                </div>
+                <div class="form-group">
+                    <label for="scale-units">Units *</label>
+                    <select id="scale-units" required aria-label="Select measurement units">
+                        <option value="feet">Feet</option>
+                        <option value="meters">Meters</option>
+                        <option value="inches">Inches</option>
+                        <option value="yards">Yards</option>
+                        <option value="miles">Miles</option>
+                        <option value="kilometers">Kilometers</option>
+                    </select>
+                </div>
+                <div class="modal-buttons">
+                    <button type="button" id="scale-cancel" class="btn-modal btn-modal-secondary">
+                        Cancel
+                    </button>
+                    <button type="submit" class="btn-modal btn-modal-primary">
+                        Set Scale
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 
