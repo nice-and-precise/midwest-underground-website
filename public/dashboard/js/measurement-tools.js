@@ -18,8 +18,11 @@ const measurementState = {
     isPanning: false,            // Flag indicating if user is panning
     currentPoints: [],           // Points for current measurement being drawn
     counters: {},                // Auto-increment counters for count markers by category and page
+    activeCountCategory: null,   // Currently selected category for count tool
     undoStack: [],               // Stack for undo operations (per page)
-    redoStack: []                // Stack for redo operations (per page)
+    redoStack: [],               // Stack for redo operations (per page)
+    lastClickTime: 0,            // Track last click time for double-click detection
+    tempPreviewLine: null        // Temporary preview line for linear tool
 };
 
 /**
@@ -330,6 +333,7 @@ function attachToolListeners() {
     if (countBtn) {
         countBtn.addEventListener('click', () => {
             console.log('[Measurement Tools] Count tool button clicked');
+            // Count tool doesn't require scale calibration
             activateTool('count');
         });
     }
@@ -377,9 +381,26 @@ function activateTool(toolName) {
     // Update tool button states (enable/disable based on scale)
     updateToolButtonStates();
 
+    // If count tool activated, prompt for category
+    if (toolName === 'count') {
+        const category = promptForCountCategory();
+        if (!category) {
+            console.log('[Measurement Tools] Count tool cancelled - no category selected');
+            activateTool(null);
+            return;
+        }
+        measurementState.activeCountCategory = category;
+        console.log('[Measurement Tools] Count tool active - category:', category);
+    }
+
     // If scale tool activated, show instructions
     if (toolName === 'scale') {
         console.log('[Measurement Tools] Scale tool active - click two points to set scale');
+    }
+
+    // Clear count category when deactivating count tool
+    if (toolName !== 'count') {
+        measurementState.activeCountCategory = null;
     }
 }
 
@@ -474,16 +495,13 @@ function handleCanvasMouseDown(event) {
             handleScaleClick(pointer);
             break;
         case 'linear':
-            // To be implemented in future tasks
-            console.log('[Measurement Tools] Linear tool - to be implemented');
+            handleLinearClick(pointer);
             break;
         case 'area':
-            // To be implemented in future tasks
-            console.log('[Measurement Tools] Area tool - to be implemented');
+            handleAreaClick(pointer);
             break;
         case 'count':
-            // To be implemented in future tasks
-            console.log('[Measurement Tools] Count tool - to be implemented');
+            handleCountClick(pointer);
             break;
     }
 }
@@ -493,11 +511,23 @@ function handleCanvasMouseDown(event) {
  * Updates temporary preview objects during drawing
  */
 function handleCanvasMouseMove(event) {
-    if (!measurementState.activeTool || !measurementState.isDrawing) {
+    const pointer = measurementState.fabricCanvas.getPointer(event.e);
+
+    // Handle linear tool preview even when not isDrawing
+    if (measurementState.activeTool === 'linear' && measurementState.currentPoints.length > 0) {
+        updateLinearPreview(pointer);
         return;
     }
 
-    const pointer = measurementState.fabricCanvas.getPointer(event.e);
+    // Handle area tool preview even when not isDrawing
+    if (measurementState.activeTool === 'area' && measurementState.currentPoints.length > 0) {
+        updateAreaPreview(pointer);
+        return;
+    }
+
+    if (!measurementState.activeTool || !measurementState.isDrawing) {
+        return;
+    }
 
     // Handle based on active tool
     switch (measurementState.activeTool) {
@@ -769,8 +799,1021 @@ function handleScaleFormSubmit() {
 }
 
 /**
+ * Handle linear measurement click
+ * Collects points for polyline measurement
+ * First click starts the line, subsequent clicks add vertices
+ * Double-click or Enter key finishes the line
+ */
+function handleLinearClick(pointer) {
+    const currentPage = viewerState?.currentPage || 1;
+    const currentTime = Date.now();
+
+    // Check for double-click (within 300ms of last click)
+    const isDoubleClick = (currentTime - measurementState.lastClickTime) < 300;
+    measurementState.lastClickTime = currentTime;
+
+    // If double-click and we have at least 2 points, finish the measurement
+    if (isDoubleClick && measurementState.currentPoints.length >= 2) {
+        console.log('[Measurement Tools] Double-click detected - finishing linear measurement');
+        finishLinearMeasurement();
+        return;
+    }
+
+    // Check for snap to existing endpoints
+    const snappedPoint = findSnapPoint(pointer);
+    const pointToAdd = snappedPoint || pointer;
+
+    // Add point to current points array
+    measurementState.currentPoints.push({ x: pointToAdd.x, y: pointToAdd.y });
+
+    console.log('[Measurement Tools] Linear point added:', pointToAdd,
+        `(Total points: ${measurementState.currentPoints.length})`);
+
+    // First click - create first point marker
+    if (measurementState.currentPoints.length === 1) {
+        measurementState.isDrawing = true;
+
+        // Create point marker
+        const circle = new fabric.Circle({
+            left: pointToAdd.x - 4,
+            top: pointToAdd.y - 4,
+            radius: 4,
+            fill: '#FF6B35',
+            stroke: '#003B5C',
+            strokeWidth: 2,
+            selectable: false,
+            evented: false,
+            objectType: 'linear-temp'
+        });
+
+        measurementState.fabricCanvas.add(circle);
+        measurementState.fabricCanvas.renderAll();
+    } else {
+        // Subsequent clicks - update the polyline
+        updateLinearPolyline();
+
+        // Add point marker
+        const circle = new fabric.Circle({
+            left: pointToAdd.x - 4,
+            top: pointToAdd.y - 4,
+            radius: 4,
+            fill: '#FF6B35',
+            stroke: '#003B5C',
+            strokeWidth: 2,
+            selectable: false,
+            evented: false,
+            objectType: 'linear-temp'
+        });
+
+        measurementState.fabricCanvas.add(circle);
+        measurementState.fabricCanvas.renderAll();
+    }
+}
+
+/**
+ * Find snap point near existing endpoints
+ * Returns snapped point if within 10px radius, null otherwise
+ */
+function findSnapPoint(pointer) {
+    const snapRadius = 10;
+    const objects = measurementState.fabricCanvas.getObjects();
+
+    // Find all existing polylines (linear measurements)
+    const polylines = objects.filter(obj => obj.objectType === 'linear-measurement');
+
+    for (const polyline of polylines) {
+        if (!polyline.points) continue;
+
+        // Check first and last points
+        const points = polyline.points;
+        const endpoints = [
+            { x: points[0].x + polyline.left, y: points[0].y + polyline.top },
+            { x: points[points.length - 1].x + polyline.left, y: points[points.length - 1].y + polyline.top }
+        ];
+
+        for (const endpoint of endpoints) {
+            const dx = pointer.x - endpoint.x;
+            const dy = pointer.y - endpoint.y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+
+            if (distance <= snapRadius) {
+                console.log('[Measurement Tools] Snapped to endpoint:', endpoint);
+                return endpoint;
+            }
+        }
+    }
+
+    return null;
+}
+
+/**
+ * Update linear polyline during drawing
+ * Creates/updates temporary polyline with all current points
+ */
+function updateLinearPolyline() {
+    // Remove existing temporary polyline
+    if (measurementState.tempObject) {
+        measurementState.fabricCanvas.remove(measurementState.tempObject);
+    }
+
+    // Create points array for Fabric polyline (relative to 0,0)
+    const points = measurementState.currentPoints.map(p => ({ x: p.x, y: p.y }));
+
+    // Create new polyline
+    const polyline = new fabric.Polyline(points, {
+        stroke: '#FF6B35',
+        strokeWidth: 2,
+        fill: null,
+        selectable: false,
+        evented: false,
+        objectType: 'linear-temp',
+        objectCaching: false
+    });
+
+    measurementState.tempObject = polyline;
+    measurementState.fabricCanvas.add(polyline);
+    measurementState.fabricCanvas.renderAll();
+}
+
+/**
+ * Update linear preview line
+ * Shows preview line from last point to current mouse position
+ */
+function updateLinearPreview(pointer) {
+    if (measurementState.currentPoints.length === 0) {
+        return;
+    }
+
+    // Remove existing preview line
+    if (measurementState.tempPreviewLine) {
+        measurementState.fabricCanvas.remove(measurementState.tempPreviewLine);
+    }
+
+    // Check for snap point
+    const snappedPoint = findSnapPoint(pointer);
+    const targetPoint = snappedPoint || pointer;
+
+    // Create preview points including all current points plus preview point
+    const previewPoints = [
+        ...measurementState.currentPoints.map(p => ({ x: p.x, y: p.y })),
+        { x: targetPoint.x, y: targetPoint.y }
+    ];
+
+    // Create preview polyline
+    const previewLine = new fabric.Polyline(previewPoints, {
+        stroke: '#FF6B35',
+        strokeWidth: 2,
+        strokeDashArray: [5, 5],
+        fill: null,
+        selectable: false,
+        evented: false,
+        objectType: 'linear-temp',
+        objectCaching: false
+    });
+
+    measurementState.tempPreviewLine = previewLine;
+    measurementState.fabricCanvas.add(previewLine);
+    measurementState.fabricCanvas.renderAll();
+
+    // If snapped, show visual feedback
+    if (snappedPoint) {
+        // Create temporary highlight circle
+        const snapCircle = new fabric.Circle({
+            left: snappedPoint.x - 6,
+            top: snappedPoint.y - 6,
+            radius: 6,
+            fill: 'transparent',
+            stroke: '#00FF00',
+            strokeWidth: 2,
+            selectable: false,
+            evented: false,
+            objectType: 'linear-temp'
+        });
+
+        measurementState.fabricCanvas.add(snapCircle);
+        measurementState.fabricCanvas.renderAll();
+    }
+}
+
+/**
+ * Finish linear measurement
+ * Calculates total length, prompts for category, creates final objects
+ */
+function finishLinearMeasurement() {
+    try {
+        const currentPage = viewerState?.currentPage || 1;
+        const scaleData = measurementState.scaleData[currentPage];
+
+        if (!scaleData) {
+            showError('Scale not set for this page. Please set scale first.');
+            cleanupCurrentMeasurement();
+            return;
+        }
+
+        if (measurementState.currentPoints.length < 2) {
+            showError('At least 2 points required for linear measurement.');
+            cleanupCurrentMeasurement();
+            return;
+        }
+
+        console.log('[Measurement Tools] Finishing linear measurement with',
+            measurementState.currentPoints.length, 'points');
+
+        // Calculate total length in pixels
+        let totalPixelLength = 0;
+        const points = measurementState.currentPoints;
+
+        for (let i = 0; i < points.length - 1; i++) {
+            const dx = points[i + 1].x - points[i].x;
+            const dy = points[i + 1].y - points[i].y;
+            const segmentLength = Math.sqrt(dx * dx + dy * dy);
+            totalPixelLength += segmentLength;
+        }
+
+        // Convert to real-world units using scale ratio
+        const realLength = totalPixelLength / scaleData.ratio;
+
+        console.log('[Measurement Tools] Calculated length:', {
+            pixelLength: totalPixelLength.toFixed(2),
+            realLength: realLength.toFixed(2),
+            units: scaleData.units
+        });
+
+        // Prompt for category
+        const category = promptForCategory();
+        if (!category) {
+            console.log('[Measurement Tools] Linear measurement cancelled - no category selected');
+            cleanupCurrentMeasurement();
+            return;
+        }
+
+        // Get category color
+        const categoryColor = getCategoryColor(category);
+
+        // Create final polyline
+        const fabricPoints = points.map(p => ({ x: p.x, y: p.y }));
+        const polyline = new fabric.Polyline(fabricPoints, {
+            stroke: categoryColor,
+            strokeWidth: 3,
+            fill: null,
+            selectable: true,
+            evented: true,
+            objectType: 'linear-measurement',
+            objectCaching: false,
+            hasControls: false,
+            hasBorders: true,
+            lockMovementX: true,
+            lockMovementY: true
+        });
+
+        // Calculate midpoint for text label
+        const midpoint = calculatePolylineMidpoint(points);
+
+        // Create text label
+        const labelText = `${realLength.toFixed(1)} ${scaleData.units}`;
+        const text = new fabric.Text(labelText, {
+            left: midpoint.x,
+            top: midpoint.y - 20,
+            fontSize: 14,
+            fontFamily: 'Arial',
+            fill: '#FFFFFF',
+            backgroundColor: 'rgba(0, 0, 0, 0.7)',
+            padding: 4,
+            selectable: true,
+            evented: true,
+            objectType: 'linear-text',
+            hasControls: false,
+            hasBorders: true,
+            lockMovementX: true,
+            lockMovementY: true
+        });
+
+        // Clean up temporary objects
+        cleanupCurrentMeasurement();
+
+        // Add final objects to canvas
+        measurementState.fabricCanvas.add(polyline);
+        measurementState.fabricCanvas.add(text);
+        measurementState.fabricCanvas.renderAll();
+
+        // Create measurement data object
+        const measurementId = generateMeasurementId();
+        const measurementData = {
+            type: 'linear',
+            id: measurementId,
+            label: `Linear #${measurementId}`,
+            category: category,
+            points: points,
+            pixelLength: totalPixelLength,
+            realLength: realLength,
+            units: scaleData.units,
+            created: new Date().toISOString(),
+            fabricObjects: [polyline.id, text.id]
+        };
+
+        // Store measurement data
+        if (!measurementState.measurements[currentPage]) {
+            measurementState.measurements[currentPage] = { objects: [], data: [] };
+        }
+        if (!measurementState.measurements[currentPage].data) {
+            measurementState.measurements[currentPage].data = [];
+        }
+        measurementState.measurements[currentPage].data.push(measurementData);
+
+        console.log('[Measurement Tools] Linear measurement created:', measurementData);
+
+        // Emit event for future integration (Task 12 - placeholder)
+        document.dispatchEvent(new CustomEvent('measurement:created', {
+            detail: measurementData
+        }));
+
+        // Keep linear tool active for next measurement
+        // User can press ESC or click another tool to deactivate
+        console.log('[Measurement Tools] Linear measurement complete. Tool remains active.');
+
+    } catch (error) {
+        console.error('[Measurement Tools] Error finishing linear measurement:', error);
+        showError('Failed to create linear measurement. Please try again.');
+        cleanupCurrentMeasurement();
+    }
+}
+
+/**
+ * Prompt user for measurement category
+ * Returns category string or null if cancelled
+ */
+function promptForCategory() {
+    const categories = ['HDD', 'Fiber', 'Trench', 'Other'];
+    let categoryMessage = 'Select measurement category:\n\n';
+    categories.forEach((cat, idx) => {
+        categoryMessage += `${idx + 1}. ${cat}\n`;
+    });
+    categoryMessage += '\nEnter number (1-4):';
+
+    const input = prompt(categoryMessage);
+
+    if (!input) {
+        return null;
+    }
+
+    const categoryIndex = parseInt(input) - 1;
+
+    if (categoryIndex >= 0 && categoryIndex < categories.length) {
+        return categories[categoryIndex];
+    }
+
+    // If invalid input, default to 'Other'
+    return 'Other';
+}
+
+/**
+ * Get color for measurement category
+ * @param {string} category - Category name
+ * @returns {string} Hex color code
+ */
+function getCategoryColor(category) {
+    const colors = {
+        'HDD': '#FF6B35',      // Orange
+        'Fiber': '#0066CC',    // Blue
+        'Trench': '#8B4513',   // Brown
+        'Other': '#666666'     // Gray
+    };
+
+    return colors[category] || colors['Other'];
+}
+
+/**
+ * Calculate midpoint of polyline for text label placement
+ * @param {Array} points - Array of {x, y} points
+ * @returns {Object} Midpoint {x, y}
+ */
+function calculatePolylineMidpoint(points) {
+    if (points.length === 0) {
+        return { x: 0, y: 0 };
+    }
+
+    // Calculate center point along the polyline path
+    // Find the point at approximately 50% of total length
+    let totalLength = 0;
+    const segments = [];
+
+    for (let i = 0; i < points.length - 1; i++) {
+        const dx = points[i + 1].x - points[i].x;
+        const dy = points[i + 1].y - points[i].y;
+        const length = Math.sqrt(dx * dx + dy * dy);
+        segments.push({ start: points[i], end: points[i + 1], length: length });
+        totalLength += length;
+    }
+
+    const halfLength = totalLength / 2;
+    let accumulatedLength = 0;
+
+    for (const segment of segments) {
+        if (accumulatedLength + segment.length >= halfLength) {
+            // This segment contains the midpoint
+            const ratio = (halfLength - accumulatedLength) / segment.length;
+            return {
+                x: segment.start.x + (segment.end.x - segment.start.x) * ratio,
+                y: segment.start.y + (segment.end.y - segment.start.y) * ratio
+            };
+        }
+        accumulatedLength += segment.length;
+    }
+
+    // Fallback to geometric center
+    const sumX = points.reduce((sum, p) => sum + p.x, 0);
+    const sumY = points.reduce((sum, p) => sum + p.y, 0);
+    return {
+        x: sumX / points.length,
+        y: sumY / points.length
+    };
+}
+
+/**
+ * Generate unique measurement ID
+ * Simple incrementing counter for now
+ */
+let measurementIdCounter = 1;
+function generateMeasurementId() {
+    return measurementIdCounter++;
+}
+
+/**
+ * Handle area measurement click
+ * Collects vertices for polygon measurement
+ * First click starts the polygon, subsequent clicks add vertices
+ * Click near first point or press Enter to close polygon
+ */
+function handleAreaClick(pointer) {
+    const currentPage = viewerState?.currentPage || 1;
+    const closePolygonRadius = 10; // 10px radius for closing polygon
+
+    // Check if clicking near first point to close polygon (if we have at least 3 points)
+    if (measurementState.currentPoints.length >= 3) {
+        const firstPoint = measurementState.currentPoints[0];
+        const dx = pointer.x - firstPoint.x;
+        const dy = pointer.y - firstPoint.y;
+        const distanceToFirst = Math.sqrt(dx * dx + dy * dy);
+
+        if (distanceToFirst <= closePolygonRadius) {
+            console.log('[Measurement Tools] Clicking first point - closing polygon');
+            finishAreaMeasurement();
+            return;
+        }
+    }
+
+    // Add vertex to current points array
+    measurementState.currentPoints.push({ x: pointer.x, y: pointer.y });
+
+    console.log('[Measurement Tools] Area vertex added:', pointer,
+        `(Total vertices: ${measurementState.currentPoints.length})`);
+
+    // First click - create first vertex marker
+    if (measurementState.currentPoints.length === 1) {
+        measurementState.isDrawing = true;
+
+        // Create vertex marker
+        const circle = new fabric.Circle({
+            left: pointer.x - 5,
+            top: pointer.y - 5,
+            radius: 5,
+            fill: '#FF6B35',
+            stroke: '#003B5C',
+            strokeWidth: 2,
+            selectable: false,
+            evented: false,
+            objectType: 'area-temp'
+        });
+
+        measurementState.fabricCanvas.add(circle);
+        measurementState.fabricCanvas.renderAll();
+    } else {
+        // Subsequent clicks - add vertex marker
+        const circle = new fabric.Circle({
+            left: pointer.x - 5,
+            top: pointer.y - 5,
+            radius: 5,
+            fill: '#FF6B35',
+            stroke: '#003B5C',
+            strokeWidth: 2,
+            selectable: false,
+            evented: false,
+            objectType: 'area-temp'
+        });
+
+        measurementState.fabricCanvas.add(circle);
+        measurementState.fabricCanvas.renderAll();
+    }
+}
+
+/**
+ * Update area preview polygon
+ * Shows preview polygon edge from last vertex to cursor
+ * Shows semi-transparent polygon fill with all current vertices + cursor point
+ */
+function updateAreaPreview(pointer) {
+    if (measurementState.currentPoints.length === 0) {
+        return;
+    }
+
+    // Remove existing temporary preview objects
+    const objects = measurementState.fabricCanvas.getObjects();
+    const tempPreviewObjects = objects.filter(obj => obj.objectType === 'area-preview');
+    tempPreviewObjects.forEach(obj => {
+        measurementState.fabricCanvas.remove(obj);
+    });
+
+    // Create preview points including all current vertices + cursor point
+    const previewPoints = [
+        ...measurementState.currentPoints.map(p => ({ x: p.x, y: p.y })),
+        { x: pointer.x, y: pointer.y }
+    ];
+
+    // If we have at least 3 points (including cursor), show preview polygon fill
+    if (previewPoints.length >= 3) {
+        const previewPolygon = new fabric.Polygon(previewPoints, {
+            fill: 'rgba(255, 107, 53, 0.15)', // Very light orange
+            stroke: '#FF6B35',
+            strokeWidth: 2,
+            strokeDashArray: [5, 5],
+            selectable: false,
+            evented: false,
+            objectType: 'area-preview',
+            objectCaching: false
+        });
+
+        measurementState.fabricCanvas.add(previewPolygon);
+    } else if (previewPoints.length === 2) {
+        // If only 2 points, show dashed line
+        const previewLine = new fabric.Line([
+            previewPoints[0].x, previewPoints[0].y,
+            previewPoints[1].x, previewPoints[1].y
+        ], {
+            stroke: '#FF6B35',
+            strokeWidth: 2,
+            strokeDashArray: [5, 5],
+            selectable: false,
+            evented: false,
+            objectType: 'area-preview'
+        });
+
+        measurementState.fabricCanvas.add(previewLine);
+    }
+
+    // Highlight first point when hovering near it (if we have at least 3 vertices)
+    if (measurementState.currentPoints.length >= 3) {
+        const firstPoint = measurementState.currentPoints[0];
+        const dx = pointer.x - firstPoint.x;
+        const dy = pointer.y - firstPoint.y;
+        const distanceToFirst = Math.sqrt(dx * dx + dy * dy);
+
+        if (distanceToFirst <= 10) {
+            // Create highlight circle around first point
+            const highlightCircle = new fabric.Circle({
+                left: firstPoint.x - 8,
+                top: firstPoint.y - 8,
+                radius: 8,
+                fill: 'transparent',
+                stroke: '#00FF00',
+                strokeWidth: 3,
+                selectable: false,
+                evented: false,
+                objectType: 'area-preview'
+            });
+
+            measurementState.fabricCanvas.add(highlightCircle);
+        }
+    }
+
+    measurementState.fabricCanvas.renderAll();
+}
+
+/**
+ * Finish area measurement
+ * Calculates area using shoelace formula, converts to real-world units
+ * Prompts for category, creates final polygon with fill and text label
+ */
+function finishAreaMeasurement() {
+    try {
+        const currentPage = viewerState?.currentPage || 1;
+        const scaleData = measurementState.scaleData[currentPage];
+
+        if (!scaleData) {
+            showError('Scale not set for this page. Please set scale first.');
+            cleanupCurrentMeasurement();
+            return;
+        }
+
+        if (measurementState.currentPoints.length < 3) {
+            showError('At least 3 vertices required for area measurement.');
+            cleanupCurrentMeasurement();
+            return;
+        }
+
+        console.log('[Measurement Tools] Finishing area measurement with',
+            measurementState.currentPoints.length, 'vertices');
+
+        const vertices = measurementState.currentPoints;
+
+        // Calculate area using shoelace formula
+        const shoelaceArea = Math.abs(
+            vertices.reduce((sum, v, i, arr) => {
+                const next = arr[(i + 1) % arr.length];
+                return sum + (v.x * next.y - next.x * v.y);
+            }, 0) / 2
+        );
+
+        console.log('[Measurement Tools] Pixel area (shoelace):', shoelaceArea.toFixed(2));
+
+        // Convert pixel² to real units² using scale ratio squared
+        // Formula: realArea = pixelArea / (ratio * ratio)
+        const pixelArea = shoelaceArea;
+        const realArea = pixelArea / (scaleData.ratio * scaleData.ratio);
+
+        console.log('[Measurement Tools] Calculated area:', {
+            pixelArea: pixelArea.toFixed(2),
+            realArea: realArea.toFixed(2),
+            units: `square ${scaleData.units}`
+        });
+
+        // Calculate perimeter (sum of edge lengths)
+        let perimeter = 0;
+        for (let i = 0; i < vertices.length; i++) {
+            const next = vertices[(i + 1) % vertices.length];
+            const dx = next.x - vertices[i].x;
+            const dy = next.y - vertices[i].y;
+            perimeter += Math.sqrt(dx * dx + dy * dy);
+        }
+        const realPerimeter = perimeter / scaleData.ratio;
+
+        console.log('[Measurement Tools] Perimeter:', {
+            pixelPerimeter: perimeter.toFixed(2),
+            realPerimeter: realPerimeter.toFixed(2),
+            units: scaleData.units
+        });
+
+        // Prompt for category
+        const category = promptForAreaCategory();
+        if (!category) {
+            console.log('[Measurement Tools] Area measurement cancelled - no category selected');
+            cleanupCurrentMeasurement();
+            return;
+        }
+
+        // Get category colors
+        const categoryColors = getAreaCategoryColors(category);
+
+        // Create final polygon
+        const fabricPoints = vertices.map(p => ({ x: p.x, y: p.y }));
+        const polygon = new fabric.Polygon(fabricPoints, {
+            fill: categoryColors.fill,
+            stroke: categoryColors.stroke,
+            strokeWidth: 3,
+            selectable: true,
+            evented: true,
+            objectType: 'area-measurement',
+            objectCaching: false,
+            hasControls: false,
+            hasBorders: true,
+            lockMovementX: true,
+            lockMovementY: true
+        });
+
+        // Calculate centroid for text label
+        const centroid = calculatePolygonCentroid(vertices);
+
+        // Format area with comma separators for readability
+        const formattedArea = realArea.toLocaleString('en-US', {
+            minimumFractionDigits: 1,
+            maximumFractionDigits: 1
+        });
+
+        // Create text label
+        const labelText = `${formattedArea} sq ${scaleData.units}`;
+        const text = new fabric.Text(labelText, {
+            left: centroid.x,
+            top: centroid.y,
+            fontSize: 14,
+            fontFamily: 'Arial',
+            fill: '#FFFFFF',
+            backgroundColor: 'rgba(0, 0, 0, 0.7)',
+            padding: 4,
+            originX: 'center',
+            originY: 'center',
+            selectable: true,
+            evented: true,
+            objectType: 'area-text',
+            hasControls: false,
+            hasBorders: true,
+            lockMovementX: true,
+            lockMovementY: true
+        });
+
+        // Clean up temporary objects
+        cleanupCurrentMeasurement();
+
+        // Add final objects to canvas
+        measurementState.fabricCanvas.add(polygon);
+        measurementState.fabricCanvas.add(text);
+        measurementState.fabricCanvas.renderAll();
+
+        // Create measurement data object
+        const measurementId = generateMeasurementId();
+        const measurementData = {
+            type: 'area',
+            id: measurementId,
+            label: `Area #${measurementId}`,
+            category: category,
+            vertices: vertices,
+            pixelArea: pixelArea,
+            realArea: realArea,
+            perimeter: realPerimeter,
+            units: scaleData.units,
+            created: new Date().toISOString(),
+            fabricObjects: [polygon.id, text.id]
+        };
+
+        // Store measurement data
+        if (!measurementState.measurements[currentPage]) {
+            measurementState.measurements[currentPage] = { objects: [], data: [] };
+        }
+        if (!measurementState.measurements[currentPage].data) {
+            measurementState.measurements[currentPage].data = [];
+        }
+        measurementState.measurements[currentPage].data.push(measurementData);
+
+        console.log('[Measurement Tools] Area measurement created:', measurementData);
+
+        // Log warning if area seems unusual (self-intersecting polygon check)
+        if (pixelArea < 100) {
+            console.warn('[Measurement Tools] Warning: Very small area detected. Polygon may be self-intersecting or very small.');
+        }
+
+        // Emit event for future integration (Task 12 - placeholder)
+        document.dispatchEvent(new CustomEvent('measurement:created', {
+            detail: measurementData
+        }));
+
+        // Keep area tool active for next measurement
+        console.log('[Measurement Tools] Area measurement complete. Tool remains active.');
+
+    } catch (error) {
+        console.error('[Measurement Tools] Error finishing area measurement:', error);
+        showError('Failed to create area measurement. Please try again.');
+        cleanupCurrentMeasurement();
+    }
+}
+
+/**
+ * Prompt user for area measurement category
+ * Returns category string or null if cancelled
+ */
+function promptForAreaCategory() {
+    const categories = ['Excavation', 'Paving', 'Bore Zone', 'Other'];
+    let categoryMessage = 'Select area category:\n\n';
+    categories.forEach((cat, idx) => {
+        categoryMessage += `${idx + 1}. ${cat}\n`;
+    });
+    categoryMessage += '\nEnter number (1-4):';
+
+    const input = prompt(categoryMessage);
+
+    if (!input) {
+        return null;
+    }
+
+    const categoryIndex = parseInt(input) - 1;
+
+    if (categoryIndex >= 0 && categoryIndex < categories.length) {
+        return categories[categoryIndex];
+    }
+
+    // If invalid input, default to 'Other'
+    return 'Other';
+}
+
+/**
+ * Get colors for area measurement category
+ * Returns object with fill (semi-transparent) and stroke colors
+ * @param {string} category - Category name
+ * @returns {Object} {fill: string, stroke: string}
+ */
+function getAreaCategoryColors(category) {
+    const colors = {
+        'Excavation': {
+            fill: 'rgba(139, 69, 19, 0.3)',  // Brown with transparency
+            stroke: '#8B4513'                 // Brown
+        },
+        'Paving': {
+            fill: 'rgba(128, 128, 128, 0.3)', // Gray with transparency
+            stroke: '#808080'                  // Gray
+        },
+        'Bore Zone': {
+            fill: 'rgba(255, 107, 53, 0.3)',  // Orange with transparency
+            stroke: '#FF6B35'                  // Orange
+        },
+        'Other': {
+            fill: 'rgba(102, 102, 102, 0.3)', // Gray with transparency
+            stroke: '#666666'                  // Gray
+        }
+    };
+
+    return colors[category] || colors['Other'];
+}
+
+/**
+ * Calculate centroid of polygon for text label placement
+ * Uses average of all x and y coordinates
+ * @param {Array} vertices - Array of {x, y} vertices
+ * @returns {Object} Centroid {x, y}
+ */
+function calculatePolygonCentroid(vertices) {
+    if (vertices.length === 0) {
+        return { x: 0, y: 0 };
+    }
+
+    const sumX = vertices.reduce((sum, v) => sum + v.x, 0);
+    const sumY = vertices.reduce((sum, v) => sum + v.y, 0);
+
+    return {
+        x: sumX / vertices.length,
+        y: sumY / vertices.length
+    };
+}
+
+/**
+ * Handle count marker click
+ * Single click to place a numbered marker
+ * Auto-increments counter for category and page
+ */
+function handleCountClick(pointer) {
+    try {
+        const currentPage = viewerState?.currentPage || 1;
+        const category = measurementState.activeCountCategory;
+
+        if (!category) {
+            console.error('[Measurement Tools] No category selected for count tool');
+            showError('Please select a category first.');
+            activateTool(null);
+            return;
+        }
+
+        console.log('[Measurement Tools] Count click at:', pointer, 'Category:', category);
+
+        // Initialize counters for page if needed
+        if (!measurementState.counters[currentPage]) {
+            measurementState.counters[currentPage] = {};
+        }
+
+        // Initialize counter for category if needed
+        if (!measurementState.counters[currentPage][category]) {
+            measurementState.counters[currentPage][category] = 0;
+        }
+
+        // Increment counter
+        measurementState.counters[currentPage][category]++;
+        const count = measurementState.counters[currentPage][category];
+
+        console.log('[Measurement Tools] Count marker:', {
+            page: currentPage,
+            category: category,
+            count: count
+        });
+
+        // Get category color
+        const categoryColor = getCountCategoryColor(category);
+
+        // Create circle background
+        const circle = new fabric.Circle({
+            radius: 15,
+            fill: categoryColor,
+            stroke: '#003B5C',
+            strokeWidth: 2,
+            originX: 'center',
+            originY: 'center'
+        });
+
+        // Create number text
+        const text = new fabric.Text(count.toString(), {
+            fontSize: 16,
+            fill: '#FFFFFF',
+            fontWeight: 'bold',
+            fontFamily: 'Arial',
+            originX: 'center',
+            originY: 'center'
+        });
+
+        // Create group (circle + text)
+        const group = new fabric.Group([circle, text], {
+            left: pointer.x,
+            top: pointer.y,
+            selectable: true,     // Can be moved
+            hasControls: false,   // No resize handles
+            hasBorders: false,    // No border when selected
+            lockRotation: true,   // Can't rotate
+            objectType: 'count-marker',
+            countCategory: category,
+            countNumber: count
+        });
+
+        // Add group to canvas
+        measurementState.fabricCanvas.add(group);
+        measurementState.fabricCanvas.renderAll();
+
+        // Create measurement data object
+        const measurementId = generateMeasurementId();
+        const measurementData = {
+            type: 'count',
+            id: measurementId,
+            label: `${category} #${count}`,
+            category: category,
+            position: { x: pointer.x, y: pointer.y },
+            count: count,
+            created: new Date().toISOString(),
+            fabricObjects: [group]
+        };
+
+        // Store measurement data
+        if (!measurementState.measurements[currentPage]) {
+            measurementState.measurements[currentPage] = { objects: [], data: [] };
+        }
+        if (!measurementState.measurements[currentPage].data) {
+            measurementState.measurements[currentPage].data = [];
+        }
+        measurementState.measurements[currentPage].data.push(measurementData);
+
+        console.log('[Measurement Tools] Count marker created:', measurementData);
+
+        // Emit event for future integration (Task 12 - placeholder)
+        document.dispatchEvent(new CustomEvent('measurement:created', {
+            detail: measurementData
+        }));
+
+        // Add double-click handler for editing (placeholder for Task 11)
+        group.on('mousedblclick', () => {
+            console.log('[Measurement Tools] Count marker double-clicked - edit placeholder (Task 11)');
+            console.log('Marker data:', measurementData);
+            // TODO: Task 11 - Show edit modal
+        });
+
+        // Tool remains active for next marker placement
+        console.log('[Measurement Tools] Count marker placed. Tool remains active.');
+
+    } catch (error) {
+        console.error('[Measurement Tools] Error placing count marker:', error);
+        showError('Failed to place count marker. Please try again.');
+    }
+}
+
+/**
+ * Prompt user for count marker category
+ * Returns category string or null if cancelled
+ */
+function promptForCountCategory() {
+    const categories = ['Pits', 'Splices', 'Poles', 'Equipment', 'Other'];
+    let categoryMessage = 'Select count marker category:\n\n';
+    categories.forEach((cat, idx) => {
+        categoryMessage += `${idx + 1}. ${cat}\n`;
+    });
+    categoryMessage += '\nEnter number (1-5):';
+
+    const input = prompt(categoryMessage);
+
+    if (!input) {
+        return null;
+    }
+
+    const categoryIndex = parseInt(input) - 1;
+
+    if (categoryIndex >= 0 && categoryIndex < categories.length) {
+        return categories[categoryIndex];
+    }
+
+    // If invalid input, default to 'Other'
+    return 'Other';
+}
+
+/**
+ * Get color for count marker category
+ * @param {string} category - Category name
+ * @returns {string} Hex color code
+ */
+function getCountCategoryColor(category) {
+    const colors = {
+        'Pits': '#FF6B35',        // Safety Orange
+        'Splices': '#0066CC',     // Blue
+        'Poles': '#8B4513',       // Brown
+        'Equipment': '#666666',   // Gray
+        'Other': '#999999'        // Light Gray
+    };
+
+    return colors[category] || colors['Other'];
+}
+
+/**
  * Handle keyboard events
  * ESC key cancels current measurement
+ * Enter key finishes linear measurement
  */
 function handleKeyDown(event) {
     // ESC key - cancel current measurement
@@ -786,6 +1829,22 @@ function handleKeyDown(event) {
         // Deactivate tool
         activateTool(null);
     }
+
+    // Enter key - finish linear measurement
+    if (event.key === 'Enter' && measurementState.activeTool === 'linear') {
+        if (measurementState.currentPoints.length >= 2) {
+            console.log('[Measurement Tools] Enter key pressed - finishing linear measurement');
+            finishLinearMeasurement();
+        }
+    }
+
+    // Enter key - finish area measurement (close polygon)
+    if (event.key === 'Enter' && measurementState.activeTool === 'area') {
+        if (measurementState.currentPoints.length >= 3) {
+            console.log('[Measurement Tools] Enter key pressed - finishing area measurement');
+            finishAreaMeasurement();
+        }
+    }
 }
 
 /**
@@ -799,9 +1858,14 @@ function cleanupCurrentMeasurement() {
         return;
     }
 
-    // Remove all temporary objects
+    // Remove all temporary objects (scale-temp, linear-temp, area-temp, area-preview)
     const objects = measurementState.fabricCanvas.getObjects();
-    const tempObjects = objects.filter(obj => obj.objectType === 'scale-temp');
+    const tempObjects = objects.filter(obj =>
+        obj.objectType === 'scale-temp' ||
+        obj.objectType === 'linear-temp' ||
+        obj.objectType === 'area-temp' ||
+        obj.objectType === 'area-preview'
+    );
 
     tempObjects.forEach(obj => {
         measurementState.fabricCanvas.remove(obj);
@@ -809,6 +1873,7 @@ function cleanupCurrentMeasurement() {
 
     // Clear temporary state
     measurementState.tempObject = null;
+    measurementState.tempPreviewLine = null;
     measurementState.isDrawing = false;
     measurementState.currentPoints = [];
 
