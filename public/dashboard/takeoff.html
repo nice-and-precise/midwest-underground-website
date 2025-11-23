@@ -267,6 +267,156 @@
         </div>
     </div>
 
+    <!-- Measurement Properties Panel -->
+    <div id="properties-panel" class="properties-panel" style="display: none;">
+        <div class="properties-panel-content">
+            <div class="properties-header">
+                <h3 id="properties-title">Measurement Properties</h3>
+                <button type="button" id="properties-close" class="btn-close" title="Close (Esc)">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+
+            <form id="properties-form" class="properties-form">
+                <!-- Measurement Type (Read-Only) -->
+                <div class="form-section">
+                    <div class="form-group">
+                        <label for="prop-type">Type</label>
+                        <input
+                            type="text"
+                            id="prop-type"
+                            class="form-input-readonly"
+                            readonly
+                            aria-label="Measurement type"
+                        />
+                    </div>
+                </div>
+
+                <!-- Calculated Value (Read-Only) -->
+                <div class="form-section">
+                    <div class="form-group">
+                        <label for="prop-value">Value</label>
+                        <input
+                            type="text"
+                            id="prop-value"
+                            class="form-input-readonly"
+                            readonly
+                            aria-label="Calculated measurement value"
+                        />
+                    </div>
+                </div>
+
+                <!-- Editable Properties -->
+                <div class="form-section">
+                    <div class="form-group">
+                        <label for="prop-label">Label *</label>
+                        <input
+                            type="text"
+                            id="prop-label"
+                            class="form-input"
+                            required
+                            placeholder="e.g., Main Trench"
+                            aria-label="Measurement label"
+                        />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="prop-category">Category *</label>
+                        <input
+                            type="text"
+                            id="prop-category"
+                            class="form-input"
+                            required
+                            placeholder="e.g., HDD, Excavation, Pits"
+                            aria-label="Measurement category"
+                            list="category-suggestions"
+                        />
+                        <datalist id="category-suggestions">
+                            <option value="HDD">
+                            <option value="Excavation">
+                            <option value="Pits">
+                            <option value="Manholes">
+                            <option value="Conduit">
+                            <option value="Fiber">
+                            <option value="Utilities">
+                        </datalist>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="prop-color">Color</label>
+                        <div class="color-picker-wrapper">
+                            <input
+                                type="color"
+                                id="prop-color"
+                                class="form-input-color"
+                                value="#FF6B35"
+                                aria-label="Measurement color"
+                            />
+                            <span id="prop-color-preview" class="color-preview">#FF6B35</span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="prop-notes">Notes</label>
+                        <textarea
+                            id="prop-notes"
+                            class="form-textarea"
+                            rows="3"
+                            placeholder="Additional notes or comments..."
+                            aria-label="Measurement notes"
+                        ></textarea>
+                    </div>
+                </div>
+
+                <!-- Timestamps (Read-Only) -->
+                <div class="form-section form-section-metadata">
+                    <div class="form-group">
+                        <label for="prop-created">Created</label>
+                        <input
+                            type="text"
+                            id="prop-created"
+                            class="form-input-readonly form-input-small"
+                            readonly
+                            aria-label="Creation timestamp"
+                        />
+                    </div>
+                    <div class="form-group">
+                        <label for="prop-modified">Modified</label>
+                        <input
+                            type="text"
+                            id="prop-modified"
+                            class="form-input-readonly form-input-small"
+                            readonly
+                            aria-label="Last modified timestamp"
+                        />
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="properties-actions">
+                    <button type="button" id="prop-delete" class="btn-action btn-delete">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="3 6 5 6 21 6"></polyline>
+                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                        </svg>
+                        Delete
+                    </button>
+                    <div class="button-group">
+                        <button type="button" id="prop-cancel" class="btn-action btn-secondary">
+                            Cancel
+                        </button>
+                        <button type="submit" class="btn-action btn-primary">
+                            Save Changes
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- JavaScript -->
     <script src="js/pdf-viewer.js"></script>
     <script src="js/measurement-tools.js"></script>

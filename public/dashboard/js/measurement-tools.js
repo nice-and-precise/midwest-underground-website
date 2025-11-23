@@ -378,6 +378,11 @@ function attachToolListeners() {
         measurementState.fabricCanvas.on('object:moving', handleObjectMoving);
         
         console.log('[Measurement Tools] Task 9: Selection and editing event listeners attached');
+
+        // Task 11: Attach double-click event listener for properties panel
+        measurementState.fabricCanvas.on('mouse:dblclick', handleMeasurementDoubleClick);
+        
+        console.log('[Measurement Tools] Task 11: Double-click event listener attached for properties panel');
     }
 
     // Attach keyboard event listeners
@@ -2553,6 +2558,442 @@ function deleteSingleMeasurement(fabricObject, currentPage, measurements) {
     }));
 
     console.log('[Measurement Tools] Task 9: Measurement deleted successfully');
+}
+
+
+// ============================================
+// TASK 11: MEASUREMENT PROPERTIES PANEL
+// ============================================
+
+/**
+ * Properties panel state
+ */
+const propertiesPanelState = {
+    isOpen: false,
+    currentMeasurement: null,
+    currentObject: null,
+    overlay: null
+};
+
+/**
+ * Handle double-click on measurement object
+ * Opens properties panel for editing
+ */
+function handleMeasurementDoubleClick(event) {
+    const target = event.target;
+
+    // Ignore if target is not a measurement object
+    if (!target || !target.measurementData) {
+        return;
+    }
+
+    console.log('[Properties Panel] Double-click detected on measurement:', target.measurementData);
+
+    // Open properties panel with measurement data
+    openPropertiesPanel(target, target.measurementData);
+}
+
+/**
+ * Open properties panel with measurement data
+ * @param {fabric.Object} object - Fabric object that was clicked
+ * @param {Object} measurementData - Measurement data associated with object
+ */
+function openPropertiesPanel(object, measurementData) {
+    console.log('[Properties Panel] Opening panel for:', measurementData);
+
+    const panel = document.getElementById('properties-panel');
+    if (!panel) {
+        console.error('[Properties Panel] Panel element not found!');
+        return;
+    }
+
+    // Store current measurement and object references
+    propertiesPanelState.currentMeasurement = measurementData;
+    propertiesPanelState.currentObject = object;
+    propertiesPanelState.isOpen = true;
+
+    // Populate form fields
+    populatePropertiesForm(measurementData);
+
+    // Show panel with slide-in animation
+    panel.classList.add('active');
+
+    // Create and show overlay
+    createPropertiesOverlay();
+
+    // Focus on first input
+    setTimeout(() => {
+        const labelInput = document.getElementById('prop-label');
+        if (labelInput) {
+            labelInput.select();
+        }
+    }, 100);
+
+    // Attach panel event listeners (if not already attached)
+    attachPropertiesPanelListeners();
+}
+
+/**
+ * Close properties panel
+ * @param {boolean} saveChanges - Whether to save changes before closing
+ */
+function closePropertiesPanel(saveChanges = false) {
+    console.log('[Properties Panel] Closing panel, save changes:', saveChanges);
+
+    const panel = document.getElementById('properties-panel');
+    if (!panel) return;
+
+    // Remove active class to trigger slide-out animation
+    panel.classList.remove('active');
+
+    // Remove overlay
+    if (propertiesPanelState.overlay) {
+        propertiesPanelState.overlay.remove();
+        propertiesPanelState.overlay = null;
+    }
+
+    // Reset state
+    propertiesPanelState.isOpen = false;
+    propertiesPanelState.currentMeasurement = null;
+    propertiesPanelState.currentObject = null;
+
+    // Clear form
+    const form = document.getElementById('properties-form');
+    if (form) {
+        form.reset();
+    }
+}
+
+/**
+ * Populate properties form with measurement data
+ * @param {Object} data - Measurement data
+ */
+function populatePropertiesForm(data) {
+    // Type (read-only)
+    const typeInput = document.getElementById('prop-type');
+    if (typeInput) {
+        const typeLabels = {
+            'linear': 'Linear Measurement',
+            'area': 'Area Measurement',
+            'count': 'Count Marker'
+        };
+        typeInput.value = typeLabels[data.type] || data.type;
+    }
+
+    // Value (read-only) - Format based on type
+    const valueInput = document.getElementById('prop-value');
+    if (valueInput) {
+        let valueText = '';
+        if (data.type === 'linear') {
+            valueText = data.realLength.toFixed(2) + ' ' + data.units;
+        } else if (data.type === 'area') {
+            valueText = data.realArea.toFixed(2) + ' ' + data.units + '² (Perimeter: ' + data.perimeter.toFixed(2) + ' ' + data.units + ')';
+        } else if (data.type === 'count') {
+            valueText = 'Count: ' + data.count;
+        }
+        valueInput.value = valueText;
+    }
+
+    // Label (editable)
+    const labelInput = document.getElementById('prop-label');
+    if (labelInput) {
+        labelInput.value = data.label || '';
+    }
+
+    // Category (editable)
+    const categoryInput = document.getElementById('prop-category');
+    if (categoryInput) {
+        categoryInput.value = data.category || '';
+    }
+
+    // Color (editable)
+    const colorInput = document.getElementById('prop-color');
+    const colorPreview = document.getElementById('prop-color-preview');
+    if (colorInput) {
+        const currentColor = data.color || '#FF6B35';
+        colorInput.value = currentColor;
+        if (colorPreview) {
+            colorPreview.textContent = currentColor;
+        }
+    }
+
+    // Notes (editable)
+    const notesInput = document.getElementById('prop-notes');
+    if (notesInput) {
+        notesInput.value = data.notes || '';
+    }
+
+    // Created timestamp (read-only)
+    const createdInput = document.getElementById('prop-created');
+    if (createdInput && data.created) {
+        createdInput.value = formatTimestamp(data.created);
+    }
+
+    // Modified timestamp (read-only)
+    const modifiedInput = document.getElementById('prop-modified');
+    if (modifiedInput) {
+        const modifiedTime = data.modified || data.created;
+        if (modifiedTime) {
+            modifiedInput.value = formatTimestamp(modifiedTime);
+        }
+    }
+}
+
+/**
+ * Format timestamp for display
+ * @param {string} timestamp - ISO timestamp
+ * @returns {string} Formatted timestamp
+ */
+function formatTimestamp(timestamp) {
+    try {
+        const date = new Date(timestamp);
+        return date.toLocaleString();
+    } catch (error) {
+        return timestamp;
+    }
+}
+
+/**
+ * Create overlay backdrop for properties panel
+ */
+function createPropertiesOverlay() {
+    // Remove existing overlay if any
+    if (propertiesPanelState.overlay) {
+        propertiesPanelState.overlay.remove();
+    }
+
+    // Create new overlay
+    const overlay = document.createElement('div');
+    overlay.className = 'properties-panel-overlay active';
+    overlay.addEventListener('click', () => {
+        closePropertiesPanel(false);
+    });
+
+    document.body.appendChild(overlay);
+    propertiesPanelState.overlay = overlay;
+}
+
+/**
+ * Attach event listeners to properties panel elements
+ * Only attaches once to avoid duplicates
+ */
+let propertiesPanelListenersAttached = false;
+
+function attachPropertiesPanelListeners() {
+    if (propertiesPanelListenersAttached) {
+        return;
+    }
+
+    console.log('[Properties Panel] Attaching event listeners...');
+
+    // Close button
+    const closeBtn = document.getElementById('properties-close');
+    if (closeBtn) {
+        closeBtn.addEventListener('click', () => {
+            closePropertiesPanel(false);
+        });
+    }
+
+    // Cancel button
+    const cancelBtn = document.getElementById('prop-cancel');
+    if (cancelBtn) {
+        cancelBtn.addEventListener('click', () => {
+            closePropertiesPanel(false);
+        });
+    }
+
+    // Delete button
+    const deleteBtn = document.getElementById('prop-delete');
+    if (deleteBtn) {
+        deleteBtn.addEventListener('click', handlePropertiesDelete);
+    }
+
+    // Form submission (Save)
+    const form = document.getElementById('properties-form');
+    if (form) {
+        form.addEventListener('submit', handlePropertiesSave);
+    }
+
+    // Color input change (update preview)
+    const colorInput = document.getElementById('prop-color');
+    if (colorInput) {
+        colorInput.addEventListener('input', (event) => {
+            const colorPreview = document.getElementById('prop-color-preview');
+            if (colorPreview) {
+                colorPreview.textContent = event.target.value;
+            }
+        });
+    }
+
+    // Escape key to close
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape' && propertiesPanelState.isOpen) {
+            closePropertiesPanel(false);
+        }
+    });
+
+    propertiesPanelListenersAttached = true;
+    console.log('[Properties Panel] Event listeners attached');
+}
+
+/**
+ * Handle properties form save
+ * @param {Event} event - Form submit event
+ */
+function handlePropertiesSave(event) {
+    event.preventDefault();
+
+    console.log('[Properties Panel] Saving changes...');
+
+    if (!propertiesPanelState.currentMeasurement || !propertiesPanelState.currentObject) {
+        console.error('[Properties Panel] No measurement data to save!');
+        return;
+    }
+
+    const data = propertiesPanelState.currentMeasurement;
+    const object = propertiesPanelState.currentObject;
+
+    // Get form values
+    const labelInput = document.getElementById('prop-label');
+    const categoryInput = document.getElementById('prop-category');
+    const colorInput = document.getElementById('prop-color');
+    const notesInput = document.getElementById('prop-notes');
+
+    // Update measurement data
+    const oldLabel = data.label;
+    const oldColor = data.color;
+
+    data.label = labelInput.value.trim();
+    data.category = categoryInput.value.trim();
+    data.color = colorInput.value;
+    data.notes = notesInput.value.trim();
+    data.modified = new Date().toISOString();
+
+    // Update Fabric object styling if color changed
+    if (oldColor !== data.color) {
+        updateMeasurementColor(object, data, data.color);
+    }
+
+    // Update label text on canvas if label changed
+    if (oldLabel !== data.label) {
+        updateMeasurementLabel(object, data, data.label);
+    }
+
+    // Render canvas to show changes
+    measurementState.fabricCanvas.renderAll();
+
+    // Emit measurement:updated event
+    document.dispatchEvent(new CustomEvent('measurement:updated', {
+        detail: {
+            type: data.type,
+            id: data.id,
+            label: data.label,
+            category: data.category,
+            color: data.color,
+            notes: data.notes,
+            modified: data.modified
+        }
+    }));
+
+    console.log('[Properties Panel] Changes saved successfully');
+
+    // Close panel
+    closePropertiesPanel(true);
+}
+
+/**
+ * Handle delete button click in properties panel
+ */
+function handlePropertiesDelete() {
+    if (!propertiesPanelState.currentObject) {
+        console.error('[Properties Panel] No object to delete!');
+        return;
+    }
+
+    // Confirm deletion
+    const data = propertiesPanelState.currentMeasurement;
+    const confirmMessage = 'Are you sure you want to delete this ' + data.type + ' measurement?\n\nLabel: ' + data.label + '\nCategory: ' + data.category;
+
+    if (!confirm(confirmMessage)) {
+        console.log('[Properties Panel] Deletion cancelled');
+        return;
+    }
+
+    console.log('[Properties Panel] Deleting measurement...');
+
+    // Close panel first
+    closePropertiesPanel(false);
+
+    // Use existing delete function
+    handleDeleteMeasurement(propertiesPanelState.currentObject);
+}
+
+/**
+ * Update measurement object color
+ * @param {fabric.Object} object - Fabric object to update
+ * @param {Object} data - Measurement data
+ * @param {string} newColor - New color hex value
+ */
+function updateMeasurementColor(object, data, newColor) {
+    console.log('[Properties Panel] Updating color to:', newColor);
+
+    if (data.type === 'linear') {
+        // Update polyline stroke color
+        object.set('stroke', newColor);
+    } else if (data.type === 'area') {
+        // Update polygon stroke color
+        object.set('stroke', newColor);
+    } else if (data.type === 'count') {
+        // Count markers are groups - update circle fill
+        const objects = object.getObjects();
+        const circle = objects.find(obj => obj.type === 'circle');
+        if (circle) {
+            circle.set('fill', newColor);
+        }
+    }
+
+    // Store new color in data
+    data.color = newColor;
+}
+
+/**
+ * Update measurement label text on canvas
+ * @param {fabric.Object} object - Fabric object to update
+ * @param {Object} data - Measurement data
+ * @param {string} newLabel - New label text
+ */
+function updateMeasurementLabel(object, data, newLabel) {
+    console.log('[Properties Panel] Updating label to:', newLabel);
+
+    // Find associated text object
+    const textObject = findTextObjectForMeasurement(data);
+
+    if (textObject) {
+        // Update text content based on measurement type
+        let updatedText = '';
+
+        if (data.type === 'linear') {
+            updatedText = newLabel + '\n' + data.realLength.toFixed(2) + ' ' + data.units;
+        } else if (data.type === 'area') {
+            updatedText = newLabel + '\n' + data.realArea.toFixed(2) + ' ' + data.units + '²';
+        } else if (data.type === 'count') {
+            // For count markers, the text is inside the group
+            const objects = object.getObjects();
+            const text = objects.find(obj => obj.type === 'text');
+            if (text) {
+                // Count markers show number, not label, so just update data
+                // Label is shown in properties/export only
+                console.log('[Properties Panel] Count marker label updated in data only');
+            }
+        }
+
+        if (updatedText && data.type !== 'count') {
+            textObject.set('text', updatedText);
+        }
+    }
+
+    // Store new label in data
+    data.label = newLabel;
 }
 
 // Export for global access
