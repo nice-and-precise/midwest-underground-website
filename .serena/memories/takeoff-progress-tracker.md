@@ -10,8 +10,8 @@
 ## Current Status
 
 **Module:** 1.2 - Basic measurement tools
-**Status:** not_started
-**Next Role:** PLANNER
+**Status:** planned
+**Next Role:** IMPLEMENTER
 **Blockers:** None
 
 ---
@@ -31,7 +31,7 @@
 | Module | Name | Status | Current Role |
 |--------|------|--------|--------------|
 | 1.1 | PDF plan viewer | completed ✅ | null |
-| 1.2 | Basic measurement tools | not_started | null |
+| 1.2 | Basic measurement tools | planned | null |
 | 1.3 | Quantity calculator | not_started | null |
 | 1.4 | Data export and persistence | not_started | null |
 
@@ -88,6 +88,18 @@
 ---
 
 ## Recent Activity
+
+### 2025-11-22 - Module 1.2 Planning Complete
+- **Role:** PLANNER
+- **Module:** 1.2 - Basic measurement tools
+- **Action:** Created comprehensive implementation plan with 15 atomic tasks
+- **Outcome:** Module status changed from "not_started" → "planned"
+- **Plan Location:** .claude/plans/module-1.2-plan.md
+- **Estimated Time:** 6.5 hours (390 minutes)
+- **Risks Identified:** 7 (coordinate sync, scale accuracy, performance, geometry calculations, browser compatibility, touch input, state serialization)
+- **Integration Strategy:** Fabric.js canvas overlay on PDF.js canvas with event-driven sync
+- **Key Features:** Scale calibration, linear/area/count measurement tools, real-time display, undo/redo, per-page persistence
+- **Next:** IMPLEMENTER role to begin Task 1 (Add Fabric.js Library and Initialize)
 
 ### 2025-11-22 - Module 1.1 COMPLETED ✅
 - **Role:** DOC (final)
