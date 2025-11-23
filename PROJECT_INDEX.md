@@ -1,9 +1,9 @@
 # Project Index: Midwest Underground Website
 
-**Generated:** 2025-11-23 (Updated)
-**Version:** 3.0.0
-**Branch:** feat/takeoff-system
-**Status:** Production Ready (Takeoff System: 93.5% Complete)
+**Generated:** 2025-11-23 (Post-Restructure)
+**Version:** 4.0.0
+**Branch:** master
+**Status:** Production Ready (Takeoff System: 93.5% Complete) | Documentation: 100% Restructured
 
 ## 📋 Quick Context
 
@@ -11,6 +11,18 @@ This is a **hybrid web application** for Midwest Underground of Minnesota Inc - 
 - **Legacy Static Site:** Pure HTML/CSS/JS (5 public pages + 9 dashboard pages)
 - **Next.js Migration:** Full-stack app with 15+ dashboard pages (60% complete)
 - **Takeoff System:** Production-ready PDF measurement & estimating tool (93.5% complete)
+
+## 📚 Documentation Restructure (NEW!)
+
+**Status:** ✅ **COMPLETE** (Commit: 9b0685e)
+
+- Root .md files reduced: **69 → 7** (89.9% reduction)
+- Documentation structure: **Professional IA** under docs/
+- Brand compliance: **100%** (0 deprecated colors)
+- Validation scripts: **4 automation tools** created
+- Next session priorities: **7 HIGH priority docs** to create
+
+See: `docs/NEXT-SESSION-HANDOFF.md` for continuation plan
 
 ## 🚀 Quick Start
 
@@ -29,6 +41,8 @@ npm run dev  # http://localhost:3000
 ```
 
 ## 📁 Project Structure
+
+**Updated:** Post-documentation restructure (Nov 23, 2025)
 
 ```
 midwest-underground-website/
@@ -58,6 +72,23 @@ midwest-underground-website/
 │
 ├── prisma/                 # Database layer
 │   └── schema.prisma       # 16 models (User, Project, Bore, etc.)
+│
+├── docs/                      # 📚 RESTRUCTURED: Professional documentation (130 files)
+│   ├── README.md             # Documentation index
+│   ├── getting-started/      # Setup guides (3 files)
+│   ├── architecture/         # System design (2 files, 4 pending)
+│   ├── guides/               # How-to guides (13 files)
+│   ├── brand/                # Brand standards (2 files)
+│   ├── features/             # Feature docs (4 files)
+│   ├── ai/                   # AI & Serena MCP (3 files)
+│   ├── archive/              # Historical docs (50 files)
+│   ├── checklists/           # Task checklists (1 file)
+│   ├── procedures/           # SOPs (5 files)
+│   ├── takeoff/              # Takeoff module (41 files)
+│   ├── NEXT-SESSION-HANDOFF.md    # ⭐ Handoff for next AI session
+│   ├── VALIDATION-RESULTS.md      # Restructure validation
+│   ├── RESTRUCTURE-REPORT.md      # Executive summary
+│   └── DOCUMENTATION-MIGRATION-CHECKLIST.md  # Phase checklist
 │
 ├── .serena/memories/       # 📚 Session context (70+ memory files)
 └── .claude/                # 🤖 AI agent configs & plans
@@ -228,15 +259,29 @@ npm run test:coverage # Generate coverage report
 npm run test:all      # Run everything
 ```
 
-## 📖 Documentation
+## 📖 Documentation System
 
-### Project Docs (60+ files)
-- **CLAUDE.md** - Project context & AI agent instructions
-- **README.md** - Main documentation (830 lines)
-- **PROJECT_INDEX.md** - This file
-- **MIGRATION-TO-NEXTJS.md** - Migration guide
-- **QUICK-START.md** - Getting started guide
-- **DEPLOYMENT-GUIDE.md** - Production deployment
+### Root Documentation (7 Core Files)
+1. **README.md** - Project overview
+2. **CLAUDE.md** - AI agent context
+3. **CONTRIBUTING.md** - Contribution guidelines
+4. **CHANGELOG.md** - Version history
+5. **SECURITY.md** - Security policies
+6. **PROJECT_INDEX.md** - This file
+7. **PHASE-4-COMPLETION-REPORT.md** - Pending move to archive
+
+### Validation Infrastructure
+- **Scripts:** 4 automation tools in scripts/docs/
+- **Commands:** 5 npm scripts for validation
+- **Status:** Build ✅, Brand ✅, Audit ✅
+- **Known Issues:** 144 broken links (expected, docs to create)
+
+### Next Session Priorities
+See `docs/NEXT-SESSION-HANDOFF.md` for:
+- 7 HIGH priority documentation files to create
+- Templates with line numbers from spec
+- Multi-agent execution strategy
+- Success criteria and validation commands
 
 ### Session Memories (70+ files)
 **Location:** `.serena/memories/`
@@ -278,7 +323,7 @@ npm run test:all      # Run everything
 - **API Routes:** 32
 - **Database Models:** 16
 - **Test Files:** 14
-- **Documentation Files:** 60+
+- **Documentation Files:** 130+ (restructured)
 
 ### Lines of Code
 - **Total Project:** ~50,000 lines
@@ -289,8 +334,8 @@ npm run test:all      # Run everything
 
 ### Commits
 - **Total:** 100+ commits
-- **Latest:** 7e81b40 (Takeoff navigation integration)
-- **Branch:** feat/takeoff-system
+- **Latest:** 9b0685e (Documentation restructure)
+- **Branch:** master
 
 ## 🎯 Project Status
 
@@ -301,11 +346,13 @@ npm run test:all      # Run everything
 - **Phase 3 (Advanced Features):** Planned 📋
 
 ### Recent Milestones (Nov 23, 2025)
-1. ✅ Takeoff System Dashboard Integration Complete
-2. ✅ Module 1.3 Comprehensive Testing (96% coverage)
-3. ✅ Navigation Added Across All 9 Dashboard Pages
-4. ✅ Documentation Updated (README, memories)
-5. ✅ GitHub Sync Complete (Commit: 7e81b40)
+1. ✅ Documentation Restructure Complete (Commit: 9b0685e)
+2. ✅ 69 → 7 Root Files (89.9% reduction)
+3. ✅ Professional Documentation IA under docs/
+4. ✅ 100% Brand Compliance (0 deprecated colors)
+5. ✅ 4 Validation Scripts Created
+6. ✅ Takeoff System Dashboard Integration Complete
+7. ✅ Module 1.3 Comprehensive Testing (96% coverage)
 
 ### Next Steps
 1. **Immediate:** User testing & browser verification
@@ -374,14 +421,14 @@ npm run test:e2e
 ### Git Workflow
 ```bash
 # Current branch
-git checkout feat/takeoff-system
+git checkout master
 
 # Latest changes
-git log --oneline -1  # Should show: 7e81b40
+git log --oneline -1  # Should show: 9b0685e
 
 # Sync with remote
-git pull origin feat/takeoff-system
-git push origin feat/takeoff-system
+git pull origin master
+git push origin master
 ```
 
 ## 💾 Memory Files (Session Context)
@@ -390,12 +437,17 @@ git push origin feat/takeoff-system
 **Total:** 70+ memory files
 
 ### Key Memories to Read
-1. **current-status.md** - Overall project status
-2. **session-2025-11-23-takeoff-navigation-integration.md** - Latest session
-3. **takeoff-system-context.md** - Takeoff architecture & design
-4. **project-overview.md** - High-level project overview
-5. **code-style-conventions.md** - Coding standards
-6. **tech-stack.md** - Technology decisions
+**Latest (Nov 23 Post-Restructure):**
+1. **session-handoff-2025-11-23-docs-complete.md** - Documentation restructure completion
+2. **NEXT-SESSION-HANDOFF.md** (in docs/) - Detailed handoff for next session
+
+**Previous:**
+3. **current-status.md** - Overall project status
+4. **session-2025-11-23-takeoff-navigation-integration.md** - Latest session
+5. **takeoff-system-context.md** - Takeoff architecture & design
+6. **project-overview.md** - High-level project overview
+7. **code-style-conventions.md** - Coding standards
+8. **tech-stack.md** - Technology decisions
 
 ### Session History
 - **November 23, 2025:** Takeoff navigation integration + Module 1.3 testing
@@ -429,6 +481,15 @@ npm run db:push     # Push schema changes
 npm run db:seed     # Seed with dummy data
 npm run db:studio   # Open Prisma Studio GUI
 npm run db:reset    # Reset and reseed
+```
+
+### Documentation Commands
+```bash
+npm run docs:audit          # Audit all markdown files
+npm run docs:validate       # Check for broken links
+npm run docs:check-colors   # Brand color compliance
+npm run docs:generate-toc   # Generate table of contents
+npm run docs:check-all      # Run all validation
 ```
 
 ## 📈 Token Efficiency
@@ -470,8 +531,9 @@ npm run db:reset    # Reset and reseed
 
 ---
 
-**Last Updated:** November 23, 2025
-**Branch:** feat/takeoff-system
-**Commit:** 7e81b40
-**Index Version:** 3.0.0
-**Total Size:** 3,500 tokens (~12KB)
+**Last Updated:** November 23, 2025 (Post-Documentation Restructure)
+**Branch:** master
+**Commit:** 9b0685e
+**Index Version:** 4.0.0
+**Total Size:** ~4,000 tokens (~15KB)
+**Previous Version:** 3.0.0 (Pre-restructure)
