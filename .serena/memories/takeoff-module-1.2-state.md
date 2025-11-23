@@ -3,9 +3,9 @@
 **Module:** 1.2 - Basic measurement tools
 **Phase:** Phase 5 - Finalization (Tasks 12-15)
 **Status:** in-progress
-**Current Task:** Task 13 - Undo/Redo Support
-**Progress:** 12/15 tasks complete (80%)
-**Last Completed:** Task 12 - Event Emission System ✅
+**Current Task:** Task 14 - Measurement Persistence
+**Progress:** 13/15 tasks complete (87%)
+**Last Completed:** Task 13 - Undo/Redo Support ✅
 
 ---
 
@@ -80,11 +80,23 @@
   - Event validation and error handling
   - 5 events total: created, updated, deleted, selected, deselected
 
-- ⏳ Task 13: Add Undo/Redo Support (40 min)
+- ✅ **Task 13: Undo/Redo Support (40 min)** - COMPLETED (commit pending)
+  - Created comprehensive undo/redo infrastructure (9 functions)
+  - Integrated with all CRUD operations (6 locations)
+  - Added keyboard shortcuts (Ctrl+Z, Ctrl+Y, Ctrl+Shift+Z)
+  - Per-page stack management (isolated by page number)
+  - Stack size limit (50 operations per page)
+  - Redo stack clears on new action
+  - Deep clone data to prevent mutation
+  - Recursion prevention flag
+  - Recreate Fabric objects on undo delete
+  - Update Fabric objects on undo update
+  - Console logging for debugging
+  - +540 lines added (3,169 → 3,709 lines)
 - ⏳ Task 14: Add Measurement Persistence (35 min)
 - ⏳ Task 15: Add Scale Indicator UI (25 min)
 
-**Remaining Time:** 120 minutes (~2 hours)
+**Remaining Time:** 60 minutes (~1 hour)
 
 ---
 

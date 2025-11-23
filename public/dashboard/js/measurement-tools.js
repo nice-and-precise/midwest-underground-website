@@ -1340,6 +1340,9 @@ function finishLinearMeasurement() {
         // Task 12: Emit standardized creation event
         emitMeasurementEvent('measurement:created', measurementData);
 
+        // Task 13: Push to undo stack
+        pushToUndoStack('create', measurementData);
+
         // Keep linear tool active for next measurement
         // User can press ESC or click another tool to deactivate
         console.log('[Measurement Tools] Linear measurement complete. Tool remains active.');
@@ -1822,6 +1825,9 @@ function finishAreaMeasurement() {
         // Task 12: Emit standardized creation event
         emitMeasurementEvent('measurement:created', measurementData);
 
+        // Task 13: Push to undo stack
+        pushToUndoStack('create', measurementData);
+
         // Keep area tool active for next measurement
         console.log('[Measurement Tools] Area measurement complete. Tool remains active.');
 
@@ -2021,6 +2027,9 @@ function handleCountClick(pointer) {
         // Task 12: Emit standardized creation event
         emitMeasurementEvent('measurement:created', measurementData);
 
+        // Task 13: Push to undo stack
+        pushToUndoStack('create', measurementData);
+
         // Add double-click handler for editing (placeholder for Task 11)
         group.on('mousedblclick', () => {
             console.log('[Measurement Tools] Count marker double-clicked - edit placeholder (Task 11)');
@@ -2123,33 +2132,33 @@ function handleKeyDown(event) {
         // Only delete if no tool is active (not in drawing mode)
         if (!measurementState.activeTool || measurementState.activeTool === null) {
             const activeObject = measurementState.fabricCanvas?.getActiveObject();
-            
+
             if (activeObject) {
                 // Prevent default backspace behavior (navigation)
                 event.preventDefault();
-                
+
                 // Only delete measurement objects
                 const isMeasurement = activeObject.objectType && (
-                    activeObject.objectType.includes('measurement') || 
+                    activeObject.objectType.includes('measurement') ||
                     activeObject.objectType === 'count-marker'
                 );
-                
+
                 // For multiple selection
                 const isMultipleSelection = activeObject.type === 'activeSelection';
-                const hasMeasurements = isMultipleSelection && 
-                    activeObject.getObjects().some(obj => 
+                const hasMeasurements = isMultipleSelection &&
+                    activeObject.getObjects().some(obj =>
                         obj.objectType && (
-                            obj.objectType.includes('measurement') || 
+                            obj.objectType.includes('measurement') ||
                             obj.objectType === 'count-marker'
                         )
                     );
 
                 if (isMeasurement || hasMeasurements) {
                     // Show confirmation dialog
-                    const confirmMessage = isMultipleSelection 
-                        ? 'Delete selected measurements?' 
+                    const confirmMessage = isMultipleSelection
+                        ? 'Delete selected measurements?'
                         : 'Delete this measurement?';
-                    
+
                     if (confirm(confirmMessage)) {
                         console.log('[Measurement Tools] Task 9: Deleting selected measurement(s)');
                         handleDeleteMeasurement(activeObject);
@@ -2157,6 +2166,22 @@ function handleKeyDown(event) {
                 }
             }
         }
+    }
+
+    // Task 13: Ctrl+Z - Undo last operation
+    if (event.ctrlKey && event.key === 'z' && !event.shiftKey) {
+        event.preventDefault();
+        console.log('[Undo/Redo] Ctrl+Z pressed - undo');
+        undoLastOperation();
+        return;
+    }
+
+    // Task 13: Ctrl+Y or Ctrl+Shift+Z - Redo last undone operation
+    if (event.ctrlKey && (event.key === 'y' || (event.shiftKey && event.key === 'z'))) {
+        event.preventDefault();
+        console.log('[Undo/Redo] Ctrl+Y pressed - redo');
+        redoLastOperation();
+        return;
     }
 }
 
@@ -2265,6 +2290,9 @@ function handleObjectModified(event) {
             return;
         }
 
+        // Task 13: Capture previous state for undo
+        const previousData = JSON.parse(JSON.stringify(measurementData));
+
         // Handle different measurement types
         switch (measurementData.type) {
             case 'linear':
@@ -2280,6 +2308,9 @@ function handleObjectModified(event) {
 
         // Task 12: Emit standardized update event
         emitMeasurementEvent('measurement:updated', measurementData);
+
+        // Task 13: Push to undo stack
+        pushToUndoStack('update', measurementData, previousData);
 
         console.log('[Measurement Tools] Task 9: Measurement updated:', measurementData);
 
@@ -2588,6 +2619,9 @@ function deleteSingleMeasurement(fabricObject, currentPage, measurements) {
     // Task 12: Emit standardized delete event
     emitMeasurementEvent('measurement:deleted', measurementData);
 
+    // Task 13: Push to undo stack
+    pushToUndoStack('delete', measurementData);
+
     console.log('[Measurement Tools] Task 9: Measurement deleted successfully');
 }
 
@@ -2731,6 +2765,506 @@ function emitMeasurementDeselected() {
     }));
 
     console.log('[Event System] measurement:deselected emitted');
+}
+
+
+// ============================================
+// TASK 13: UNDO/REDO SUPPORT
+// ============================================
+
+/**
+ * Undo/Redo System for Measurement Operations
+ *
+ * Tracks all measurement CRUD operations and allows users to undo/redo
+ * changes using keyboard shortcuts (Ctrl+Z for undo, Ctrl+Y for redo).
+ *
+ * Stack Structure (per page):
+ * {
+ *     action: 'create|update|delete',
+ *     measurementData: {...},  // Full measurement state
+ *     previousData: {...},     // For updates only
+ *     timestamp: 'ISO-8601',
+ *     page: number
+ * }
+ *
+ * Implementation Notes:
+ * - Stacks are per-page (isolated by page number)
+ * - Maximum 50 operations per page (oldest dropped when exceeded)
+ * - Redo stack clears when new action is performed
+ * - All data is deep cloned to prevent mutation issues
+ * - Recursion prevention flag avoids infinite loops
+ */
+
+// Flag to prevent undo/redo operations from triggering new stack pushes
+let isUndoRedoOperation = false;
+
+// Maximum stack size per page
+const MAX_UNDO_STACK_SIZE = 50;
+
+/**
+ * Push operation to undo stack
+ * @param {string} action - Operation type ('create', 'update', 'delete')
+ * @param {Object} measurementData - Current measurement state
+ * @param {Object} previousData - Previous state (for updates only)
+ */
+function pushToUndoStack(action, measurementData, previousData = null) {
+    // Skip if this is an undo/redo operation (prevent recursion)
+    if (isUndoRedoOperation) {
+        return;
+    }
+
+    try {
+        const currentPage = viewerState?.currentPage || 1;
+
+        // Ensure undo/redo stacks exist for current page
+        if (!measurementState.undoStack[currentPage]) {
+            measurementState.undoStack[currentPage] = [];
+        }
+        if (!measurementState.redoStack[currentPage]) {
+            measurementState.redoStack[currentPage] = [];
+        }
+
+        // Deep clone data to prevent reference issues
+        const stackEntry = {
+            action: action,
+            measurementData: JSON.parse(JSON.stringify(measurementData)),
+            previousData: previousData ? JSON.parse(JSON.stringify(previousData)) : null,
+            timestamp: new Date().toISOString(),
+            page: currentPage
+        };
+
+        // Push to undo stack
+        measurementState.undoStack[currentPage].push(stackEntry);
+
+        // Enforce stack size limit (remove oldest if exceeded)
+        if (measurementState.undoStack[currentPage].length > MAX_UNDO_STACK_SIZE) {
+            measurementState.undoStack[currentPage].shift();
+        }
+
+        // Clear redo stack when new action is performed
+        measurementState.redoStack[currentPage] = [];
+
+        console.log(`[Undo/Redo] Pushed ${action} to undo stack (page ${currentPage}):`, {
+            action: stackEntry.action,
+            measurementId: measurementData.id,
+            stackSize: measurementState.undoStack[currentPage].length
+        });
+
+    } catch (error) {
+        console.error('[Undo/Redo] Error pushing to undo stack:', error);
+    }
+}
+
+/**
+ * Undo last operation (Ctrl+Z)
+ */
+function undoLastOperation() {
+    const currentPage = viewerState?.currentPage || 1;
+
+    // Check if undo stack exists and has entries
+    if (!measurementState.undoStack[currentPage] ||
+        measurementState.undoStack[currentPage].length === 0) {
+        console.log('[Undo/Redo] Nothing to undo');
+        return;
+    }
+
+    try {
+        // Set flag to prevent recursion
+        isUndoRedoOperation = true;
+
+        // Pop from undo stack
+        const entry = measurementState.undoStack[currentPage].pop();
+
+        console.log(`[Undo/Redo] Undoing ${entry.action}:`, {
+            measurementId: entry.measurementData.id,
+            page: entry.page
+        });
+
+        // Perform reverse operation
+        switch (entry.action) {
+            case 'create':
+                // Undo create = delete the measurement
+                undoCreate(entry.measurementData);
+                break;
+
+            case 'update':
+                // Undo update = restore previous data
+                undoUpdate(entry.measurementData, entry.previousData);
+                break;
+
+            case 'delete':
+                // Undo delete = recreate the measurement
+                undoDelete(entry.measurementData);
+                break;
+
+            default:
+                console.warn(`[Undo/Redo] Unknown action type: ${entry.action}`);
+                return;
+        }
+
+        // Push to redo stack
+        if (!measurementState.redoStack[currentPage]) {
+            measurementState.redoStack[currentPage] = [];
+        }
+        measurementState.redoStack[currentPage].push(entry);
+
+        console.log('[Undo/Redo] Undo operation completed');
+
+    } catch (error) {
+        console.error('[Undo/Redo] Error during undo operation:', error);
+    } finally {
+        // Reset flag
+        isUndoRedoOperation = false;
+    }
+}
+
+/**
+ * Redo last undone operation (Ctrl+Y)
+ */
+function redoLastOperation() {
+    const currentPage = viewerState?.currentPage || 1;
+
+    // Check if redo stack exists and has entries
+    if (!measurementState.redoStack[currentPage] ||
+        measurementState.redoStack[currentPage].length === 0) {
+        console.log('[Undo/Redo] Nothing to redo');
+        return;
+    }
+
+    try {
+        // Set flag to prevent recursion
+        isUndoRedoOperation = true;
+
+        // Pop from redo stack
+        const entry = measurementState.redoStack[currentPage].pop();
+
+        console.log(`[Undo/Redo] Redoing ${entry.action}:`, {
+            measurementId: entry.measurementData.id,
+            page: entry.page
+        });
+
+        // Perform original operation
+        switch (entry.action) {
+            case 'create':
+                // Redo create = recreate the measurement
+                undoDelete(entry.measurementData);
+                break;
+
+            case 'update':
+                // Redo update = restore new data
+                undoUpdate(entry.previousData, entry.measurementData);
+                break;
+
+            case 'delete':
+                // Redo delete = delete the measurement again
+                undoCreate(entry.measurementData);
+                break;
+
+            default:
+                console.warn(`[Undo/Redo] Unknown action type: ${entry.action}`);
+                return;
+        }
+
+        // Push back to undo stack
+        if (!measurementState.undoStack[currentPage]) {
+            measurementState.undoStack[currentPage] = [];
+        }
+        measurementState.undoStack[currentPage].push(entry);
+
+        console.log('[Undo/Redo] Redo operation completed');
+
+    } catch (error) {
+        console.error('[Undo/Redo] Error during redo operation:', error);
+    } finally {
+        // Reset flag
+        isUndoRedoOperation = false;
+    }
+}
+
+/**
+ * Undo a create operation (remove the measurement)
+ * @param {Object} measurementData - Measurement to remove
+ */
+function undoCreate(measurementData) {
+    const currentPage = viewerState?.currentPage || 1;
+    const measurements = measurementState.measurements[currentPage]?.data || [];
+
+    // Find and remove the measurement
+    const index = measurements.findIndex(m => m.id === measurementData.id);
+    if (index !== -1) {
+        // Remove Fabric objects from canvas
+        const allObjects = measurementState.fabricCanvas.getObjects();
+        for (const objId of measurementData.fabricObjects || []) {
+            const obj = allObjects.find(o => o.id === objId);
+            if (obj) {
+                measurementState.fabricCanvas.remove(obj);
+            }
+        }
+
+        // Remove from measurements array
+        measurements.splice(index, 1);
+        measurementState.fabricCanvas.renderAll();
+
+        console.log('[Undo/Redo] Removed measurement (undo create):', measurementData.id);
+    }
+}
+
+/**
+ * Undo a delete operation (restore the measurement)
+ * @param {Object} measurementData - Measurement to restore
+ */
+function undoDelete(measurementData) {
+    const currentPage = viewerState?.currentPage || 1;
+    const measurements = measurementState.measurements[currentPage]?.data || [];
+
+    // Recreate Fabric objects and add back to canvas
+    try {
+        let fabricObjects = [];
+
+        switch (measurementData.type) {
+            case 'linear':
+                fabricObjects = recreateLinearMeasurement(measurementData);
+                break;
+            case 'area':
+                fabricObjects = recreateAreaMeasurement(measurementData);
+                break;
+            case 'count':
+                fabricObjects = recreateCountMarker(measurementData);
+                break;
+        }
+
+        // Update measurement with new Fabric object IDs
+        measurementData.fabricObjects = fabricObjects;
+
+        // Add back to measurements array
+        measurements.push(measurementData);
+        measurementState.fabricCanvas.renderAll();
+
+        console.log('[Undo/Redo] Restored measurement (undo delete):', measurementData.id);
+
+    } catch (error) {
+        console.error('[Undo/Redo] Error restoring measurement:', error);
+    }
+}
+
+/**
+ * Undo an update operation (restore previous state)
+ * @param {Object} currentData - Current measurement data
+ * @param {Object} previousData - Previous measurement data
+ */
+function undoUpdate(currentData, previousData) {
+    if (!previousData) {
+        console.warn('[Undo/Redo] No previous data for update undo');
+        return;
+    }
+
+    const currentPage = viewerState?.currentPage || 1;
+    const measurements = measurementState.measurements[currentPage]?.data || [];
+
+    // Find the measurement
+    const index = measurements.findIndex(m => m.id === currentData.id);
+    if (index === -1) {
+        console.warn('[Undo/Redo] Measurement not found for update undo');
+        return;
+    }
+
+    // Store current Fabric object IDs
+    const fabricObjectIds = measurements[index].fabricObjects;
+
+    // Restore previous data
+    measurements[index] = JSON.parse(JSON.stringify(previousData));
+    measurements[index].fabricObjects = fabricObjectIds;
+
+    // Update Fabric objects to reflect previous state
+    updateFabricObjectsFromData(measurements[index]);
+
+    console.log('[Undo/Redo] Restored previous state (undo update):', currentData.id);
+}
+
+/**
+ * Recreate linear measurement Fabric objects
+ * @param {Object} data - Measurement data
+ * @returns {Array} Array of Fabric object IDs
+ */
+function recreateLinearMeasurement(data) {
+    const fabricPoints = data.points.map(p => ({ x: p.x, y: p.y }));
+
+    // Create polyline
+    const polyline = new fabric.Polyline(fabricPoints, {
+        stroke: data.color || '#003B5C',
+        strokeWidth: 3,
+        fill: 'transparent',
+        selectable: true,
+        hasControls: true,
+        objectCaching: false,
+        objectType: 'measurement-linear',
+        measurementData: data
+    });
+    polyline.id = `linear-${data.id}`;
+
+    // Create text label
+    const midpoint = calculatePolylineMidpoint(fabricPoints);
+    const text = new fabric.Text(`${data.length.toFixed(2)} ${data.unit}`, {
+        left: midpoint.x,
+        top: midpoint.y - 15,
+        fontSize: 14,
+        fill: data.color || '#003B5C',
+        backgroundColor: 'rgba(255, 255, 255, 0.8)',
+        selectable: false,
+        objectType: 'measurement-text'
+    });
+    text.id = `text-${data.id}`;
+
+    measurementState.fabricCanvas.add(polyline, text);
+
+    return [polyline.id, text.id];
+}
+
+/**
+ * Recreate area measurement Fabric objects
+ * @param {Object} data - Measurement data
+ * @returns {Array} Array of Fabric object IDs
+ */
+function recreateAreaMeasurement(data) {
+    const fabricPoints = data.points.map(p => ({ x: p.x, y: p.y }));
+
+    // Create polygon
+    const polygon = new fabric.Polygon(fabricPoints, {
+        fill: `${data.color}33` || 'rgba(0, 59, 92, 0.2)',
+        stroke: data.color || '#003B5C',
+        strokeWidth: 2,
+        selectable: true,
+        hasControls: true,
+        objectCaching: false,
+        objectType: 'measurement-area',
+        measurementData: data
+    });
+    polygon.id = `area-${data.id}`;
+
+    // Create text label
+    const centroid = calculatePolygonCentroid(fabricPoints);
+    const text = new fabric.Text(`${data.area.toFixed(2)} ${data.unit}`, {
+        left: centroid.x,
+        top: centroid.y - 15,
+        fontSize: 14,
+        fill: data.color || '#003B5C',
+        backgroundColor: 'rgba(255, 255, 255, 0.8)',
+        selectable: false,
+        objectType: 'measurement-text'
+    });
+    text.id = `text-${data.id}`;
+
+    measurementState.fabricCanvas.add(polygon, text);
+
+    return [polygon.id, text.id];
+}
+
+/**
+ * Recreate count marker Fabric objects
+ * @param {Object} data - Measurement data
+ * @returns {Array} Array of Fabric object IDs
+ */
+function recreateCountMarker(data) {
+    const color = data.color || '#003B5C';
+
+    // Create circle
+    const circle = new fabric.Circle({
+        left: data.x,
+        top: data.y,
+        radius: 15,
+        fill: color,
+        stroke: '#FFFFFF',
+        strokeWidth: 2,
+        originX: 'center',
+        originY: 'center'
+    });
+
+    // Create text
+    const text = new fabric.Text(String(data.count), {
+        left: data.x,
+        top: data.y,
+        fontSize: 14,
+        fill: '#FFFFFF',
+        fontWeight: 'bold',
+        originX: 'center',
+        originY: 'center'
+    });
+
+    // Group circle and text
+    const group = new fabric.Group([circle, text], {
+        left: data.x,
+        top: data.y,
+        selectable: true,
+        hasControls: true,
+        objectType: 'count-marker',
+        measurementData: data
+    });
+    group.id = `count-${data.id}`;
+
+    measurementState.fabricCanvas.add(group);
+
+    return [group.id];
+}
+
+/**
+ * Update Fabric objects to match measurement data
+ * @param {Object} data - Measurement data
+ */
+function updateFabricObjectsFromData(data) {
+    const allObjects = measurementState.fabricCanvas.getObjects();
+
+    // Update each Fabric object
+    for (const objId of data.fabricObjects || []) {
+        const obj = allObjects.find(o => o.id === objId);
+        if (!obj) continue;
+
+        // Update common properties
+        if (obj.set) {
+            obj.set({
+                stroke: data.color,
+                fill: obj.objectType === 'measurement-area' ? `${data.color}33` : obj.fill
+            });
+        }
+
+        // Update text if it's a text object
+        if (obj.objectType === 'measurement-text') {
+            let newText = '';
+            switch (data.type) {
+                case 'linear':
+                    newText = `${data.length.toFixed(2)} ${data.unit}`;
+                    break;
+                case 'area':
+                    newText = `${data.area.toFixed(2)} ${data.unit}`;
+                    break;
+            }
+            if (newText && obj.set) {
+                obj.set({ text: newText, fill: data.color });
+            }
+        }
+
+        // Update measurement data reference
+        if (obj.measurementData) {
+            obj.measurementData = data;
+        }
+    }
+
+    measurementState.fabricCanvas.renderAll();
+}
+
+/**
+ * Clear undo/redo stacks for current page
+ */
+function clearUndoRedoStacks() {
+    const currentPage = viewerState?.currentPage || 1;
+
+    if (measurementState.undoStack[currentPage]) {
+        measurementState.undoStack[currentPage] = [];
+    }
+    if (measurementState.redoStack[currentPage]) {
+        measurementState.redoStack[currentPage] = [];
+    }
+
+    console.log(`[Undo/Redo] Cleared stacks for page ${currentPage}`);
 }
 
 
@@ -3032,6 +3566,9 @@ function handlePropertiesSave(event) {
     const colorInput = document.getElementById('prop-color');
     const notesInput = document.getElementById('prop-notes');
 
+    // Task 13: Capture previous state for undo
+    const previousData = JSON.parse(JSON.stringify(data));
+
     // Update measurement data
     const oldLabel = data.label;
     const oldColor = data.color;
@@ -3057,6 +3594,9 @@ function handlePropertiesSave(event) {
 
     // Task 12: Emit standardized update event
     emitMeasurementEvent('measurement:updated', data);
+
+    // Task 13: Push to undo stack
+    pushToUndoStack('update', data, previousData);
 
     console.log('[Properties Panel] Changes saved successfully');
 
