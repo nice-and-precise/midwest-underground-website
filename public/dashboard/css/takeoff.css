@@ -494,3 +494,28 @@ body {
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
   /* Canvas rendering quality handled in JavaScript */
 }
+
+/* ============================================
+   MODULE 1.2: MEASUREMENT TOOLS
+   ============================================ */
+
+/* Measurement Canvas Overlay */
+#measurement-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: auto;
+  z-index: 2; /* Above PDF canvas (z-index: 1) */
+  /* No background - transparent to see PDF underneath */
+}
+
+/* Viewer container needs relative positioning for absolute canvas */
+.viewer-container {
+  position: relative;
+}
+
+/* Ensure PDF canvas is below measurement canvas */
+#pdf-canvas {
+  position: relative;
+  z-index: 1;
+}

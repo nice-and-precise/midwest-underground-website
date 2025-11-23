@@ -94,6 +94,13 @@ document.addEventListener('DOMContentLoaded', () => {
   attachEventListeners();
 
   console.log('PDF Viewer initialized');
+
+  // Initialize measurement tools module (Module 1.2)
+  if (typeof initMeasurementTools === 'function') {
+    initMeasurementTools();
+  } else {
+    console.warn('Measurement tools module not found - measurement features unavailable');
+  }
 });
 
 /**
@@ -399,12 +406,34 @@ async function renderPage(pageNum) {
     await viewerState.renderTask.promise;
 
     // Update current page state
+    const oldPage = viewerState.currentPage;
     viewerState.currentPage = pageNum;
 
     // Update UI
     updatePageControls();
 
     console.log(`Rendered page ${pageNum} of ${viewerState.totalPages}`);
+
+    // Dispatch event for measurement tools (Module 1.2)
+    document.dispatchEvent(new CustomEvent('page:rendered', {
+      detail: {
+        pageNumber: pageNum,
+        width: canvas.width,
+        height: canvas.height,
+        styleWidth: canvas.style.width,
+        styleHeight: canvas.style.height
+      }
+    }));
+
+    // If page changed, dispatch page:changed event
+    if (oldPage !== pageNum) {
+      document.dispatchEvent(new CustomEvent('page:changed', {
+        detail: {
+          oldPage: oldPage,
+          newPage: pageNum
+        }
+      }));
+    }
   } catch (error) {
     if (error.name === 'RenderingCancelledException') {
       console.log('Rendering cancelled (new page requested)');
@@ -519,6 +548,9 @@ function setZoom(zoom) {
 
   const clampedZoom = Math.max(MIN_ZOOM, Math.min(MAX_ZOOM, zoom));
 
+  // Store old zoom for event
+  const oldZoom = viewerState.zoom;
+
   // Update state
   viewerState.zoom = clampedZoom;
 
@@ -527,6 +559,14 @@ function setZoom(zoom) {
 
   // Update pan cursor
   updatePanCursor();
+
+  // Dispatch zoom:changed event for measurement tools (Module 1.2)
+  document.dispatchEvent(new CustomEvent('zoom:changed', {
+    detail: {
+      oldZoom: oldZoom,
+      newZoom: clampedZoom
+    }
+  }));
 
   // Re-render current page with new zoom
   renderPage(viewerState.currentPage);

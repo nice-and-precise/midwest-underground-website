@@ -10,6 +10,10 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
     <!-- Fallback CDN (for future reference): https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.min.js -->
 
+    <!-- Fabric.js Library (for measurement canvas overlay) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.0/fabric.min.js"></script>
+    <!-- Fallback CDN: https://unpkg.com/fabric@5.3.0/dist/fabric.min.js -->
+
     <!-- Styles -->
     <link rel="stylesheet" href="css/takeoff.css">
 </head>
@@ -135,6 +139,8 @@
             <!-- Canvas Container -->
             <div id="viewer-container" class="viewer-container">
                 <canvas id="pdf-canvas"></canvas>
+                <!-- Measurement Canvas Overlay (Fabric.js) - z-index: 2 -->
+                <canvas id="measurement-canvas"></canvas>
             </div>
 
         </section>
@@ -165,5 +171,6 @@
 
     <!-- JavaScript -->
     <script src="js/pdf-viewer.js"></script>
+    <script src="js/measurement-tools.js"></script>
 </body>
 </html>
