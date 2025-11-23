@@ -3,9 +3,9 @@
 **Module:** 1.2 - Basic measurement tools
 **Phase:** Phase 5 - Finalization (Tasks 12-15)
 **Status:** in-progress
-**Current Task:** Task 14 - Measurement Persistence
-**Progress:** 13/15 tasks complete (87%)
-**Last Completed:** Task 13 - Undo/Redo Support ✅
+**Current Task:** Module 1.2 COMPLETE! Ready for Module 1.3
+**Progress:** 15/15 tasks complete (100%) ✅
+**Last Completed:** Tasks 14 & 15 - Persistence & Scale Indicator ✅
 
 ---
 
@@ -68,7 +68,7 @@
   - Real-time Fabric object updates
   - Event emission on save
 
-### Phase 5: Finalization (Tasks 12-15) - IN PROGRESS
+### Phase 5: Finalization (Tasks 12-15) - ✅ COMPLETE
 - ✅ **Task 12: Implement Event Emission System (20 min)** - COMPLETED
   - Created emitMeasurementEvent() helper function
   - Standardized all measurement:created events (3 locations)
@@ -93,10 +93,25 @@
   - Update Fabric objects on undo update
   - Console logging for debugging
   - +540 lines added (3,169 → 3,709 lines)
-- ⏳ Task 14: Add Measurement Persistence (35 min)
-- ⏳ Task 15: Add Scale Indicator UI (25 min)
+- ✅ **Task 14: Measurement Persistence (35 min)** - COMPLETED (commit 24aa434)
+  - Auto-save to localStorage after CRUD
+  - Load measurements on page load
+  - Export to JSON file
+  - Import from JSON file
+  - Clear all with confirmation
+  - Toolbar buttons (Export, Import, Clear)
+  - Version control for storage format
+  - +337 lines
 
-**Remaining Time:** 60 minutes (~1 hour)
+- ✅ **Task 15: Scale Indicator UI (25 min)** - COMPLETED (commit 24aa434)
+  - Scale info in status bar
+  - Color-coded status (green=set, red=warning)
+  - Optional visual scale bar on canvas
+  - Auto-update on page change
+  - Auto-update after calibration
+  - +234 lines
+
+**Remaining Time:** 0 minutes - MODULE 1.2 COMPLETE! ✅
 
 ---
 
