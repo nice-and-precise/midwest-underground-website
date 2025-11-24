@@ -1,3 +1,7 @@
+⚠️ **ARCHIVED DOCUMENTATION** - This file references documentation from a previous project phase. Some links may point to files that have been moved, renamed, or removed. For current documentation, see [docs/README.md](../../README.md).
+
+---
+
 <!-- TOC -->
 
 ## Table of Contents
@@ -571,22 +575,22 @@ npm run build
 
 ### Complete Guide Library (16 Files)
 
-1. **[README.md](README.md)** - Project overview
+1. **[README.md](../../../README.md)** - Project overview
 2. **[HDD-OPERATIONS-PHASE-3-7-COMPLETE.md](HDD-OPERATIONS-PHASE-3-7-COMPLETE.md)** - Full implementation guide (500+ lines)
-3. **[SESSION-FIXES-AND-IMPROVEMENTS.md](SESSION-FIXES-AND-IMPROVEMENTS.md)** - Recent fixes (150+ lines)
+3. **[SESSION-FIXES-AND-IMPROVEMENTS.md](../sessions/SESSION-FIXES-AND-IMPROVEMENTS.md)** - Recent fixes (150+ lines)
 4. **[COMPLETE-PROJECT-SUMMARY.md](COMPLETE-PROJECT-SUMMARY.md)** - This file
-5. **[docs/PLACEHOLDERS.md](docs/PLACEHOLDERS.md)** - Content tracking
-6. **[docs/DEPLOYMENT-GUIDE.md](docs/DEPLOYMENT-GUIDE.md)** - Deploy instructions
-7. **[docs/API-DOCUMENTATION.md](docs/API-DOCUMENTATION.md)** - API reference
-8. **[docs/COMPONENT-LIBRARY.md](docs/COMPONENT-LIBRARY.md)** - Component docs
-9. **[docs/DATABASE-SCHEMA.md](docs/DATABASE-SCHEMA.md)** - Schema reference
-10. **[docs/AUTHENTICATION-GUIDE.md](docs/AUTHENTICATION-GUIDE.md)** - Auth setup
-11. **[docs/OFFLINE-SYNC-GUIDE.md](docs/OFFLINE-SYNC-GUIDE.md)** - Offline features
-12. **[docs/KPI-CALCULATIONS.md](docs/KPI-CALCULATIONS.md)** - KPI formulas
-13. **[docs/TESTING-GUIDE.md](docs/TESTING-GUIDE.md)** - Testing procedures
-14. **[docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md)** - Common issues
-15. **[docs/CONTENT-UPDATE-GUIDE.md](docs/CONTENT-UPDATE-GUIDE.md)** - Non-technical guide
-16. **[docs/BRAND-STANDARDS.md](docs/BRAND-STANDARDS.md)** - Design system
+5. **[docs/PLACEHOLDERS.md](../../PLACEHOLDERS.md)** - Content tracking
+6. **[docs/DEPLOYMENT-GUIDE.md](../../guides/DEPLOYMENT-GUIDE.md)** - Deploy instructions
+7. **[docs/API-DOCUMENTATION.md](../../architecture/API-REFERENCE.md)** - API reference (now API-REFERENCE.md)
+8. **docs/COMPONENT-LIBRARY.md** - Component docs (archived - no longer available)
+9. **[docs/DATABASE-SCHEMA.md](../../architecture/DATABASE-SCHEMA.md)** - Schema reference
+10. **docs/AUTHENTICATION-GUIDE.md** - Auth setup (archived - see [DEVELOPMENT.md](../../guides/DEVELOPMENT.md))
+11. **docs/OFFLINE-SYNC-GUIDE.md** - Offline features (archived - no longer available)
+12. **docs/KPI-CALCULATIONS.md** - KPI formulas (archived - no longer available)
+13. **[docs/TESTING-GUIDE.md](../../guides/TESTING.md)** - Testing procedures (now TESTING.md)
+14. **[docs/TROUBLESHOOTING.md](../../guides/TROUBLESHOOTING.md)** - Common issues
+15. **docs/CONTENT-UPDATE-GUIDE.md** - Non-technical guide (archived - no longer available)
+16. **[docs/BRAND-STANDARDS.md](../../brand/BRAND-STANDARDS.md)** - Design system
 
 **Total Documentation:** 9,000+ lines
 
@@ -870,12 +874,12 @@ npm run dev
 ```
 
 **Documentation:**
-- Start with [README.md](README.md)
+- Start with [README.md](../../../README.md)
 - See [HDD-OPERATIONS-PHASE-3-7-COMPLETE.md](HDD-OPERATIONS-PHASE-3-7-COMPLETE.md)
-- Check [docs/](docs/) folder for specific guides
+- Check [docs/](../../) folder for specific guides
 
 **Common Issues:**
-- See [docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md)
+- See [docs/TROUBLESHOOTING.md](../../guides/TROUBLESHOOTING.md)
 - Check server logs in terminal
 - Verify environment variables
 
@@ -886,7 +890,7 @@ npm run dev
 - Credentials: See mock login file
 
 **User Guides:**
-- [docs/CONTENT-UPDATE-GUIDE.md](docs/CONTENT-UPDATE-GUIDE.md) - Update content
+- docs/CONTENT-UPDATE-GUIDE.md - Update content (archived - no longer available)
 - [HDD-OPERATIONS-PHASE-3-7-COMPLETE.md](HDD-OPERATIONS-PHASE-3-7-COMPLETE.md) - User documentation section
 
 **Support:**

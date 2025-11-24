@@ -227,9 +227,9 @@ Always use theme-aware text colors:
 
 ## Related Files
 
-- [COMPLETE-PROJECT-SUMMARY.md](./COMPLETE-PROJECT-SUMMARY.md) - Full project status
-- [SESSION-FIXES-AND-IMPROVEMENTS.md](./SESSION-FIXES-AND-IMPROVEMENTS.md) - Previous session fixes
-- [src/app/globals.css](./src/app/globals.css) - Main stylesheet with CSS variables
+- [COMPLETE-PROJECT-SUMMARY.md](../reports/COMPLETE-PROJECT-SUMMARY.md) - Full project status
+- [SESSION-FIXES-AND-IMPROVEMENTS.md](../sessions/SESSION-FIXES-AND-IMPROVEMENTS.md) - Previous session fixes
+- [src/app/globals.css](../../../src/app/globals.css) - Main stylesheet with CSS variables
 
 ## Completion Date
 

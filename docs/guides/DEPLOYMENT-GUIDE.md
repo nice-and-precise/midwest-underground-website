@@ -567,10 +567,10 @@ npm run build
 - [Vercel Documentation](https://vercel.com/docs)
 
 ### Internal Documentation
-- [README.md](README.md) - Project overview
+- [README.md](../../README.md) - Project overview
 - [QA-AUDIT-CHECKLIST.md](QA-AUDIT-CHECKLIST.md) - Testing guide
 - [IMAGE-OPTIMIZATION-RECOMMENDATIONS.md](IMAGE-OPTIMIZATION-RECOMMENDATIONS.md) - Image optimization
-- [SESSION-SUMMARY-OCT-25-2025.md](SESSION-SUMMARY-OCT-25-2025.md) - Recent changes
+- [SESSION-SUMMARY-OCT-25-2025.md](../archive/sessions/SESSION-SUMMARY-OCT-25-2025.md) - Recent changes
 
 ---
 

@@ -1,3 +1,7 @@
+⚠️ **ARCHIVED DOCUMENTATION** - This file references documentation from a previous project phase. Some links may point to files that have been moved or renamed. For current documentation, see [docs/README.md](../../README.md).
+
+---
+
 <!-- TOC -->
 
 ## Table of Contents
@@ -92,7 +96,7 @@ Route (app)                              Size     First Load JS
 - Unused images: **14MB** of dead assets
 - Service images: **1.1MB** uncompressed JPEGs
 
-**Deliverable:** Created [IMAGE-OPTIMIZATION-RECOMMENDATIONS.md](IMAGE-OPTIMIZATION-RECOMMENDATIONS.md)
+**Deliverable:** Created [IMAGE-OPTIMIZATION-RECOMMENDATIONS.md](../../guides/IMAGE-OPTIMIZATION-RECOMMENDATIONS.md)
 - 230+ lines of detailed optimization guidance
 - Phase 1 (Pre-Launch): Delete unused files, optimize logos to < 50KB
 - Phase 2 (Post-Launch): Next.js Image component, lazy loading, WebP
@@ -106,7 +110,7 @@ Route (app)                              Size     First Load JS
 
 **Task:** Create comprehensive testing guide for QA personnel
 
-**Deliverable:** [QA-AUDIT-CHECKLIST.md](QA-AUDIT-CHECKLIST.md)
+**Deliverable:** [QA-AUDIT-CHECKLIST.md](../../guides/QA-AUDIT-CHECKLIST.md)
 - **690 lines, 300+ test items**
 - Static HTML testing (11 pages)
 - Next.js app testing (32 routes)
@@ -322,7 +326,7 @@ gh pr merge 1 --squash
    - Use TinyPNG or Squoosh for logo files
    - Delete unused assets
    - Convert to WebP where supported
-   - See: [IMAGE-OPTIMIZATION-RECOMMENDATIONS.md](IMAGE-OPTIMIZATION-RECOMMENDATIONS.md)
+   - See: [IMAGE-OPTIMIZATION-RECOMMENDATIONS.md](../../guides/IMAGE-OPTIMIZATION-RECOMMENDATIONS.md)
 
 2. **Set Up Production Environment (1-2 hours)**
    - Create `.env.production` file
@@ -331,7 +335,7 @@ gh pr merge 1 --squash
    - Deploy to staging environment first
 
 3. **Run QA Audit (8-12 hours)**
-   - Follow [QA-AUDIT-CHECKLIST.md](QA-AUDIT-CHECKLIST.md)
+   - Follow [QA-AUDIT-CHECKLIST.md](../../guides/QA-AUDIT-CHECKLIST.md)
    - Document all bugs found
    - Fix critical issues before launch
    - Get stakeholder sign-off
@@ -468,12 +472,12 @@ gh pr merge 1 --squash
 
 ### Key Files for Future Developers
 
-1. **[README.md](README.md)** - Project overview and quick start
-2. **[BUILD-SUCCESS-REPORT.md](BUILD-SUCCESS-REPORT.md)** - TypeScript fixes and build process
-3. **[QA-AUDIT-CHECKLIST.md](QA-AUDIT-CHECKLIST.md)** - Complete testing guide
-4. **[IMAGE-OPTIMIZATION-RECOMMENDATIONS.md](IMAGE-OPTIMIZATION-RECOMMENDATIONS.md)** - Performance optimization
-5. **[PLACEHOLDERS.md](PLACEHOLDERS.md)** - Content that needs replacement
-6. **[docs/](docs/)** - 16 comprehensive guides
+1. **[README.md](../../../README.md)** - Project overview and quick start
+2. **[BUILD-SUCCESS-REPORT.md](../reports/BUILD-SUCCESS-REPORT.md)** - TypeScript fixes and build process
+3. **[QA-AUDIT-CHECKLIST.md](../../guides/QA-AUDIT-CHECKLIST.md)** - Complete testing guide
+4. **[IMAGE-OPTIMIZATION-RECOMMENDATIONS.md](../../guides/IMAGE-OPTIMIZATION-RECOMMENDATIONS.md)** - Performance optimization
+5. **[PLACEHOLDERS.md](../../PLACEHOLDERS.md)** - Content that needs replacement
+6. **[docs/](../../)** - 16 comprehensive guides
 
 ### Common Tasks
 

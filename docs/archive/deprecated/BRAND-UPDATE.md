@@ -1,3 +1,7 @@
+⚠️ **DEPRECATED DOCUMENTATION** - This file documents brand updates from the static HTML version of the website. The project has since been migrated to Next.js with TypeScript and Tailwind CSS. Referenced files no longer exist. For current brand standards, see [docs/brand/BRAND-STANDARDS.md](../../brand/BRAND-STANDARDS.md).
+
+---
+
 <!-- TOC -->
 
 ## Table of Contents
@@ -94,45 +98,48 @@ Successfully updated the entire Midwest Underground website to align with offici
 ## Files Modified
 
 ### CSS Files (1)
-1. **[css/styles.css](css/styles.css)**
+1. **css/styles.css** _(deprecated - from static HTML version)_
    - Updated `:root` CSS variables with official brand colors
    - Updated `[data-theme="dark"]` with new dark mode palette
    - Added legacy color aliases for backward compatibility
    - Updated semantic colors for light and dark themes
+   - _Note: Now handled by Tailwind CSS in Next.js app_
 
 ### JavaScript Files (8)
-All dashboard JavaScript files updated with new Chart.js color schemes:
+All dashboard JavaScript files updated with new Chart.js color schemes _(deprecated - from static HTML version)_:
 
-1. **[dashboard/js/charts.js](dashboard/js/charts.js)**
+1. **dashboard/js/charts.js** _(archived)_
    - Updated theme-aware color palette
    - Updated revenue chart background color (rgba)
 
-2. **[dashboard/js/customers.js](dashboard/js/customers.js)**
+2. **dashboard/js/customers.js** _(archived)_
    - Updated chart initialization colors
    - Updated customer type distribution chart colors
    - Updated notification toast colors
 
-3. **[dashboard/js/dashboard.js](dashboard/js/dashboard.js)**
+3. **dashboard/js/dashboard.js** _(archived)_
    - Updated notification toast colors (Steel for info)
 
-4. **[dashboard/js/equipment.js](dashboard/js/equipment.js)**
+4. **dashboard/js/equipment.js** _(archived)_
    - Updated chart color palette
    - Updated notification toast colors
 
-5. **[dashboard/js/financials.js](dashboard/js/financials.js)**
+5. **dashboard/js/financials.js** _(archived)_
    - Updated revenue & profit chart colors
    - Updated expense breakdown chart colors
    - Updated chart background rgba values
    - Updated notification toast colors
 
-6. **[dashboard/js/projects.js](dashboard/js/projects.js)**
+6. **dashboard/js/projects.js** _(archived)_
    - Updated notification toast colors
 
-7. **[dashboard/js/reports.js](dashboard/js/reports.js)**
+7. **dashboard/js/reports.js** _(archived)_
    - Updated notification toast colors
 
-8. **[dashboard/js/modal.js](dashboard/js/modal.js)**
+8. **dashboard/js/modal.js** _(archived)_
    - No changes required (uses CSS variables)
+
+_All functionality has been migrated to Next.js TypeScript components with Tailwind CSS. See `src/app/dashboard/` for current implementation._
 
 ---
 

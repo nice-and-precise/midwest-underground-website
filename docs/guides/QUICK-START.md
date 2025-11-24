@@ -89,26 +89,26 @@ Location: `C:\Users\Owner\Desktop\midwest-underground-website`
 
 ### Start Here
 
-1. **[README.md](README.md)** - Complete project overview
-2. **[PROJECT-SUMMARY.md](PROJECT-SUMMARY.md)** - Build details & deliverables  
+1. **[README.md](../../README.md)** - Complete project overview
+2. **PROJECT-SUMMARY.md** - Build details (archived - see [docs/archive/reports/](../archive/reports/))
 3. **[CHECKLIST.md](CHECKLIST.md)** - Quality verification (100% complete)
 
 ### When You Need To...
 
 **Deploy the website:**
-→ [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md)
+→ [DEPLOYMENT-GUIDE.md](DEPLOYMENT-GUIDE.md)
 
 **Update content:**
-→ [docs/MAINTENANCE.md](docs/MAINTENANCE.md)
+→ [docs/MAINTENANCE.md](../MAINTENANCE.md)
 
 **Add new features:**
-→ [docs/FEATURE-REQUESTS.md](docs/FEATURE-REQUESTS.md)
+→ [docs/FEATURE-REQUESTS.md](../FEATURE-REQUESTS.md)
 
 **Understand architecture:**
-→ [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)
+→ [docs/architecture/OVERVIEW.md](../architecture/OVERVIEW.md)
 
 **Track placeholders:**
-→ [docs/PLACEHOLDERS.md](docs/PLACEHOLDERS.md)
+→ [docs/PLACEHOLDERS.md](../PLACEHOLDERS.md)
 
 ---
 
@@ -117,7 +117,7 @@ Location: `C:\Users\Owner\Desktop\midwest-underground-website`
 Three complete feature guides with copy-paste templates:
 
 ### 1. Dark Mode Toggle (~2 hours)
-**Guide:** [docs/features/DARK-MODE.md](docs/features/DARK-MODE.md)
+**Guide:** [docs/features/DARK-MODE.md](../features/DARK-MODE.md)
 
 ```
 What: Light/dark theme switcher
@@ -126,7 +126,7 @@ Includes: Complete CSS + JavaScript + Testing
 ```
 
 ### 2. Service Request Form (~3-4 hours)
-**Guide:** [docs/features/SERVICE-REQUEST-FORM.md](docs/features/SERVICE-REQUEST-FORM.md)
+**Guide:** [docs/features/SERVICE-REQUEST-FORM.md](../features/SERVICE-REQUEST-FORM.md)
 
 ```
 What: Multi-step form with file upload
@@ -135,7 +135,7 @@ Includes: 3-step form, validation, Formspree integration
 ```
 
 ### 3. Invoice Payment System (~2-8 hours)
-**Guide:** [docs/features/INVOICE-PAYMENT.md](docs/features/INVOICE-PAYMENT.md)
+**Guide:** [docs/features/INVOICE-PAYMENT.md](../features/INVOICE-PAYMENT.md)
 
 ```
 What: Secure online payment processing
@@ -252,7 +252,7 @@ midwest-underground-website/
    - Email: info@midwestundergroundmn.com
    - Address: 4320 County Rd 8 SE, Willmar, MN 56201
 
-See [docs/PLACEHOLDERS.md](docs/PLACEHOLDERS.md) for complete list (88 items).
+See [docs/PLACEHOLDERS.md](../PLACEHOLDERS.md) for complete list (88 items).
 
 ---
 
@@ -273,7 +273,7 @@ grep -r "(320) 382-6636" --include="*.html"
 3. Update content
 4. Add to navigation
 
-See [docs/MAINTENANCE.md](docs/MAINTENANCE.md) for detailed instructions.
+See [docs/MAINTENANCE.md](../MAINTENANCE.md) for detailed instructions.
 
 ### Add New Project
 
@@ -323,14 +323,14 @@ git push origin main
 
 ### Documentation First
 
-- [README.md](README.md) - Start here
-- [docs/MAINTENANCE.md](docs/MAINTENANCE.md) - Content updates
-- [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) - How it works
+- [README.md](../../README.md) - Start here
+- [docs/MAINTENANCE.md](../MAINTENANCE.md) - Content updates
+- [docs/architecture/OVERVIEW.md](../architecture/OVERVIEW.md) - How it works
 
 ### For Features
 
-- [docs/FEATURE-REQUESTS.md](docs/FEATURE-REQUESTS.md) - Master guide
-- [docs/features/](docs/features/) - Specific guides
+- [docs/FEATURE-REQUESTS.md](../FEATURE-REQUESTS.md) - Master guide
+- [docs/features/](../features/) - Specific guides
 
 ### Ask Claude Code
 
@@ -422,9 +422,9 @@ Please help me fix this.
 
 **Questions?** Check the documentation in `/docs/` folder.
 
-**Ready to deploy?** See [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md)
+**Ready to deploy?** See [DEPLOYMENT-GUIDE.md](DEPLOYMENT-GUIDE.md)
 
-**Want to add features?** See [docs/FEATURE-REQUESTS.md](docs/FEATURE-REQUESTS.md)
+**Want to add features?** See [docs/FEATURE-REQUESTS.md](../FEATURE-REQUESTS.md)
 
 ---
 

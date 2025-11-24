@@ -42,7 +42,7 @@ npm run docs:audit
 
 **Features:**
 - Finds all .md files (excludes node_modules, .git, .next, out)
-- Extracts [text](url) markdown links
+- Extracts markdown links in standard format
 - Checks file existence for relative links
 - Reports broken links with file, line number, and target path
 - Exit code 1 if broken links found

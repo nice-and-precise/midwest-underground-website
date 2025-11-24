@@ -47,7 +47,7 @@ This session focused on fixing remaining issues, improving dark mode readability
 **Issue:** Homepage displayed a "Next.js Migration Status" section showing outdated "Next Steps" that were already complete.
 
 **Fix:**
-- Removed migration status section from [src/app/page.tsx](src/app/page.tsx)
+- Removed migration status section from [src/app/page.tsx](../../../src/app/page.tsx)
 - Replaced with professional "Call to Action" section
 - New CTA includes:
   - Clear value proposition
@@ -363,9 +363,9 @@ Client: tanderson@willmarmu.gov / client123
 ```
 
 ### Documentation
-- [HDD-OPERATIONS-PHASE-3-7-COMPLETE.md](HDD-OPERATIONS-PHASE-3-7-COMPLETE.md) - Full implementation guide
-- [PLACEHOLDERS.md](docs/PLACEHOLDERS.md) - Content placeholders tracker
-- [README.md](README.md) - Project overview
+- [HDD-OPERATIONS-PHASE-3-7-COMPLETE.md](../reports/HDD-OPERATIONS-PHASE-3-7-COMPLETE.md) - Full implementation guide
+- [PLACEHOLDERS.md](../../PLACEHOLDERS.md) - Content placeholders tracker
+- [README.md](../../../README.md) - Project overview
 
 ### Key Repositories
 - Main Website: `c:\Users\Owner\Desktop\midwest-underground-website`

@@ -831,7 +831,7 @@ await prisma.reportAudit.create({
 
 ### Existing Dashboard Integration
 
-**Current dashboard cards** (from [src/app/dashboard/page.tsx](src/app/dashboard/page.tsx:186)):
+**Current dashboard cards** (from [src/app/dashboard/page.tsx](../../../src/app/dashboard/page.tsx) - originally line 186):
 1. Bore Logs
 2. Field Reports
 3. Projects
@@ -897,7 +897,7 @@ export async function GET(request: NextRequest) {
 }
 ```
 
-**Middleware** (from [src/middleware.ts](src/middleware.ts:50)):
+**Middleware** (from [src/middleware.ts](../../../src/middleware.ts) - originally line 50):
 - Public routes: /, /services, /about, /projects, /contact, /auth/*
 - Protected routes: /dashboard/*
 - Auto-redirects to login with callback URL

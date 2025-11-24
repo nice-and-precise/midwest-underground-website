@@ -720,14 +720,14 @@ $users = [
 ## Support & Documentation
 
 ### Full Documentation
-- **Dashboard Spec**: [docs/features/BUSINESS-DASHBOARD.md](../features/BUSINESS-DASHBOARD.md)
-- **Architecture**: [docs/ARCHITECTURE.md](../ARCHITECTURE.md)
-- **Dark Mode Testing**: [docs/DARK-MODE-TEST-PLAN.md](../DARK-MODE-TEST-PLAN.md)
+- **Dashboard Spec**: [docs/features/BUSINESS-DASHBOARD.md](features/BUSINESS-DASHBOARD.md)
+- **Architecture**: [docs/architecture/OVERVIEW.md](architecture/OVERVIEW.md)
+- **Dark Mode Testing**: [docs/DARK-MODE-TEST-PLAN.md](DARK-MODE-TEST-PLAN.md)
 
 ### Quick Links
 - **GitHub**: https://github.com/nice-and-precise/midwest-underground-website
 - **Issues**: Report bugs via GitHub Issues
-- **README**: [README.md](../../README.md)
+- **README**: [README.md](../README.md)
 
 ---
 
