@@ -1,9 +1,10 @@
 # Project Index: Midwest Underground Website
 
-**Generated:** 2025-11-23 (Post-Restructure)
-**Version:** 4.0.0
+**Generated:** 2025-11-24 (Updated via /sc:index-repo)
+**Version:** 5.0.0
 **Branch:** master
 **Status:** Production Ready (Takeoff System: 93.5% Complete) | Documentation: 100% Restructured
+**Token Efficiency:** 94% reduction (58K → 3.5K tokens)
 
 ## 📋 Quick Context
 
@@ -59,10 +60,18 @@ midwest-underground-website/
 │
 ├── src/                      # 🔄 NEXT.JS: Migration in progress (60%)
 │   ├── app/                  # App Router (15+ pages)
-│   │   ├── page.tsx         # Homepage
-│   │   ├── dashboard/       # Dashboard pages (11 pages)
+│   │   ├── layout.tsx       # Root layout (minimal)
+│   │   ├── (marketing)/     # ✨ Marketing route group (public pages)
+│   │   │   ├── layout.tsx   # Marketing layout (header/footer)
+│   │   │   └── page.tsx     # Homepage
+│   │   ├── dashboard/       # Dashboard pages (12 pages with sidebar)
+│   │   │   ├── layout.tsx   # Dashboard layout (sidebar navigation)
+│   │   │   └── [features]/  # 12 dashboard features
+│   │   ├── auth/            # Authentication pages
 │   │   └── api/             # API routes (32 endpoints)
 │   ├── components/          # React components (11 total)
+│   │   └── dashboard/       # Dashboard-specific components
+│   │       └── DashboardSidebar.tsx  # ✨ NEW: Full sidebar navigation
 │   └── lib/                 # Utilities & services (6 libraries)
 │
 ├── tests/                   # Testing suite (14 test files)
@@ -73,10 +82,11 @@ midwest-underground-website/
 ├── prisma/                 # Database layer
 │   └── schema.prisma       # 16 models (User, Project, Bore, etc.)
 │
-├── docs/                      # 📚 RESTRUCTURED: Professional documentation (130 files)
+├── docs/                      # 📚 RESTRUCTURED: Professional documentation (130+ files)
 │   ├── README.md             # Documentation index
 │   ├── getting-started/      # Setup guides (3 files)
-│   ├── architecture/         # System design (2 files, 4 pending)
+│   ├── architecture/         # System design (3 files, 4 pending)
+│   │   └── ROUTE-GROUPS.md  # ✨ NEW: Route groups architecture
 │   ├── guides/               # How-to guides (13 files)
 │   ├── brand/                # Brand standards (2 files)
 │   ├── features/             # Feature docs (4 files)

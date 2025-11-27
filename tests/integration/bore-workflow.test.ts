@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeAll } from 'vitest';
 import { prisma } from '@/lib/prisma';
-import { ProjectStatus, BoreStatus, DailyReportStatus } from '@prisma/client';
+import { ProjectStatus, BoreStatus, ReportStatus } from '@prisma/client';
 
 describe('Bore Logging Workflow (Integration)', () => {
   let userId: string;
@@ -114,32 +114,32 @@ describe('Bore Logging Workflow (Integration)', () => {
           { name: 'D24x40 Drill', hours: 8, rate: 150, total: 1200 }
         ],
         notes: 'Completed 100 LF of drilling',
-        status: DailyReportStatus.DRAFT
+        status: ReportStatus.DRAFT
       }
     });
     reportId = dailyReport.id;
 
     expect(dailyReport).toBeDefined();
-    expect(dailyReport.status).toBe(DailyReportStatus.DRAFT);
+    expect(dailyReport.status).toBe(ReportStatus.DRAFT);
     expect(dailyReport.crew).toHaveLength(2);
     expect(dailyReport.production).toHaveLength(1);
 
     // Step 8: Submit daily report for approval
     const submittedReport = await prisma.dailyReport.update({
       where: { id: dailyReport.id },
-      data: { status: DailyReportStatus.SUBMITTED }
+      data: { status: ReportStatus.SUBMITTED }
     });
-    expect(submittedReport.status).toBe(DailyReportStatus.SUBMITTED);
+    expect(submittedReport.status).toBe(ReportStatus.SUBMITTED);
 
     // Step 9: Approve daily report
     const approvedReport = await prisma.dailyReport.update({
       where: { id: dailyReport.id },
       data: {
-        status: DailyReportStatus.APPROVED,
+        status: ReportStatus.APPROVED,
         signedById: userId
       }
     });
-    expect(approvedReport.status).toBe(DailyReportStatus.APPROVED);
+    expect(approvedReport.status).toBe(ReportStatus.APPROVED);
     expect(approvedReport.signedById).toBe(userId);
 
     // Step 10: Complete the bore

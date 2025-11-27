@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeAll } from 'vitest';
 import { prisma } from '@/lib/prisma';
-import { DailyReportStatus } from '@prisma/client';
+import { ReportStatus } from '@prisma/client';
 
 describe('Daily Reports API', () => {
   let testProjectId: string;
@@ -41,11 +41,11 @@ describe('Daily Reports API', () => {
 
     it('should filter reports by status', async () => {
       const reports = await prisma.dailyReport.findMany({
-        where: { status: DailyReportStatus.DRAFT }
+        where: { status: ReportStatus.DRAFT }
       });
 
       reports.forEach(report => {
-        expect(report.status).toBe(DailyReportStatus.DRAFT);
+        expect(report.status).toBe(ReportStatus.DRAFT);
       });
     });
   });
@@ -68,7 +68,7 @@ describe('Daily Reports API', () => {
           impact: 'None'
         },
         notes: 'Good progress today',
-        status: DailyReportStatus.DRAFT
+        status: ReportStatus.DRAFT
       };
 
       const report = await prisma.dailyReport.create({
@@ -85,7 +85,7 @@ describe('Daily Reports API', () => {
       expect(report.crew).toBeDefined();
       expect(Array.isArray(report.crew)).toBe(true);
       expect(report.production).toBeDefined();
-      expect(report.status).toBe(DailyReportStatus.DRAFT);
+      expect(report.status).toBe(ReportStatus.DRAFT);
     });
 
     it('should fail without required projectId', async () => {
@@ -108,7 +108,7 @@ describe('Daily Reports API', () => {
         data: reportData
       });
 
-      expect(report.status).toBe(DailyReportStatus.DRAFT);
+      expect(report.status).toBe(ReportStatus.DRAFT);
 
       await prisma.dailyReport.delete({ where: { id: report.id } });
     });
@@ -169,10 +169,10 @@ describe('Daily Reports API', () => {
     it('should update report status', async () => {
       const updated = await prisma.dailyReport.update({
         where: { id: testReportId },
-        data: { status: DailyReportStatus.SUBMITTED }
+        data: { status: ReportStatus.SUBMITTED }
       });
 
-      expect(updated.status).toBe(DailyReportStatus.SUBMITTED);
+      expect(updated.status).toBe(ReportStatus.SUBMITTED);
     });
 
     it('should update production data', async () => {
@@ -195,12 +195,12 @@ describe('Daily Reports API', () => {
         where: { id: testReportId },
         data: {
           signedById: user!.id,
-          status: DailyReportStatus.APPROVED
+          status: ReportStatus.APPROVED
         }
       });
 
       expect(updated.signedById).toBe(user!.id);
-      expect(updated.status).toBe(DailyReportStatus.APPROVED);
+      expect(updated.status).toBe(ReportStatus.APPROVED);
     });
   });
 });

@@ -30,7 +30,7 @@ describe('811 Compliance Workflow (Integration)', () => {
   afterAll(async () => {
     // Cleanup
     await prisma.ticket811Response.deleteMany({
-      where: { ticket811Id: { in: [activeTicketId, expiredTicketId] } }
+      where: { ticketId: { in: [activeTicketId, expiredTicketId] } }
     });
     await prisma.ticket811.deleteMany({
       where: { id: { in: [activeTicketId, expiredTicketId] } }
@@ -69,7 +69,7 @@ describe('811 Compliance Workflow (Integration)', () => {
     for (const utility of utilities) {
       await prisma.ticket811Response.create({
         data: {
-          ticket811Id: activeTicketId,
+          ticketId: activeTicketId,
           utilityName: utility.name,
           responseType: utility.type,
           responseDate: new Date('2025-01-03'),

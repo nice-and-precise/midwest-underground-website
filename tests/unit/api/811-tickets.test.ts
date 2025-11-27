@@ -175,7 +175,7 @@ describe('811 Tickets API', () => {
   describe('POST /api/hdd/811-tickets/[id]/responses', () => {
     it('should add a utility response to a ticket', async () => {
       const responseData = {
-        ticket811Id: testTicketId,
+        ticketId: testTicketId,
         utilityName: 'Xcel Energy',
         responseType: 'Clear',
         responseDate: new Date('2025-01-03'),
@@ -186,14 +186,14 @@ describe('811 Tickets API', () => {
       const response = await prisma.ticket811Response.create({
         data: responseData,
         include: {
-          ticket811: true,
-          respondedBy: true
+          ticket: true,
+          respondedById: true
         }
       });
 
       expect(response).toBeDefined();
       expect(response.utilityName).toBe('Xcel Energy');
-      expect(response.ticket811Id).toBe(testTicketId);
+      expect(response.ticketId).toBe(testTicketId);
       expect(response.respondedBy).toBeDefined();
     });
 
@@ -203,7 +203,7 @@ describe('811 Tickets API', () => {
       for (const utility of utilities) {
         await prisma.ticket811Response.create({
           data: {
-            ticket811Id: testTicketId,
+            ticketId: testTicketId,
             utilityName: utility,
             responseDate: new Date(),
             respondedById: testUserId
@@ -223,7 +223,7 @@ describe('811 Tickets API', () => {
 
     it('should fail without required fields', async () => {
       const responseData = {
-        ticket811Id: testTicketId,
+        ticketId: testTicketId,
         // utilityName is required
         responseDate: new Date(),
         respondedById: testUserId

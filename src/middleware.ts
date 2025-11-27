@@ -16,9 +16,14 @@ export default auth((req) => {
     '/auth/error'
   ]
 
+  // Public API routes (only auth-related endpoints)
+  const publicApiRoutes = [
+    '/api/auth'
+  ]
+
   // Check if current path is public
-  // NOTE: For testing, all API routes are temporarily public until auth is fully implemented
-  const isPublicRoute = publicRoutes.some(route => pathname === route || pathname.startsWith('/api/'))
+  const isPublicRoute = publicRoutes.some(route => pathname === route) ||
+    publicApiRoutes.some(route => pathname.startsWith(route))
 
   // Redirect to login if trying to access protected route while not authenticated
   if (!isPublicRoute && !isAuthenticated) {
@@ -32,7 +37,10 @@ export default auth((req) => {
     return NextResponse.redirect(new URL('/dashboard', req.url))
   }
 
-  return NextResponse.next()
+  // Add pathname to headers so it's available in layouts
+  const response = NextResponse.next()
+  response.headers.set('x-pathname', pathname)
+  return response
 })
 
 // Configure which routes to run middleware on

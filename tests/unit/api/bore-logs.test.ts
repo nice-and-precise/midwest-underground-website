@@ -26,7 +26,7 @@ describe('Bore Logs API', () => {
           _count: {
             select: {
               rodPasses: true,
-              tickets811: true
+              inspections: true
             }
           }
         },
@@ -65,7 +65,7 @@ describe('Bore Logs API', () => {
           _count: {
             select: {
               rodPasses: true,
-              tickets811: true
+              inspections: true
             }
           }
         },
@@ -188,11 +188,11 @@ describe('Bore Logs API', () => {
         include: {
           project: true,
           rodPasses: true,
-          tickets811: true,
+          inspections: true,
           _count: {
             select: {
               rodPasses: true,
-              tickets811: true
+              inspections: true
             }
           }
         }

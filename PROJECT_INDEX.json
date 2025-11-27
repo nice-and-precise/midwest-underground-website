@@ -1,12 +1,13 @@
 {
   "project": {
     "name": "midwest-underground-website",
-    "version": "3.0.0",
-    "generated": "2025-11-23",
-    "branch": "feat/takeoff-system",
-    "commit": "7e81b40",
+    "version": "5.0.0",
+    "generated": "2025-11-24",
+    "branch": "master",
+    "commit": "9b0685e",
     "status": "production-ready",
-    "description": "Hybrid web application for Midwest Underground Inc - Static dashboard + Next.js migration + Takeoff System"
+    "description": "Hybrid web application for Midwest Underground Inc - Static dashboard + Next.js migration + Takeoff System",
+    "tokenEfficiency": "94% reduction (58K → 3.5K tokens)"
   },
   "entryPoints": {
     "static": {
@@ -425,11 +426,12 @@
     }
   },
   "metadata": {
-    "lastUpdated": "2025-11-23",
-    "branch": "feat/takeoff-system",
-    "commit": "7e81b40",
-    "indexVersion": "3.0.0",
+    "lastUpdated": "2025-11-24",
+    "branch": "master",
+    "commit": "9b0685e",
+    "indexVersion": "5.0.0",
     "fileSize": "~15KB",
-    "tokenCount": "~4,000"
+    "tokenCount": "~4,000",
+    "generatedBy": "/sc:index-repo command"
   }
 }

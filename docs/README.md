@@ -31,6 +31,7 @@ Midwest Underground Website - complete documentation.
 
 - **[Overview](architecture/OVERVIEW.md)** – High-level system design.
 - **[Current State](architecture/CURRENT-STATE.md)** – Actual running state and branches.
+- **[Route Groups](architecture/ROUTE-GROUPS.md)** – Layout architecture and route groups pattern.
 - **[Database Schema](architecture/DATABASE-SCHEMA.md)** – Prisma models and relationships.
 - **[API Reference](architecture/API-REFERENCE.md)** – API endpoints and contracts.
 - **[Decisions](architecture/DECISIONS.md)** – Documented architectural decisions.

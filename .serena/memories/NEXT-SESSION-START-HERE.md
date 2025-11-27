@@ -1,287 +1,254 @@
-# NEXT SESSION START HERE
+# 🚀 START HERE - Next Session Quick Reference
 
-**Last Updated:** 2025-11-23  
-**Latest Commit:** 02c6c1f  
-**Project Status:** Documentation Phase Complete → Link Cleanup Next
-
----
-
-## 🎯 IMMEDIATE NEXT SESSION
-
-### Focus: Fix Archived Documentation Links
-
-**Read This Handoff First:**
-```
-docs/NEXT-SESSION-HANDOFF-LINK-CLEANUP.md
-```
-
-**Session Objective:**
-Fix 100 broken links in archived and active documentation
-
-**Expected Duration:** 60-90 minutes
-
-**Success Criteria:**
-- Broken links: 100 → <10
-- Create 3 missing files (LOGO-USAGE.md, FEATURES.md, LICENSE)
-- All active documentation validated
-- Archive docs marked with warnings
+**Last Updated:** 2025-11-24
+**Status:** Repository Index v5.0.0 Updated ✅
 
 ---
 
-## Quick Start for Next Session
+## 📖 FIRST ACTION: Read the Index
 
-### 1. Read Handoff Documentation
-```
-docs/NEXT-SESSION-HANDOFF-LINK-CLEANUP.md  # Comprehensive execution plan
-.serena/memories/session-complete-2025-11-23-comprehensive-docs-created.md
-```
-
-### 2. Current Status
-
-**Documentation:** ✅ 95% COMPLETE (7 comprehensive docs created)  
-**Broken Links:** 100 (down from 144, target: <10)  
-**Brand Compliance:** ✅ PASSING  
-**Build Status:** ✅ PASSING  
-**Latest Commit:** 02c6c1f (pushed to GitHub)
-
-### 3. What Was Just Completed
-
-**Session 2025-11-23 (Documentation Creation):**
-- Created 7 comprehensive documentation files (6,653 lines)
-- Added 20+ mermaid diagrams
-- Reduced broken links from 144 → 100
-- All validations passing (colors, build)
-- Committed (7131556) and pushed to GitHub
-
-**Files Created:**
-- docs/architecture/OVERVIEW.md
-- docs/architecture/DATABASE-SCHEMA.md
-- docs/architecture/API-REFERENCE.md
-- docs/architecture/DECISIONS.md
-- docs/guides/DEVELOPMENT.md
-- docs/guides/TESTING.md
-- docs/guides/DEPLOYMENT.md
-
----
-
-## Next Session Execution Plan
-
-### Phase 1: Setup (5 minutes)
-1. Read handoff: `docs/NEXT-SESSION-HANDOFF-LINK-CLEANUP.md`
-2. Run validation: `npm run docs:validate`
-3. Analyze broken links by category
-
-### Phase 2: Fix Archive Links (40 minutes)
-**Files to Fix (in order):**
-1. `docs/archive/reports/COMPLETE-PROJECT-SUMMARY.md` (18 links)
-2. `docs/archive/sessions/SESSION-SUMMARY-OCT-25-2025.md` (10 links)
-3. `docs/archive/deprecated/BRAND-UPDATE.md` (9 links)
-4. `docs/archive/deprecated/DARK-MODE-CONTRAST-FIXES.md` (3 links)
-5. Others (12 links combined)
-
-**Common Fixes:**
-- Update relative paths (e.g., `README.md` → `../../../README.md`)
-- Add archive warnings to deprecated docs
-- Remove or update references to deleted files
-
-### Phase 3: Create Missing Files (15 minutes)
-1. Create `docs/brand/LOGO-USAGE.md`
-2. Create `docs/FEATURES.md`
-3. Create root `LICENSE` file
-
-### Phase 4: Fix Active Documentation (20 minutes)
-**Files to Fix:**
-1. `docs/guides/QUICK-START.md` (21 links) - HIGH PRIORITY
-2. `docs/DASHBOARD-USER-GUIDE.md` (4 links)
-3. `docs/guides/DEPLOYMENT-GUIDE.md` (2 links)
-4. `docs/README.md` (1 link)
-5. Root `README.md` (3 links)
-
-### Phase 5: Validate & Commit (10 minutes)
-1. Run `npm run docs:validate` (verify <10 broken links)
-2. Run `npm run docs:check-all`
-3. Commit and push to GitHub
-4. Run `/sc:save` to preserve session context
-
----
-
-## Broken Link Categories
-
-### Category 1: Missing Files in Archive (50+ links)
-**Examples:**
-- `css/styles.css`
-- `dashboard/js/*.js`
-- Session summary files
-
-**Fix:** Mark as unavailable, add archive notes
-
-### Category 2: Incorrect Relative Paths (30+ links)
-**Examples:**
-- `docs/PLACEHOLDERS.md` (wrong path from archive)
-- `README.md` (needs `../../` or `../../../`)
-
-**Fix:** Calculate correct relative path, update
-
-### Category 3: Missing Documentation Files (15+ links)
-**Examples:**
-- `docs/brand/LOGO-USAGE.md` ← CREATE THIS
-- `docs/FEATURES.md` ← CREATE THIS
-- `LICENSE` ← CREATE THIS
-
-**Fix:** Create the missing files
-
-### Category 4: Archive Dead Links (5+ links)
-**Examples:**
-- Code references with line numbers
-- Temporary session files
-
-**Fix:** Remove line numbers, add archive notes
-
----
-
-## Files to Create
-
-### 1. docs/brand/LOGO-USAGE.md
-**Purpose:** Logo and brand asset usage guidelines  
-**Content:** Logo variants, sizing, spacing, dos/don'ts  
-**Reference:** `docs/brand/BRAND-STANDARDS.md`
-
-### 2. docs/FEATURES.md
-**Purpose:** Comprehensive feature list  
-**Content:** Core features, HDD operations, dashboard features  
-**Reference:** `PROJECT_INDEX.md`, `DASHBOARD-USER-GUIDE.md`
-
-### 3. LICENSE
-**Purpose:** Repository license  
-**Content:** MIT License (or user preference)  
-**Location:** Root directory
-
----
-
-## Key Commands
-
+**ALWAYS START BY READING:**
 ```bash
-# Validation
-npm run docs:validate          # Check links
-npm run docs:check-colors      # Check brand colors
-npm run docs:check-all         # Full audit
+cat PROJECT_INDEX.md
+```
 
-# Search
-git ls-files "*.md"            # List markdown files
-git grep -n "LOGO-USAGE.md"    # Find references
+**Why?**
+- ✅ **94% Token Savings:** 3,500 tokens vs 58,000 tokens
+- ✅ **Instant Context:** Understand entire codebase in seconds
+- ✅ **Complete Coverage:** All entry points, modules, APIs, tests
+- ✅ **Production Ready:** Updated 2025-11-24 via /sc:index-repo
 
-# Git
-git status
-git add docs/ README.md LICENSE
-git commit -m "docs: fix 90+ broken links..."
-git push origin master
+**Index Version:** v5.0.0 (latest)
+**Location:** `PROJECT_INDEX.md` and `PROJECT_INDEX.json`
+**Token Cost:** ~3,500 tokens (vs 58,000 without index)
 
-# Session
-/sc:save --type all --checkpoint
+---
+
+## 🎯 Current Project Status
+
+### Overall Progress
+- **Takeoff System:** 93.5% complete (PRODUCTION READY)
+- **Static Dashboard:** 100% complete (9 pages in production)
+- **Next.js Migration:** 60% complete (15+ pages)
+- **Documentation:** 100% restructured (138+ files organized)
+- **Testing:** 96% coverage (Module 1.3)
+
+### Active Branch
+- **Branch:** master
+- **Latest Commit:** 9b0685e (Documentation restructure)
+- **Status:** Clean, synced
+- **Previous:** feat/takeoff-system (merged)
+
+---
+
+## 📚 Essential Memories to Read
+
+### Must Read (Top Priority)
+1. **repo-index-v5-status** - Index status and usage guide
+2. **current-status** - Overall project status
+3. **session-2025-11-24-repo-index-regeneration** - Latest session details
+
+### Context Memories
+4. **project-overview** - High-level project overview
+5. **takeoff-system-context** - Takeoff architecture
+6. **tech-stack** - Technology decisions
+7. **code-style-conventions** - Coding standards
+
+### Recent Sessions
+8. **session-2025-11-23-takeoff-navigation-integration** - Navigation work
+9. **module-1.3-comprehensive-testing-2025-11-23** - Testing session
+10. **docs-restructure-COMPLETE-2025-11-23** - Docs organization
+
+---
+
+## 🔑 Key Files & Locations
+
+### Index Files (START HERE!)
+- `PROJECT_INDEX.md` - Human-readable index (549 lines, 19KB)
+- `PROJECT_INDEX.json` - Machine-readable index (437 lines, 14KB)
+
+### Documentation Hub
+- `README.md` - Project overview and quick start
+- `CLAUDE.md` - AI agent context (contains CRITICAL instructions)
+- `docs/README.md` - Documentation index
+- `docs/NEXT-SESSION-HANDOFF.md` - Continuation plan
+
+### Core Application
+- **Static Dashboard:** `public/dashboard/*.html` (9 pages)
+- **Takeoff System:** `public/dashboard/takeoff.html`
+- **Next.js App:** `src/app/` (App Router)
+- **API Routes:** `src/app/api/` (32+ endpoints)
+- **Components:** `src/components/` (11 components)
+- **Database:** `prisma/schema.prisma` (17 models)
+
+### Configuration
+- `package.json` - Dependencies and scripts
+- `next.config.js` - Next.js configuration
+- `prisma/schema.prisma` - Database models
+- `tailwind.config.js` - Tailwind CSS
+
+---
+
+## 🚀 Quick Start Commands
+
+### View Index
+```bash
+cd C:\Users\Owner\Desktop\midwest-underground-website
+cat PROJECT_INDEX.md
+```
+
+### Start Development
+```bash
+# Static dashboard (production-ready)
+python -m http.server 8000
+# Visit: http://localhost:8000/public/dashboard/
+
+# Next.js app (development)
+npm run dev
+# Visit: http://localhost:3000
+```
+
+### Database
+```bash
+npm run db:push      # Apply schema changes
+npm run db:seed      # Seed with data
+npm run db:studio    # Open Prisma Studio
+```
+
+### Testing
+```bash
+npm test             # Unit + integration
+npm run test:e2e     # Playwright E2E
+npm run test:coverage # Coverage report
+```
+
+### Documentation Validation
+```bash
+npm run docs:validate      # Check broken links
+npm run docs:check-colors  # Brand compliance
+npm run docs:audit         # Full audit
 ```
 
 ---
 
-## Git History
+## 📋 Immediate Tasks (If Any)
 
-```
-02c6c1f (HEAD -> master) docs: add comprehensive handoff for link cleanup
-55fc5bd chore(serena): update session memories
-7131556 docs(architecture,guides): add comprehensive documentation
-496c3cf Previous commit
-```
+### Option 1: Continue Development
+- **Task 19:** Cost Database Integration (~45 min)
+- **Task 20:** Cost Calculation Engine (~60 min)
+- **Total:** ~2 hours for cost features
 
----
+### Option 2: Next.js Migration
+- Complete remaining API endpoints (8/40 remaining)
+- Implement dashboard pages (4/15 remaining)
+- Connect UI to real APIs
 
-## Success Metrics
+### Option 3: Production Deployment
+- Manual testing of takeoff system
+- Cross-browser testing (Firefox, Safari)
+- Production deployment preparation
+- Merge feat/takeoff-system → main (if needed)
 
-**Current Status:**
-- Total Links: 5,484
-- Broken Links: 100
-- Validation: FAILING
-
-**Target Status:**
-- Total Links: 5,484+
-- Broken Links: <10
-- Validation: PASSING
-
-**Expected Changes:**
-- Files Created: 3
-- Files Modified: 15-20
-- Lines Changed: 200-300
+### Option 4: Documentation
+- Create 7 HIGH priority docs (see docs/NEXT-SESSION-HANDOFF.md)
+- Update architecture diagrams
+- Add feature-specific documentation
 
 ---
 
-## After Link Cleanup Session
+## 🎓 Working with This Project
 
-### Next Priorities (in order)
-1. **Feature Development** - Complete Takeoff system (93.5% → 100%)
-2. **E2E Testing** - Increase test coverage with Playwright
-3. **CI/CD Pipeline** - Set up GitHub Actions
-4. **Photo Optimization** - Image optimization pipeline
-5. **Security Audit** - npm audit and fixes
+### For AI Sessions
+1. **ALWAYS** read `PROJECT_INDEX.md` first (saves 54,500 tokens!)
+2. Read `CLAUDE.md` for AI-specific instructions and context
+3. Check `current-status` memory for latest progress
+4. Review recent session memories for continuity
+5. Use index to locate specific files/modules
 
----
+### For Development
+1. Follow naming conventions in docs/brand/NAMING-CONVENTIONS.md
+2. Use brand colors from docs/brand/BRAND-STANDARDS.md
+3. Add tests for new features (target: 80% coverage)
+4. Update documentation when behavior changes
+5. Run validation scripts before committing
 
-## Important Files
-
-### Must Read
-- `docs/NEXT-SESSION-HANDOFF-LINK-CLEANUP.md` ← START HERE
-- `PROJECT_INDEX.md` - Project metadata
-- `CLAUDE.md` - AI context
-
-### Reference
-- `docs/architecture/OVERVIEW.md` - System architecture
-- `docs/architecture/DATABASE-SCHEMA.md` - Database docs
-- `docs/architecture/API-REFERENCE.md` - API endpoints
-- `docs/guides/DEVELOPMENT.md` - Dev workflow
-- `docs/brand/BRAND-STANDARDS.md` - Brand guidelines
+### For Architecture Decisions
+1. Document in docs/architecture/DECISIONS.md
+2. Update PROJECT_INDEX if structure changes
+3. Create Serena memory for complex decisions
+4. Consider impact on Next.js migration
 
 ---
 
-## Technology Stack
+## ⚠️ Important Reminders
 
-**Frontend:** Next.js 15.0.3, React 18.3.1, TypeScript 5.x, Tailwind CSS 3.4.1  
-**Backend:** Next.js API Routes, Prisma ORM 6.0.1, NextAuth v5  
-**Database:** SQLite (dev), PostgreSQL (prod), 16 models, 45+ indexes  
-**Testing:** Vitest 4.0.13, Playwright 1.56.1  
-**Deployment:** Vercel (recommended), Netlify, Custom VPS
+### DO
+- ✅ Read PROJECT_INDEX.md first (94% token savings!)
+- ✅ Follow brand standards (no deprecated colors)
+- ✅ Write tests for new features
+- ✅ Update documentation when making changes
+- ✅ Use Serena MCP for session persistence
 
----
-
-## Test Credentials
-
-**Email:** owner@midwestunderground.com  
-**Password:** password123
-
----
-
-## Session Template for Next Claude Code
-
-```
-Work in: C:\Users\Owner\Desktop\midwest-underground-website\
-
-All session context preserved via Serena MCP.
-
-Next session should:
-1. Read: docs/NEXT-SESSION-HANDOFF-LINK-CLEANUP.md
-2. Fix 100 broken links (target: <10)
-3. Create 3 missing files (LOGO-USAGE.md, FEATURES.md, LICENSE)
-4. Validate and commit changes
-5. Sync with GitHub
-6. Run /sc:save to preserve context
-
-Expected outcome:
-- Broken links: 100 → <10
-- Documentation: 95% → 98% complete
-- Link validation: PASSING
-
-Always use: claude --dangerously-skip-permissions
-```
+### DON'T
+- ❌ Skip reading the index (wastes 54,500 tokens!)
+- ❌ Use deprecated colors (#003B5C, #FF6B35, #2EA3F2)
+- ❌ Create root-level markdown files (use docs/)
+- ❌ Change schema without updating migrations
+- ❌ Skip validation scripts before commits
 
 ---
 
-**Status:** Ready for link cleanup session  
-**Last Session:** 2025-11-23 (Documentation Creation - 7 files, 6,653 lines)  
-**Next Focus:** Fix 100 broken links in archived/active documentation  
-**Duration:** 60-90 minutes estimated
+## 🔄 Session Management
+
+### Start of Session
+1. Read `PROJECT_INDEX.md` (3,500 tokens)
+2. Read `NEXT-SESSION-START-HERE` (this file)
+3. Check `current-status` memory
+4. Review recent session memories
+
+### During Session
+1. Track progress with TodoWrite tool
+2. Create checkpoints for complex work
+3. Update relevant Serena memories
+4. Document architectural decisions
+
+### End of Session
+1. Run `/sc:save` to persist context
+2. Update `current-status` if needed
+3. Create session summary memory
+4. Update this file if priorities changed
+
+---
+
+## 📞 Project Contact
+
+**Company:** Midwest Underground of Minnesota Inc
+**Location:** 4320 County Rd 8 SE, Willmar, MN 56201
+**Phone:** (320) 382-6636
+**Email:** info@midwestundergroundmn.com
+
+---
+
+## 🎯 Success Criteria
+
+### For Any Session
+- ✅ Read PROJECT_INDEX.md first
+- ✅ Follow established conventions
+- ✅ Add/update tests
+- ✅ Update documentation
+- ✅ Save session context
+- ✅ Validate changes before committing
+
+### For Completion
+- ✅ All features working
+- ✅ Tests passing (80%+ coverage)
+- ✅ Documentation updated
+- ✅ Brand compliant
+- ✅ No console errors
+- ✅ Performance validated
+
+---
+
+**STATUS:** ✅ Repository Index v5.0.0 Updated (2025-11-24)
+**NEXT ACTION:** Read `PROJECT_INDEX.md` (saves 54,500 tokens!)
+**ALWAYS START HERE:** This file + PROJECT_INDEX.md = Instant context
