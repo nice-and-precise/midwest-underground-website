@@ -1,7 +1,7 @@
 # Project Index: Midwest Underground Website
 
-**Generated:** 2025-11-27 (Updated via /sc:index)
-**Version:** 7.0.0
+**Generated:** 2025-11-27 (Updated via /sc:index - Multi-Agent Verified)
+**Version:** 7.1.0
 **Branch:** master
 **Status:** Production Ready | Security Hardened | 37MB Cleanup Complete
 **Token Efficiency:** 94% reduction (58K → 3.5K tokens)
@@ -9,8 +9,8 @@
 ## Quick Context
 
 This is a **Next.js 15 full-stack application** for Midwest Underground of Minnesota Inc:
-- **Next.js 15 App:** 34 pages, 32+ API routes, 17 Prisma models
-- **Static Dashboard:** 9 HTML pages in public/dashboard/
+- **Next.js 15 App:** 23 pages, 32 API routes, 16 Prisma models
+- **Static Dashboard:** 10 HTML pages in public/dashboard/
 - **Takeoff System:** PDF measurement & estimating tool
 
 ## Security Audit Complete (2025-11-27)
@@ -63,22 +63,22 @@ midwest-underground-website/
 │   └── reports.html          # Report builder
 │
 ├── src/                      # 🔄 NEXT.JS: Migration in progress (60%)
-│   ├── app/                  # App Router (15+ pages)
+│   ├── app/                  # App Router (23 pages)
 │   │   ├── layout.tsx       # Root layout (minimal)
 │   │   ├── (marketing)/     # ✨ Marketing route group (public pages)
 │   │   │   ├── layout.tsx   # Marketing layout (header/footer)
 │   │   │   └── page.tsx     # Homepage
-│   │   ├── dashboard/       # Dashboard pages (12 pages with sidebar)
+│   │   ├── dashboard/       # Dashboard pages (21 pages with sidebar)
 │   │   │   ├── layout.tsx   # Dashboard layout (sidebar navigation)
-│   │   │   └── [features]/  # 12 dashboard features
+│   │   │   └── [features]/  # Feature routes with detail pages
 │   │   ├── auth/            # Authentication pages
 │   │   └── api/             # API routes (32 endpoints)
-│   ├── components/          # React components (11 total)
+│   ├── components/          # React components (12 total)
 │   │   └── dashboard/       # Dashboard-specific components
 │   │       └── DashboardSidebar.tsx  # ✨ NEW: Full sidebar navigation
 │   └── lib/                 # Utilities & services (6 libraries)
 │
-├── tests/                   # Testing suite (14 test files)
+├── tests/                   # Testing suite (19 test files)
 │   ├── unit/               # Unit tests (API, lib)
 │   ├── integration/        # Integration workflows
 │   └── takeoff/            # Takeoff E2E tests (Playwright)
@@ -213,7 +213,7 @@ midwest-underground-website/
 - **Rod Passes:** `/api/rod-passes` (CRUD)
 - **Auth:** `/api/auth/[...nextauth]` (NextAuth.js)
 
-## 🎨 React Components (11 Total)
+## 🎨 React Components (12 Total)
 
 ### UI Components
 - **DarkModeToggle.tsx** - Theme switcher
@@ -236,18 +236,18 @@ midwest-underground-website/
 
 ## 📚 Libraries & Services (6 Total)
 
-**Location:** `src/lib/`
+**Location:** `src/lib/` (except auth.ts which is at `src/auth.ts`)
 
 1. **prisma.ts** - Database client
 2. **validations.ts** - Zod schemas
 3. **offlineSync.ts** - Offline-first sync
 4. **photo-storage.ts** - Image handling
-5. **kpiService.ts** - Analytics calculations
-6. **auth.ts** - NextAuth configuration
+5. **services/kpiService.ts** - Analytics calculations
+6. **auth.ts** (`src/auth.ts`) - NextAuth configuration
 
 ## 🧪 Testing
 
-**Total Test Files:** 14
+**Total Test Files:** 19
 
 ### Unit Tests (`tests/unit/`)
 - API route handlers
@@ -333,11 +333,11 @@ See `docs/NEXT-SESSION-HANDOFF.md` for:
 - **TypeScript Files:** 63
 - **JavaScript Files:** 35
 - **HTML Pages:** 19 (5 public + 14 dashboard)
-- **React Components:** 11
+- **React Components:** 12
 - **API Routes:** 32
 - **Database Models:** 16
-- **Test Files:** 14
-- **Documentation Files:** 130+ (restructured)
+- **Test Files:** 19
+- **Documentation Files:** 139 (restructured)
 
 ### Lines of Code
 - **Total Project:** ~50,000 lines
@@ -545,9 +545,9 @@ npm run docs:check-all      # Run all validation
 
 ---
 
-**Last Updated:** November 27, 2025 (Post-Security Audit)
+**Last Updated:** November 27, 2025 (Multi-Agent Verified)
 **Branch:** master
-**Commit:** c6cb52b (Security) → 27c7ac8 (Index)
-**Index Version:** 7.0.0
+**Commit:** e41d56e → pending (verification fixes)
+**Index Version:** 7.1.0
 **Total Size:** ~4,000 tokens (~15KB)
-**Previous Version:** 6.0.0 (Pre-index update)
+**Previous Version:** 7.0.0 (Pre-verification)

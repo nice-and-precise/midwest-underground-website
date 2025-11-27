@@ -158,9 +158,12 @@ For the full set, see `docs/brand/NAMING-CONVENTIONS.md`.
 ### At the Start of a Session
 
 1. Read this `CLAUDE.md` for context.
-2. Read `docs/architecture/CURRENT-STATE.md` for actual state.
-3. Check the current branch (`git branch`) and ensure you are on the correct one (`main` or a feature branch requested).
-4. If relevant, review recent Serena memories under `.serena/memories/`.
+2. **For token-efficient context:** Read `PROJECT_INDEX.md` (94% token savings over full docs).
+3. For complete architectural understanding: Read `docs/architecture/CURRENT-STATE.md`.
+4. Check the current branch (`git branch`) and ensure you are on the correct one (`main` or a feature branch requested).
+5. If relevant, review recent Serena memories under `.serena/memories/`.
+
+> **Token Efficiency Tip:** `PROJECT_INDEX.md` provides comprehensive project context in ~3,500 tokens vs ~58,000 tokens for reading all files. Use it first for rapid context acquisition.
 
 ### When Implementing Features
 
@@ -229,17 +232,59 @@ See `docs/ai/SERENA-SYSTEM.md` and `docs/ai/SERENA-INTEGRATION-GUIDE.md` for ful
 
 ---
 
-## 📚 Useful Files
+## 🧩 Knowledge Graph Architecture
 
-* `README.md` – project overview and quick start
-* `PROJECT_INDEX.md` – project index and metadata
-* `docs/README.md` – documentation index
-* `docs/architecture/OVERVIEW.md` – architecture view
-* `docs/brand/BRAND-STANDARDS.md` – color and typography
-* `docs/brand/NAMING-CONVENTIONS.md` – naming rules
-* `docs/ai/SERENA-SYSTEM.md` – Serena MCP system description
+This project maintains a **multi-layer knowledge system** for both human developers and AI agents:
+
+### Layer 1: AI Agent Context (Primary)
+| File | Purpose | When to Use |
+|------|---------|-------------|
+| `CLAUDE.md` (this file) | Executive summary, workflow guidelines | First read in every session |
+| `PROJECT_INDEX.md` | Token-efficient comprehensive index | Rapid context (94% token savings) |
+
+### Layer 2: Human Documentation
+| Location | Purpose |
+|----------|---------|
+| `docs/README.md` | Documentation navigation hub |
+| `docs/architecture/` | System design and decisions |
+| `docs/guides/` | Development workflows |
+| `docs/brand/` | Design and naming standards |
+
+### Layer 3: Persistent AI Memories
+| Location | Purpose |
+|----------|---------|
+| `.serena/memories/` | Session notes, decisions, patterns |
+| `docs/ai/SERENA-INTEGRATION-GUIDE.md` | Memory creation patterns |
+
+### Recommended Reading Order for AI Agents
+1. **Start:** `CLAUDE.md` (this file)
+2. **Quick Context:** `PROJECT_INDEX.md` (token-efficient)
+3. **Deep Dive:** `docs/` hierarchy as needed
+4. **Session Continuity:** `.serena/memories/` for context
 
 ---
 
-**Last Updated:** 2025-11-23
+## 📚 Useful Files
+
+**Primary AI Context:**
+* `CLAUDE.md` – This file; executive summary for AI agents
+* `PROJECT_INDEX.md` – Token-efficient project overview (read early in session)
+
+**Documentation Structure:**
+* `docs/README.md` – Complete documentation index and navigation hub
+* `docs/architecture/OVERVIEW.md` – High-level system architecture
+* `docs/architecture/CURRENT-STATE.md` – Running system status
+
+**Standards & Conventions:**
+* `docs/brand/BRAND-STANDARDS.md` – Color palette and visual guidelines
+* `docs/brand/NAMING-CONVENTIONS.md` – Code and file naming rules
+
+**AI & Memory System:**
+* `docs/ai/SERENA-SYSTEM.md` – Serena MCP system description
+* `docs/ai/SERENA-INTEGRATION-GUIDE.md` – Memory creation and discovery patterns
+* `.serena/memories/` – Persistent session knowledge base (90+ memories)
+
+---
+
+**Last Updated:** 2025-11-27
 **Maintained by:** @nice-and-precise
