@@ -16,9 +16,10 @@ export default auth((req) => {
     '/auth/error'
   ]
 
-  // Public API routes (only auth-related endpoints)
+  // Public API routes (auth and contact form)
   const publicApiRoutes = [
-    '/api/auth'
+    '/api/auth',
+    '/api/contact'
   ]
 
   // Check if current path is public

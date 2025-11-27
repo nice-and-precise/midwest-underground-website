@@ -1,9 +1,9 @@
 # Project Index: Midwest Underground Website
 
-**Generated:** 2025-11-27 (Updated via /sc:index - Multi-Agent Verified)
-**Version:** 7.1.0
+**Generated:** 2025-11-27 (Updated - Contact API & Rate Limiting)
+**Version:** 7.2.0
 **Branch:** master
-**Status:** Production Ready | Security Hardened | 37MB Cleanup Complete
+**Status:** Production Ready | Security Hardened | Contact Form Backend Complete
 **Token Efficiency:** 94% reduction (58K → 3.5K tokens)
 
 ## Quick Context
@@ -15,7 +15,7 @@ This is a **Next.js 15 full-stack application** for Midwest Underground of Minne
 
 ## Security Audit Complete (2025-11-27)
 
-**Status:** HARDENED (Commit: c6cb52b)
+**Status:** HARDENED (Latest Updates: Contact API & Rate Limiting)
 
 | Security Fix | Status |
 |--------------|--------|
@@ -25,7 +25,11 @@ This is a **Next.js 15 full-stack application** for Midwest Underground of Minne
 | File upload magic number validation | **IMPLEMENTED** |
 | Path traversal protection | **IMPLEMENTED** |
 | Dead/duplicate files cleanup | **200+ REMOVED (~37MB)** |
-| Test suite | 113/133 passing (85%) |
+| API Rate Limiting | **IMPLEMENTED** |
+| Contact Form Backend | **IMPLEMENTED** |
+| bcryptjs Edge Runtime warning | **FIXED** |
+| E2E Marketing Page Tests | **ADDED** |
+| Test suite | 141/141 passing (100%) |
 
 See: `docs/AUDIT-REPORT-2025-11-27.md` for full audit report
 
@@ -178,7 +182,7 @@ midwest-underground-website/
 
 ## 🗄️ Database (Prisma)
 
-**Models:** 16 total
+**Models:** 17 total
 **Technology:** SQLite (dev) → PostgreSQL (production)
 
 ### Core Models
@@ -186,7 +190,7 @@ midwest-underground-website/
 - **Projects:** Project, Bore, RodPass, DailyReport
 - **Operations:** Ticket811, Ticket811Response, Inspection
 - **Assets:** Equipment, Photo
-- **Business:** Customer (implied via projects)
+- **Business:** Customer (implied via projects), ContactSubmission
 - **Audit:** ReportAudit
 
 ### Migrations
@@ -196,12 +200,13 @@ midwest-underground-website/
 
 ## 🔌 API Endpoints (Next.js)
 
-**Total Routes:** 32 endpoints
+**Total Routes:** 33 endpoints
 **Technology:** Next.js 15 App Router
 
 ### Categories
 - **811 Tickets:** `/api/811-tickets` (CRUD + responses)
 - **Bore Logs:** `/api/bore-logs` (CRUD + rod passes)
+- **Contact:** `/api/contact` (POST with rate limiting, GET for admin)
 - **Customers:** `/api/customers` (CRUD)
 - **Daily Reports:** `/api/daily-reports` (CRUD)
 - **Equipment:** `/api/equipment` (CRUD)
@@ -213,13 +218,14 @@ midwest-underground-website/
 - **Rod Passes:** `/api/rod-passes` (CRUD)
 - **Auth:** `/api/auth/[...nextauth]` (NextAuth.js)
 
-## 🎨 React Components (12 Total)
+## 🎨 React Components (13 Total)
 
 ### UI Components
 - **DarkModeToggle.tsx** - Theme switcher
 - **LoginForm.tsx** - Authentication form
 - **UserMenu.tsx** - User dropdown
 - **MobileMenu.tsx** - Mobile navigation
+- **ContactForm.tsx** - Contact form with API submission
 
 ### Dashboard Components
 - **AdvancedKPICards.tsx** - KPI cards with charts
@@ -234,7 +240,7 @@ midwest-underground-website/
 - **ParallaxHero.tsx** - Homepage hero
 - **ParallaxSection.tsx** - Parallax sections
 
-## 📚 Libraries & Services (6 Total)
+## 📚 Libraries & Services (7 Total)
 
 **Location:** `src/lib/` (except auth.ts which is at `src/auth.ts`)
 
@@ -242,15 +248,16 @@ midwest-underground-website/
 2. **validations.ts** - Zod schemas
 3. **offlineSync.ts** - Offline-first sync
 4. **photo-storage.ts** - Image handling
-5. **services/kpiService.ts** - Analytics calculations
-6. **auth.ts** (`src/auth.ts`) - NextAuth configuration
+5. **rate-limit.ts** - API rate limiting utility (in-memory store)
+6. **services/kpiService.ts** - Analytics calculations
+7. **auth.ts** (`src/auth.ts`) - NextAuth configuration
 
 ## 🧪 Testing
 
-**Total Test Files:** 19
+**Total Test Files:** 21
 
 ### Unit Tests (`tests/unit/`)
-- API route handlers
+- API route handlers (including Contact API)
 - Library functions
 - Validation schemas
 
@@ -263,6 +270,7 @@ midwest-underground-website/
 - Auth flows
 - Dashboard navigation
 - HDD operations
+- **Marketing Pages:** Home, Services, About, Projects, Contact
 - **Takeoff System:** 28/33 tests passing (96% functional)
 
 ### Test Commands
@@ -545,9 +553,9 @@ npm run docs:check-all      # Run all validation
 
 ---
 
-**Last Updated:** November 27, 2025 (Multi-Agent Verified)
+**Last Updated:** November 27, 2025 (Contact API & Rate Limiting Added)
 **Branch:** master
-**Commit:** e41d56e → pending (verification fixes)
-**Index Version:** 7.1.0
+**Commit:** pending (contact form backend implementation)
+**Index Version:** 7.2.0
 **Total Size:** ~4,000 tokens (~15KB)
-**Previous Version:** 7.0.0 (Pre-verification)
+**Previous Version:** 7.1.0 (Multi-Agent Verified)

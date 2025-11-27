@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { Metadata } from 'next'
+import ContactForm from '@/components/ContactForm'
 
 export const metadata: Metadata = {
   title: 'Contact Us | Midwest Underground of Minnesota',
@@ -39,99 +40,7 @@ export default function ContactPage() {
             {/* Contact Form */}
             <div>
               <h2 style={{color: 'var(--color-primary)', marginBottom: 'var(--space-lg)'}}>Send Us a Message</h2>
-              <form style={{display: 'flex', flexDirection: 'column', gap: 'var(--space-md)'}}>
-                <div>
-                  <label htmlFor="name" style={{display: 'block', marginBottom: 'var(--space-xs)', fontWeight: 600}}>Name *</label>
-                  <input
-                    type="text"
-                    id="name"
-                    name="name"
-                    required
-                    style={{
-                      width: '100%',
-                      padding: 'var(--space-sm) var(--space-md)',
-                      border: '1px solid var(--gray-300)',
-                      borderRadius: 'var(--radius-md)',
-                      fontSize: 'var(--text-base)'
-                    }}
-                  />
-                </div>
-                <div>
-                  <label htmlFor="email" style={{display: 'block', marginBottom: 'var(--space-xs)', fontWeight: 600}}>Email *</label>
-                  <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    required
-                    style={{
-                      width: '100%',
-                      padding: 'var(--space-sm) var(--space-md)',
-                      border: '1px solid var(--gray-300)',
-                      borderRadius: 'var(--radius-md)',
-                      fontSize: 'var(--text-base)'
-                    }}
-                  />
-                </div>
-                <div>
-                  <label htmlFor="phone" style={{display: 'block', marginBottom: 'var(--space-xs)', fontWeight: 600}}>Phone</label>
-                  <input
-                    type="tel"
-                    id="phone"
-                    name="phone"
-                    style={{
-                      width: '100%',
-                      padding: 'var(--space-sm) var(--space-md)',
-                      border: '1px solid var(--gray-300)',
-                      borderRadius: 'var(--radius-md)',
-                      fontSize: 'var(--text-base)'
-                    }}
-                  />
-                </div>
-                <div>
-                  <label htmlFor="service" style={{display: 'block', marginBottom: 'var(--space-xs)', fontWeight: 600}}>Service Interested In</label>
-                  <select
-                    id="service"
-                    name="service"
-                    style={{
-                      width: '100%',
-                      padding: 'var(--space-sm) var(--space-md)',
-                      border: '1px solid var(--gray-300)',
-                      borderRadius: 'var(--radius-md)',
-                      fontSize: 'var(--text-base)',
-                      backgroundColor: 'var(--white)'
-                    }}
-                  >
-                    <option value="">Select a service...</option>
-                    <option value="hdd">Horizontal Directional Drilling</option>
-                    <option value="fiber">Fiber Optic Installation</option>
-                    <option value="utilities">Underground Utilities</option>
-                    <option value="telecom">Telecommunications</option>
-                    <option value="crossing">Road/Railway Crossings</option>
-                    <option value="emergency">Emergency Services</option>
-                    <option value="other">Other</option>
-                  </select>
-                </div>
-                <div>
-                  <label htmlFor="message" style={{display: 'block', marginBottom: 'var(--space-xs)', fontWeight: 600}}>Message *</label>
-                  <textarea
-                    id="message"
-                    name="message"
-                    required
-                    rows={5}
-                    style={{
-                      width: '100%',
-                      padding: 'var(--space-sm) var(--space-md)',
-                      border: '1px solid var(--gray-300)',
-                      borderRadius: 'var(--radius-md)',
-                      fontSize: 'var(--text-base)',
-                      resize: 'vertical'
-                    }}
-                  />
-                </div>
-                <button type="submit" className="btn btn-primary btn-lg" style={{marginTop: 'var(--space-sm)'}}>
-                  Send Message
-                </button>
-              </form>
+              <ContactForm />
             </div>
 
             {/* Contact Details */}

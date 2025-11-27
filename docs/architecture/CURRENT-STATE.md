@@ -56,7 +56,7 @@
 
 # System Architecture - Current State
 
-<!-- Last Updated: 2025-11-23 -->
+<!-- Last Updated: 2025-11-27 -->
 
 ## Default Branch: master
 
@@ -322,8 +322,8 @@ This reflects what is **actually running on master today** (2025-11-23).
 ### Medium Priority
 1. **Brand Refresh Integration:** Adapt Leaflet.js map for Next.js
 2. **Image Optimization:** Optimize existing images in public/images/
-3. **API Rate Limiting:** Add rate limiting to API routes
-4. **Email Integration:** Implement contact form email delivery
+3. ~~**API Rate Limiting:** Add rate limiting to API routes~~ ✅ **COMPLETED** (2025-11-27)
+4. ~~**Email Integration:** Implement contact form email delivery~~ ✅ **CONTACT API COMPLETE** (2025-11-27)
 
 ### Low Priority
 1. **Test Coverage:** Increase unit test coverage (currently focused on E2E)
