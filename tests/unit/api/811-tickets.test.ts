@@ -187,7 +187,7 @@ describe('811 Tickets API', () => {
         data: responseData,
         include: {
           ticket: true,
-          respondedById: true
+          respondedBy: true
         }
       });
 
@@ -270,12 +270,15 @@ describe('811 Tickets API', () => {
         }
       });
 
-      // Renew the ticket
+      // Renew the ticket with a future date
+      const futureDate = new Date();
+      futureDate.setMonth(futureDate.getMonth() + 2);
+
       const updated = await prisma.ticket811.update({
         where: { id: renewedTicket.id },
         data: {
           status: Ticket811Status.RENEWED,
-          expirationDate: new Date('2025-02-01')
+          expirationDate: futureDate
         }
       });
 

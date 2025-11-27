@@ -1,14 +1,31 @@
-import { describe, it, expect, beforeAll } from 'vitest';
+import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import { prisma } from '@/lib/prisma';
 import { ReportStatus } from '@prisma/client';
 
 describe('Daily Reports API', () => {
   let testProjectId: string;
   let testReportId: string;
+  let testUserId: string;
+  // Use unique timestamp base for all dates in this test run
+  const testRunTimestamp = Date.now();
 
   beforeAll(async () => {
     const project = await prisma.project.findFirst();
     testProjectId = project!.id;
+
+    const user = await prisma.user.findFirst();
+    testUserId = user!.id;
+  });
+
+  afterAll(async () => {
+    // Cleanup test report if it exists
+    if (testReportId) {
+      try {
+        await prisma.dailyReport.delete({ where: { id: testReportId } });
+      } catch {
+        // Ignore if already deleted
+      }
+    }
   });
 
   describe('GET /api/hdd/daily-reports', () => {
@@ -52,9 +69,11 @@ describe('Daily Reports API', () => {
 
   describe('POST /api/hdd/daily-reports', () => {
     it('should create a daily report with valid data', async () => {
+      // Use unique date based on test run timestamp
+      const uniqueDate = new Date(testRunTimestamp);
       const reportData = {
         projectId: testProjectId,
-        reportDate: new Date('2025-01-15'),
+        reportDate: uniqueDate,
         crew: [
           { name: 'John Doe', role: 'Operator', hours: 8 },
           { name: 'Jane Smith', role: 'Locator', hours: 8 }
@@ -68,7 +87,8 @@ describe('Daily Reports API', () => {
           impact: 'None'
         },
         notes: 'Good progress today',
-        status: ReportStatus.DRAFT
+        status: ReportStatus.DRAFT,
+        createdById: testUserId
       };
 
       const report = await prisma.dailyReport.create({
@@ -99,9 +119,13 @@ describe('Daily Reports API', () => {
     });
 
     it('should set default status to DRAFT', async () => {
+      // Use a unique date based on test run timestamp + offset
+      const uniqueDate = new Date(testRunTimestamp + 1000);
       const reportData = {
         projectId: testProjectId,
-        reportDate: new Date()
+        reportDate: uniqueDate,
+        crew: [], // Required field
+        createdById: testUserId
       };
 
       const report = await prisma.dailyReport.create({
@@ -114,9 +138,12 @@ describe('Daily Reports API', () => {
     });
 
     it('should store complex JSON data', async () => {
+      // Use a unique date based on test run timestamp + offset
+      const uniqueDate = new Date(testRunTimestamp + 2000);
       const reportData = {
         projectId: testProjectId,
-        reportDate: new Date(),
+        reportDate: uniqueDate,
+        crew: [], // Required field
         labor: [
           { name: 'Operator', hours: 8, rate: 75, total: 600 },
           { name: 'Locator', hours: 8, rate: 65, total: 520 }
@@ -126,7 +153,8 @@ describe('Daily Reports API', () => {
         ],
         materials: [
           { description: 'Bentonite', qty: 50, unit: 'bags', cost: 15, total: 750 }
-        ]
+        ],
+        createdById: testUserId
       };
 
       const report = await prisma.dailyReport.create({

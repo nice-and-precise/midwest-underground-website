@@ -129,6 +129,7 @@ describe('Inspections API', () => {
       const inspectionData = {
         projectId: testProjectId,
         templateName: 'Default Status Test',
+        items: [], // Required field
         createdById: testUserId
       };
 

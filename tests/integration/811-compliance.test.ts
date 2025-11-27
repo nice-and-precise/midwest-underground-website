@@ -40,12 +40,15 @@ describe('811 Compliance Workflow (Integration)', () => {
 
   it('should create 811 ticket before drilling', async () => {
     // Step 1: Create 811 ticket
+    const futureDate = new Date();
+    futureDate.setMonth(futureDate.getMonth() + 1);
+
     const ticket = await prisma.ticket811.create({
       data: {
         ticketNumber: 'INT-TEST-811-001',
         projectId,
-        ticketDate: new Date('2025-01-01'),
-        expirationDate: new Date('2025-02-01'),
+        ticketDate: new Date(),
+        expirationDate: futureDate,
         status: Ticket811Status.ACTIVE,
         notes: 'Pre-drilling locate request'
       }
@@ -133,11 +136,14 @@ describe('811 Compliance Workflow (Integration)', () => {
 
   it('should renew expired ticket', async () => {
     // Step 5: Renew the expired ticket
+    const futureDate = new Date();
+    futureDate.setMonth(futureDate.getMonth() + 2);
+
     const renewedTicket = await prisma.ticket811.update({
       where: { id: expiredTicketId },
       data: {
         status: Ticket811Status.RENEWED,
-        expirationDate: new Date('2025-02-15'), // New expiration
+        expirationDate: futureDate, // New expiration
         notes: 'Ticket renewed for continued work'
       }
     });

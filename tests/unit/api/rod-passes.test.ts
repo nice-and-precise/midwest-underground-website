@@ -4,10 +4,14 @@ import { prisma } from '@/lib/prisma';
 describe('Rod Passes API', () => {
   let testBoreId: string;
   let testRodPassId: string;
+  let testUserId: string;
 
   beforeAll(async () => {
     const bore = await prisma.bore.findFirst();
     testBoreId = bore!.id;
+
+    const user = await prisma.user.findFirst();
+    testUserId = user!.id;
   });
 
   describe('GET /api/hdd/rod-passes', () => {
@@ -62,7 +66,8 @@ describe('Rod Passes API', () => {
         fluidVolumeGal: 100,
         startedAt: new Date('2025-01-15T08:00:00'),
         completedAt: new Date('2025-01-15T09:00:00'),
-        notes: 'First pass completed successfully'
+        notes: 'First pass completed successfully',
+        loggedById: testUserId
       };
 
       const rodPass = await prisma.rodPass.create({
@@ -109,9 +114,9 @@ describe('Rod Passes API', () => {
     it('should calculate total length for bore', async () => {
       // Create multiple rod passes
       const passes = [
-        { boreId: testBoreId, sequence: 10, passNumber: 1, linearFeet: 50 },
-        { boreId: testBoreId, sequence: 11, passNumber: 2, linearFeet: 50 },
-        { boreId: testBoreId, sequence: 12, passNumber: 3, linearFeet: 50 }
+        { boreId: testBoreId, sequence: 10, passNumber: 1, linearFeet: 50, loggedById: testUserId },
+        { boreId: testBoreId, sequence: 11, passNumber: 2, linearFeet: 50, loggedById: testUserId },
+        { boreId: testBoreId, sequence: 12, passNumber: 3, linearFeet: 50, loggedById: testUserId }
       ];
 
       for (const pass of passes) {
@@ -134,7 +139,8 @@ describe('Rod Passes API', () => {
         passNumber: 1,
         linearFeet: 30,
         fluidMix: 'Modified mix with polymers',
-        notes: 'Encountered harder soil'
+        notes: 'Encountered harder soil',
+        loggedById: testUserId
       };
 
       const rodPass = await prisma.rodPass.create({

@@ -114,7 +114,8 @@ describe('Bore Logging Workflow (Integration)', () => {
           { name: 'D24x40 Drill', hours: 8, rate: 150, total: 1200 }
         ],
         notes: 'Completed 100 LF of drilling',
-        status: ReportStatus.DRAFT
+        status: ReportStatus.DRAFT,
+        createdById: userId
       }
     });
     reportId = dailyReport.id;
