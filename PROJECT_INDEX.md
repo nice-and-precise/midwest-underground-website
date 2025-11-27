@@ -1,17 +1,18 @@
 # Project Index: Midwest Underground Website
 
-**Generated:** 2025-11-27 (Updated - Contact API & Rate Limiting)
-**Version:** 7.2.0
+**Generated:** 2025-11-27 (Updated - Cost Features & Estimating System)
+**Version:** 8.0.0
 **Branch:** master
-**Status:** Production Ready | Security Hardened | Contact Form Backend Complete
+**Status:** Production Ready | Security Hardened | Cost Estimating System Complete
 **Token Efficiency:** 94% reduction (58K → 3.5K tokens)
 
 ## Quick Context
 
 This is a **Next.js 15 full-stack application** for Midwest Underground of Minnesota Inc:
-- **Next.js 15 App:** 23 pages, 32 API routes, 16 Prisma models
+- **Next.js 15 App:** 26 pages, 40 API routes, 20 Prisma models
 - **Static Dashboard:** 10 HTML pages in public/dashboard/
 - **Takeoff System:** PDF measurement & estimating tool
+- **Cost Estimating:** Complete HDD project estimation system (NEW!)
 
 ## Security Audit Complete (2025-11-27)
 
@@ -29,6 +30,7 @@ This is a **Next.js 15 full-stack application** for Midwest Underground of Minne
 | Contact Form Backend | **IMPLEMENTED** |
 | bcryptjs Edge Runtime warning | **FIXED** |
 | E2E Marketing Page Tests | **ADDED** |
+| Cost Database & Estimating | **IMPLEMENTED** |
 | Test suite | 141/141 passing (100%) |
 
 See: `docs/AUDIT-REPORT-2025-11-27.md` for full audit report
@@ -182,7 +184,7 @@ midwest-underground-website/
 
 ## 🗄️ Database (Prisma)
 
-**Models:** 17 total
+**Models:** 20 total
 **Technology:** SQLite (dev) → PostgreSQL (production)
 
 ### Core Models
@@ -192,6 +194,7 @@ midwest-underground-website/
 - **Assets:** Equipment, Photo
 - **Business:** Customer (implied via projects), ContactSubmission
 - **Audit:** ReportAudit
+- **Cost & Estimating (NEW):** CostCategory, CostItem, Estimate, EstimateLine
 
 ### Migrations
 - 11 total migrations
@@ -200,16 +203,19 @@ midwest-underground-website/
 
 ## 🔌 API Endpoints (Next.js)
 
-**Total Routes:** 33 endpoints
+**Total Routes:** 40 endpoints
 **Technology:** Next.js 15 App Router
 
 ### Categories
 - **811 Tickets:** `/api/811-tickets` (CRUD + responses)
 - **Bore Logs:** `/api/bore-logs` (CRUD + rod passes)
 - **Contact:** `/api/contact` (POST with rate limiting, GET for admin)
+- **Cost Categories (NEW):** `/api/cost-categories` (CRUD)
+- **Cost Items (NEW):** `/api/cost-items` (CRUD with category filtering)
 - **Customers:** `/api/customers` (CRUD)
 - **Daily Reports:** `/api/daily-reports` (CRUD)
 - **Equipment:** `/api/equipment` (CRUD)
+- **Estimates (NEW):** `/api/estimates` (CRUD + line items + totals recalculation)
 - **Field Reports:** `/api/field-reports` (CRUD + photos)
 - **Inspections:** `/api/inspections` (CRUD)
 - **KPIs:** `/api/kpis` (analytics)
@@ -240,17 +246,26 @@ midwest-underground-website/
 - **ParallaxHero.tsx** - Homepage hero
 - **ParallaxSection.tsx** - Parallax sections
 
-## 📚 Libraries & Services (7 Total)
+## 📚 Libraries & Services (8 Total)
 
 **Location:** `src/lib/` (except auth.ts which is at `src/auth.ts`)
 
 1. **prisma.ts** - Database client
-2. **validations.ts** - Zod schemas
+2. **validations.ts** - Zod schemas (including cost/estimate schemas)
 3. **offlineSync.ts** - Offline-first sync
 4. **photo-storage.ts** - Image handling
 5. **rate-limit.ts** - API rate limiting utility (in-memory store)
 6. **services/kpiService.ts** - Analytics calculations
-7. **auth.ts** (`src/auth.ts`) - NextAuth configuration
+7. **services/costCalculator.ts** - **NEW:** HDD cost calculation engine
+8. **auth.ts** (`src/auth.ts`) - NextAuth configuration
+
+### Cost Calculator Service (NEW)
+- `calculateLineCost()` - Calculate individual line item costs
+- `calculateEstimateTotals()` - Calculate estimate totals with markup/tax
+- `calculateLaborHours()` - Calculate labor from production rates
+- `calculateHDDBoreEstimate()` - Complete HDD bore estimation
+- HDD-specific production rates, labor rates, equipment rates
+- `formatCurrency()`, `roundToCents()` - Utility functions
 
 ## 🧪 Testing
 
@@ -338,12 +353,12 @@ See `docs/NEXT-SESSION-HANDOFF.md` for:
 ## 📊 Project Statistics
 
 ### Codebase
-- **TypeScript Files:** 63
+- **TypeScript Files:** 72
 - **JavaScript Files:** 35
 - **HTML Pages:** 19 (5 public + 14 dashboard)
-- **React Components:** 12
-- **API Routes:** 32
-- **Database Models:** 16
+- **React Components:** 13
+- **API Routes:** 40
+- **Database Models:** 20
 - **Test Files:** 19
 - **Documentation Files:** 139 (restructured)
 
@@ -367,22 +382,31 @@ See `docs/NEXT-SESSION-HANDOFF.md` for:
 - **Takeoff System:** 93.5% ✅ (PRODUCTION READY)
 - **Phase 3 (Advanced Features):** Planned 📋
 
-### Recent Milestones (Nov 23, 2025)
-1. ✅ Documentation Restructure Complete (Commit: 9b0685e)
-2. ✅ 69 → 7 Root Files (89.9% reduction)
-3. ✅ Professional Documentation IA under docs/
-4. ✅ 100% Brand Compliance (0 deprecated colors)
-5. ✅ 4 Validation Scripts Created
-6. ✅ Takeoff System Dashboard Integration Complete
-7. ✅ Module 1.3 Comprehensive Testing (96% coverage)
+### Recent Milestones (Nov 27, 2025)
+1. ✅ Cost Estimating System Complete (Commit: ce71a7b)
+2. ✅ 4 New Database Models (CostCategory, CostItem, Estimate, EstimateLine)
+3. ✅ Cost Calculation Engine with HDD-specific rates
+4. ✅ 7 New API Endpoints for cost/estimate management
+5. ✅ Estimates Dashboard Pages (list, detail, create)
+6. ✅ Contact Form Backend with rate limiting
+7. ✅ 141/141 Tests Passing
 
 ### Next Steps
-1. **Immediate:** User testing & browser verification
-2. **Module 1.4:** Data persistence to database
+1. **Immediate:** Add cost items seed data
+2. **Module 1.4:** Data persistence to database (takeoff)
 3. **Module 1.5:** Project-specific estimate integration
 4. **Phase 3:** Next.js migration of takeoff system
 
 ## 🔍 Key File Locations
+
+### Cost & Estimating System (NEW)
+- **Cost Calculator:** `src/lib/services/costCalculator.ts`
+- **API - Categories:** `src/app/api/cost-categories/route.ts`
+- **API - Items:** `src/app/api/cost-items/route.ts`
+- **API - Estimates:** `src/app/api/estimates/route.ts`
+- **Dashboard - List:** `src/app/dashboard/estimates/page.tsx`
+- **Dashboard - Detail:** `src/app/dashboard/estimates/[id]/page.tsx`
+- **Dashboard - Create:** `src/app/dashboard/estimates/new/page.tsx`
 
 ### Takeoff System
 - **Main Code:** `public/dashboard/js/measurement-tools.js`
@@ -553,9 +577,9 @@ npm run docs:check-all      # Run all validation
 
 ---
 
-**Last Updated:** November 27, 2025 (Contact API & Rate Limiting Added)
+**Last Updated:** November 27, 2025 (Cost Features & Estimating System Added)
 **Branch:** master
-**Commit:** pending (contact form backend implementation)
-**Index Version:** 7.2.0
-**Total Size:** ~4,000 tokens (~15KB)
-**Previous Version:** 7.1.0 (Multi-Agent Verified)
+**Commit:** ce71a7b (feat: add complete estimating and cost calculation system)
+**Index Version:** 8.0.0
+**Total Size:** ~4,500 tokens (~17KB)
+**Previous Version:** 7.2.0 (Contact API & Rate Limiting)

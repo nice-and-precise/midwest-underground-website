@@ -1,7 +1,7 @@
 # Database Schema Documentation
 
-**Last Updated:** 2025-11-23
-**Version:** 1.0.0
+**Last Updated:** 2025-11-27
+**Version:** 2.0.0
 **ORM:** Prisma 6.0.1
 **Status:** Production Ready
 
@@ -16,6 +16,7 @@
 - [HDD Operations Models](#hdd-operations-models)
 - [Quality & Compliance Models](#quality--compliance-models)
 - [Project Management Models](#project-management-models)
+- [Cost & Estimating Models](#cost--estimating-models) (NEW)
 - [Asset Models](#asset-models)
 - [Relationships & Constraints](#relationships--constraints)
 - [Indexes & Performance](#indexes--performance)
@@ -31,12 +32,12 @@ The Midwest Underground database schema is designed for comprehensive HDD (Horiz
 
 ### Key Metrics
 
-- **Total Models:** 16
-- **Total Fields:** 250+
-- **Relationships:** 42 foreign keys
-- **Enums:** 10 types
-- **Indexes:** 45+ for optimized queries
-- **Migrations:** 11 applied
+- **Total Models:** 20
+- **Total Fields:** 300+
+- **Relationships:** 48 foreign keys
+- **Enums:** 11 types
+- **Indexes:** 55+ for optimized queries
+- **Migrations:** 12 applied
 
 ---
 
@@ -784,6 +785,157 @@ enum COStatus {
 
 ---
 
+## Cost & Estimating Models
+
+### CostCategory
+
+**Purpose:** Organize cost items into logical groups for estimation
+
+```prisma
+model CostCategory {
+  id          String     @id @default(cuid())
+  name        String     @unique
+  description String?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  // Relations
+  items       CostItem[]
+
+  @@index([name])
+}
+```
+
+**Key Features:**
+- Unique name constraint for preventing duplicates
+- One-to-many relationship with CostItem
+- Categories can include: Drilling, Equipment, Labor, Materials, etc.
+
+### CostItem
+
+**Purpose:** Individual cost line items with unit pricing and production rates
+
+```prisma
+model CostItem {
+  id             String       @id @default(cuid())
+  categoryId     String
+  name           String
+  description    String?
+  unit           String       // LF, HR, EA, DAY, etc.
+  unitCost       Float        // Cost per unit
+  productionRate Float?       // Units per day (for scheduling)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  // Relations
+  category       CostCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  estimateLines  EstimateLine[]
+
+  @@index([categoryId])
+  @@index([name])
+}
+```
+
+**Key Features:**
+- Linked to category for organization
+- Unit types: LF (linear feet), HR (hours), EA (each), DAY (day rate)
+- Production rate for HDD-specific scheduling calculations
+- Cascade delete: removing category removes items
+
+### Estimate
+
+**Purpose:** Customer-facing project estimates with markup and tax calculations
+
+```prisma
+model Estimate {
+  id             String         @id @default(cuid())
+  name           String
+  description    String?
+  status         EstimateStatus @default(DRAFT)
+  customerName   String?
+  customerEmail  String?
+  customerPhone  String?
+  subtotal       Float          @default(0)
+  markupPercent  Float          @default(0.15)  // 15% default
+  markupAmount   Float          @default(0)
+  taxPercent     Float          @default(0)
+  taxAmount      Float          @default(0)
+  total          Float          @default(0)
+  validUntil     DateTime?
+  notes          String?
+  terms          String?
+  projectId      String?
+  createdById    String
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+
+  // Relations
+  project        Project?       @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  createdBy      User           @relation(fields: [createdById], references: [id])
+  lines          EstimateLine[]
+
+  @@index([status])
+  @@index([projectId])
+  @@index([createdById])
+}
+
+enum EstimateStatus {
+  DRAFT     // In preparation
+  SENT      // Sent to customer
+  APPROVED  // Customer approved
+  REJECTED  // Customer rejected
+  EXPIRED   // Past validUntil date
+}
+```
+
+**Key Features:**
+- Full customer information tracking
+- Automatic calculation fields (subtotal, markup, tax, total)
+- Status workflow from draft to approved/rejected
+- Optional project association
+- Validity tracking with expiration date
+
+**Calculation Logic:**
+1. `subtotal` = Sum of all line item `lineTotal` values
+2. `markupAmount` = `subtotal` × `markupPercent`
+3. `taxAmount` = (`subtotal` + `markupAmount`) × `taxPercent`
+4. `total` = `subtotal` + `markupAmount` + `taxAmount`
+
+### EstimateLine
+
+**Purpose:** Individual line items within an estimate
+
+```prisma
+model EstimateLine {
+  id          String    @id @default(cuid())
+  estimateId  String
+  costItemId  String?   // Optional link to catalog item
+  description String
+  quantity    Float
+  unit        String
+  unitCost    Float
+  lineTotal   Float     // quantity × unitCost
+  sortOrder   Int       @default(0)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  // Relations
+  estimate    Estimate  @relation(fields: [estimateId], references: [id], onDelete: Cascade)
+  costItem    CostItem? @relation(fields: [costItemId], references: [id], onDelete: SetNull)
+
+  @@index([estimateId])
+  @@index([costItemId])
+}
+```
+
+**Key Features:**
+- Optional link to cost item catalog (can also be ad-hoc entries)
+- Auto-calculated lineTotal (quantity × unitCost)
+- Sort order for display sequencing
+- Cascade delete: removing estimate removes lines
+
+---
+
 ## Asset Models
 
 ### Photo
@@ -1041,6 +1193,15 @@ enum Ticket811Status {
   EXPIRED  // Past expiration
   RENEWED  // Renewed
 }
+
+// Estimate Workflow
+enum EstimateStatus {
+  DRAFT     // In preparation
+  SENT      // Sent to customer
+  APPROVED  // Customer approved
+  REJECTED  // Customer rejected
+  EXPIRED   // Past validity date
+}
 ```
 
 ---
@@ -1082,7 +1243,7 @@ npx prisma studio
 
 ### Migration History
 
-11 migrations applied (as of 2025-11-23):
+12 migrations applied (as of 2025-11-27):
 
 1. `init` - Initial schema
 2. `add-bore-status` - Add bore status tracking
@@ -1095,6 +1256,7 @@ npx prisma studio
 9. `add-811-tickets` - 811 compliance
 10. `add-photos` - Photo management
 11. `add-pits` - Entry/exit pit tracking
+12. `add-cost-estimating` - Cost categories, items, estimates, and line items (NEW)
 
 ---
 
@@ -1188,6 +1350,6 @@ const inspections = await prisma.inspection.findMany({
 
 ---
 
-**Document Version:** 1.0.0
-**Last Updated:** 2025-11-23
+**Document Version:** 2.0.0
+**Last Updated:** 2025-11-27
 **Maintained By:** @nice-and-precise

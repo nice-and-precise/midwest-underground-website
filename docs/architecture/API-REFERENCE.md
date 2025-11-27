@@ -1,7 +1,7 @@
 # API Reference
 
-**Last Updated:** 2025-11-23
-**Version:** 1.0.0
+**Last Updated:** 2025-11-27
+**Version:** 2.0.0
 **Base URL:** `/api`
 **Authentication:** NextAuth v5 Session-based
 
@@ -19,6 +19,8 @@
 - [Project Management](#project-management)
 - [Bore Log Management](#bore-log-management)
 - [HDD Operations](#hdd-operations)
+- [Cost Categories & Items](#cost-categories--items) (NEW)
+- [Estimates](#estimates) (NEW)
 - [Photo Management](#photo-management)
 - [KPI & Analytics](#kpi--analytics)
 - [Inspection Management](#inspection-management)
@@ -1122,6 +1124,751 @@ Content-Type: application/json
 
 ---
 
+## Cost Categories & Items
+
+### GET /api/cost-categories
+
+List all cost categories.
+
+**Request:**
+```http
+GET /api/cost-categories
+```
+
+**Response (200 OK):**
+```json
+{
+  "categories": [
+    {
+      "id": "clcat1",
+      "name": "Drilling",
+      "description": "Core drilling operations costs",
+      "createdAt": "2025-11-27T10:00:00Z",
+      "updatedAt": "2025-11-27T10:00:00Z",
+      "_count": {
+        "items": 5
+      }
+    },
+    {
+      "id": "clcat2",
+      "name": "Equipment",
+      "description": "Equipment rental and operation costs",
+      "createdAt": "2025-11-27T10:00:00Z",
+      "updatedAt": "2025-11-27T10:00:00Z",
+      "_count": {
+        "items": 8
+      }
+    }
+  ]
+}
+```
+
+**Permissions:** All authenticated users
+
+---
+
+### POST /api/cost-categories
+
+Create a new cost category.
+
+**Request:**
+```http
+POST /api/cost-categories
+Content-Type: application/json
+
+{
+  "name": "Materials",
+  "description": "Raw materials and supplies"
+}
+```
+
+**Response (201 Created):**
+```json
+{
+  "category": {
+    "id": "clcat3",
+    "name": "Materials",
+    "description": "Raw materials and supplies",
+    "createdAt": "2025-11-27T12:00:00Z",
+    "updatedAt": "2025-11-27T12:00:00Z"
+  }
+}
+```
+
+**Validation Rules:**
+- `name` - Required, min 1 character, must be unique
+
+**Permissions:** OWNER, SUPER
+
+---
+
+### GET /api/cost-categories/:id
+
+Get cost category by ID with items.
+
+**Request:**
+```http
+GET /api/cost-categories/clcat1
+```
+
+**Response (200 OK):**
+```json
+{
+  "category": {
+    "id": "clcat1",
+    "name": "Drilling",
+    "description": "Core drilling operations costs",
+    "items": [
+      {
+        "id": "clitem1",
+        "name": "Pilot Bore",
+        "description": "Initial pilot bore drilling",
+        "unit": "LF",
+        "unitCost": 15.50,
+        "productionRate": 150.0
+      }
+    ],
+    "createdAt": "2025-11-27T10:00:00Z",
+    "updatedAt": "2025-11-27T10:00:00Z"
+  }
+}
+```
+
+**Errors:**
+- `404` - Category not found
+
+**Permissions:** All authenticated users
+
+---
+
+### PUT /api/cost-categories/:id
+
+Update cost category.
+
+**Request:**
+```http
+PUT /api/cost-categories/clcat1
+Content-Type: application/json
+
+{
+  "name": "Drilling Operations",
+  "description": "All drilling-related costs"
+}
+```
+
+**Response (200 OK):**
+```json
+{
+  "category": {
+    "id": "clcat1",
+    "name": "Drilling Operations",
+    "description": "All drilling-related costs",
+    "updatedAt": "2025-11-27T14:00:00Z"
+  }
+}
+```
+
+**Permissions:** OWNER, SUPER
+
+---
+
+### DELETE /api/cost-categories/:id
+
+Delete cost category (cascade deletes all items).
+
+**Request:**
+```http
+DELETE /api/cost-categories/clcat1
+```
+
+**Response (200 OK):**
+```json
+{
+  "success": true,
+  "message": "Category deleted successfully"
+}
+```
+
+**⚠️ Warning:** This cascades to delete all cost items in this category.
+
+**Permissions:** OWNER only
+
+---
+
+### GET /api/cost-items
+
+List all cost items with optional filtering.
+
+**Request:**
+```http
+GET /api/cost-items?categoryId=clcat1
+```
+
+**Query Parameters:**
+- `categoryId` (optional) - Filter by category
+
+**Response (200 OK):**
+```json
+{
+  "items": [
+    {
+      "id": "clitem1",
+      "categoryId": "clcat1",
+      "name": "Pilot Bore",
+      "description": "Initial pilot bore drilling",
+      "unit": "LF",
+      "unitCost": 15.50,
+      "productionRate": 150.0,
+      "createdAt": "2025-11-27T10:00:00Z",
+      "updatedAt": "2025-11-27T10:00:00Z",
+      "category": {
+        "id": "clcat1",
+        "name": "Drilling"
+      }
+    }
+  ]
+}
+```
+
+**Permissions:** All authenticated users
+
+---
+
+### POST /api/cost-items
+
+Create a new cost item.
+
+**Request:**
+```http
+POST /api/cost-items
+Content-Type: application/json
+
+{
+  "categoryId": "clcat1",
+  "name": "Reaming Pass",
+  "description": "Hole enlargement pass",
+  "unit": "LF",
+  "unitCost": 8.75,
+  "productionRate": 200.0
+}
+```
+
+**Response (201 Created):**
+```json
+{
+  "item": {
+    "id": "clitem2",
+    "categoryId": "clcat1",
+    "name": "Reaming Pass",
+    "description": "Hole enlargement pass",
+    "unit": "LF",
+    "unitCost": 8.75,
+    "productionRate": 200.0,
+    "createdAt": "2025-11-27T12:00:00Z",
+    "updatedAt": "2025-11-27T12:00:00Z"
+  }
+}
+```
+
+**Validation Rules:**
+- `categoryId` - Required, must exist
+- `name` - Required, min 1 character
+- `unit` - Required (e.g., "LF", "HR", "EA", "DAY")
+- `unitCost` - Required, must be positive number
+- `productionRate` - Optional, positive number (units per day)
+
+**Permissions:** OWNER, SUPER
+
+---
+
+### GET /api/cost-items/:id
+
+Get cost item by ID.
+
+**Request:**
+```http
+GET /api/cost-items/clitem1
+```
+
+**Response (200 OK):**
+```json
+{
+  "item": {
+    "id": "clitem1",
+    "categoryId": "clcat1",
+    "name": "Pilot Bore",
+    "description": "Initial pilot bore drilling",
+    "unit": "LF",
+    "unitCost": 15.50,
+    "productionRate": 150.0,
+    "category": {
+      "id": "clcat1",
+      "name": "Drilling"
+    },
+    "createdAt": "2025-11-27T10:00:00Z",
+    "updatedAt": "2025-11-27T10:00:00Z"
+  }
+}
+```
+
+**Errors:**
+- `404` - Cost item not found
+
+**Permissions:** All authenticated users
+
+---
+
+### PUT /api/cost-items/:id
+
+Update cost item.
+
+**Request:**
+```http
+PUT /api/cost-items/clitem1
+Content-Type: application/json
+
+{
+  "name": "Pilot Bore (4-6\" diameter)",
+  "unitCost": 16.00,
+  "productionRate": 140.0
+}
+```
+
+**Response (200 OK):**
+```json
+{
+  "item": {
+    "id": "clitem1",
+    "name": "Pilot Bore (4-6\" diameter)",
+    "unitCost": 16.00,
+    "productionRate": 140.0,
+    "updatedAt": "2025-11-27T14:00:00Z"
+  }
+}
+```
+
+**Permissions:** OWNER, SUPER
+
+---
+
+### DELETE /api/cost-items/:id
+
+Delete cost item.
+
+**Request:**
+```http
+DELETE /api/cost-items/clitem1
+```
+
+**Response (200 OK):**
+```json
+{
+  "success": true,
+  "message": "Cost item deleted successfully"
+}
+```
+
+**Permissions:** OWNER only
+
+---
+
+## Estimates
+
+### GET /api/estimates
+
+List all estimates with optional filtering.
+
+**Request:**
+```http
+GET /api/estimates?status=DRAFT
+```
+
+**Query Parameters:**
+- `status` (optional) - Filter by EstimateStatus enum (DRAFT, SENT, APPROVED, REJECTED, EXPIRED)
+
+**Response (200 OK):**
+```json
+{
+  "estimates": [
+    {
+      "id": "clest1",
+      "name": "Main Street HDD Bore",
+      "description": "500 LF fiber conduit installation",
+      "status": "DRAFT",
+      "customerName": "City of Minneapolis",
+      "customerEmail": "utilities@minneapolis.gov",
+      "customerPhone": "(612) 555-1234",
+      "subtotal": 12500.00,
+      "markupPercent": 0.15,
+      "markupAmount": 1875.00,
+      "taxPercent": 0.0725,
+      "taxAmount": 1042.19,
+      "total": 15417.19,
+      "validUntil": "2025-12-31T00:00:00Z",
+      "createdAt": "2025-11-27T10:00:00Z",
+      "updatedAt": "2025-11-27T10:00:00Z",
+      "createdBy": {
+        "id": "clyyy",
+        "name": "John Doe",
+        "email": "john@example.com"
+      },
+      "project": {
+        "id": "clxxx",
+        "name": "Minneapolis Fiber Project"
+      },
+      "_count": {
+        "lines": 5
+      }
+    }
+  ]
+}
+```
+
+**Permissions:** All authenticated users
+
+---
+
+### POST /api/estimates
+
+Create a new estimate.
+
+**Request:**
+```http
+POST /api/estimates
+Content-Type: application/json
+
+{
+  "name": "Highway 169 Crossing",
+  "description": "1200 LF highway crossing for fiber",
+  "customerName": "MnDOT",
+  "customerEmail": "permits@mndot.gov",
+  "customerPhone": "(651) 555-5678",
+  "markupPercent": 0.20,
+  "taxPercent": 0,
+  "validUntil": "2025-12-15T00:00:00Z",
+  "notes": "Requires night work permits",
+  "terms": "Net 30 payment terms. Work to begin within 30 days of approval.",
+  "projectId": "clxxx"
+}
+```
+
+**Response (201 Created):**
+```json
+{
+  "estimate": {
+    "id": "clest2",
+    "name": "Highway 169 Crossing",
+    "status": "DRAFT",
+    "subtotal": 0,
+    "markupPercent": 0.20,
+    "markupAmount": 0,
+    "taxPercent": 0,
+    "taxAmount": 0,
+    "total": 0,
+    "createdAt": "2025-11-27T12:00:00Z"
+  }
+}
+```
+
+**Validation Rules:**
+- `name` - Required, min 1 character
+- `markupPercent` - Optional, defaults to 0.15 (15%)
+- `taxPercent` - Optional, defaults to 0
+- `projectId` - Optional, links to existing project
+- `validUntil` - Optional, ISO 8601 datetime
+
+**Permissions:** OWNER, SUPER
+
+---
+
+### GET /api/estimates/:id
+
+Get estimate details with line items.
+
+**Request:**
+```http
+GET /api/estimates/clest1
+```
+
+**Response (200 OK):**
+```json
+{
+  "estimate": {
+    "id": "clest1",
+    "name": "Main Street HDD Bore",
+    "description": "500 LF fiber conduit installation",
+    "status": "DRAFT",
+    "customerName": "City of Minneapolis",
+    "customerEmail": "utilities@minneapolis.gov",
+    "customerPhone": "(612) 555-1234",
+    "subtotal": 12500.00,
+    "markupPercent": 0.15,
+    "markupAmount": 1875.00,
+    "taxPercent": 0.0725,
+    "taxAmount": 1042.19,
+    "total": 15417.19,
+    "validUntil": "2025-12-31T00:00:00Z",
+    "notes": "Standard bore conditions assumed",
+    "terms": "Net 30. 50% deposit required.",
+    "lines": [
+      {
+        "id": "clline1",
+        "costItemId": "clitem1",
+        "description": "Pilot bore drilling",
+        "quantity": 500,
+        "unit": "LF",
+        "unitCost": 15.50,
+        "lineTotal": 7750.00,
+        "sortOrder": 1,
+        "costItem": {
+          "id": "clitem1",
+          "name": "Pilot Bore",
+          "category": {
+            "name": "Drilling"
+          }
+        }
+      },
+      {
+        "id": "clline2",
+        "costItemId": "clitem2",
+        "description": "Reaming pass",
+        "quantity": 500,
+        "unit": "LF",
+        "unitCost": 8.75,
+        "lineTotal": 4375.00,
+        "sortOrder": 2,
+        "costItem": {
+          "id": "clitem2",
+          "name": "Reaming Pass"
+        }
+      }
+    ],
+    "createdBy": {
+      "id": "clyyy",
+      "name": "John Doe"
+    },
+    "project": null,
+    "createdAt": "2025-11-27T10:00:00Z",
+    "updatedAt": "2025-11-27T14:00:00Z"
+  }
+}
+```
+
+**Errors:**
+- `404` - Estimate not found
+
+**Permissions:** All authenticated users
+
+---
+
+### PUT /api/estimates/:id
+
+Update estimate metadata.
+
+**Request:**
+```http
+PUT /api/estimates/clest1
+Content-Type: application/json
+
+{
+  "name": "Main Street HDD Bore (Revised)",
+  "status": "SENT",
+  "markupPercent": 0.18,
+  "validUntil": "2026-01-15T00:00:00Z"
+}
+```
+
+**Response (200 OK):**
+```json
+{
+  "estimate": {
+    "id": "clest1",
+    "name": "Main Street HDD Bore (Revised)",
+    "status": "SENT",
+    "markupPercent": 0.18,
+    "markupAmount": 2250.00,
+    "total": 15842.19,
+    "updatedAt": "2025-11-27T15:00:00Z"
+  }
+}
+```
+
+**Note:** Changing `markupPercent` or `taxPercent` triggers automatic recalculation of totals.
+
+**Permissions:** OWNER, SUPER
+
+---
+
+### DELETE /api/estimates/:id
+
+Delete estimate and all line items.
+
+**Request:**
+```http
+DELETE /api/estimates/clest1
+```
+
+**Response (200 OK):**
+```json
+{
+  "success": true,
+  "message": "Estimate deleted successfully"
+}
+```
+
+**⚠️ Warning:** This cascades to delete all estimate line items.
+
+**Permissions:** OWNER only
+
+---
+
+### PATCH /api/estimates/:id
+
+Recalculate estimate totals (useful after line item changes).
+
+**Request:**
+```http
+PATCH /api/estimates/clest1
+```
+
+**Response (200 OK):**
+```json
+{
+  "estimate": {
+    "id": "clest1",
+    "subtotal": 12125.00,
+    "markupAmount": 1818.75,
+    "taxAmount": 1010.99,
+    "total": 14954.74,
+    "updatedAt": "2025-11-27T16:00:00Z"
+  }
+}
+```
+
+**Calculation Logic:**
+1. `subtotal` = Sum of all line item `lineTotal` values
+2. `markupAmount` = `subtotal` × `markupPercent`
+3. `taxAmount` = (`subtotal` + `markupAmount`) × `taxPercent`
+4. `total` = `subtotal` + `markupAmount` + `taxAmount`
+
+**Permissions:** OWNER, SUPER
+
+---
+
+### GET /api/estimates/:id/lines
+
+List all line items for an estimate.
+
+**Request:**
+```http
+GET /api/estimates/clest1/lines
+```
+
+**Response (200 OK):**
+```json
+{
+  "lines": [
+    {
+      "id": "clline1",
+      "estimateId": "clest1",
+      "costItemId": "clitem1",
+      "description": "Pilot bore drilling",
+      "quantity": 500,
+      "unit": "LF",
+      "unitCost": 15.50,
+      "lineTotal": 7750.00,
+      "sortOrder": 1,
+      "costItem": {
+        "id": "clitem1",
+        "name": "Pilot Bore",
+        "category": {
+          "id": "clcat1",
+          "name": "Drilling"
+        }
+      }
+    }
+  ]
+}
+```
+
+**Permissions:** All authenticated users
+
+---
+
+### POST /api/estimates/:id/lines
+
+Add line item to estimate.
+
+**Request:**
+```http
+POST /api/estimates/clest1/lines
+Content-Type: application/json
+
+{
+  "costItemId": "clitem3",
+  "description": "Mobilization/demobilization",
+  "quantity": 1,
+  "unit": "EA",
+  "unitCost": 2500.00,
+  "sortOrder": 0
+}
+```
+
+**Response (201 Created):**
+```json
+{
+  "line": {
+    "id": "clline3",
+    "estimateId": "clest1",
+    "costItemId": "clitem3",
+    "description": "Mobilization/demobilization",
+    "quantity": 1,
+    "unit": "EA",
+    "unitCost": 2500.00,
+    "lineTotal": 2500.00,
+    "sortOrder": 0,
+    "createdAt": "2025-11-27T14:00:00Z"
+  }
+}
+```
+
+**Validation Rules:**
+- `costItemId` - Optional, links to cost item catalog
+- `description` - Required
+- `quantity` - Required, positive number
+- `unit` - Required
+- `unitCost` - Required, positive number
+- `sortOrder` - Optional, integer for display ordering
+
+**Note:** Adding a line item automatically triggers estimate total recalculation.
+
+**Permissions:** OWNER, SUPER
+
+---
+
+### DELETE /api/estimates/:id/lines/:lineId
+
+Remove line item from estimate.
+
+**Request:**
+```http
+DELETE /api/estimates/clest1/lines/clline3
+```
+
+**Response (200 OK):**
+```json
+{
+  "success": true,
+  "message": "Line item deleted successfully"
+}
+```
+
+**Note:** Deleting a line item automatically triggers estimate total recalculation.
+
+**Permissions:** OWNER, SUPER
+
+---
+
 ## Photo Management
 
 ### POST /api/photos/upload
@@ -1409,7 +2156,7 @@ Based on 2025 API documentation best practices:
 
 ---
 
-**Document Version:** 1.0.0
-**Last Updated:** 2025-11-23
-**Total Endpoints:** 31
+**Document Version:** 2.0.0
+**Last Updated:** 2025-11-27
+**Total Endpoints:** 47
 **Maintained By:** @nice-and-precise
