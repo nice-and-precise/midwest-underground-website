@@ -103,7 +103,8 @@ describe('Rod Passes API', () => {
         boreId: 'invalid-bore-id-that-does-not-exist',
         sequence: 1,
         passNumber: 1,
-        linearFeet: 50
+        linearFeet: 50,
+        loggedById: testUserId
       };
 
       await expect(

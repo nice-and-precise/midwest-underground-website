@@ -85,7 +85,7 @@ describe('Inspection Workflow (Integration)', () => {
     });
 
     expect(updated.items).toHaveLength(5);
-    expect(updated.items.every((item: any) => item.status === 'pass')).toBe(true);
+    expect((updated.items as any[]).every((item: any) => item.status === 'pass')).toBe(true);
   });
 
   it('should complete pre-construction inspection', async () => {
@@ -147,7 +147,7 @@ describe('Inspection Workflow (Integration)', () => {
     expect(updated.status).toBe(InspectionStatus.FAILED);
 
     // Find failed items
-    const failedItems = updated.items.filter((item: any) => item.status === 'fail');
+    const failedItems = (updated.items as any[]).filter((item: any) => item.status === 'fail');
     expect(failedItems).toHaveLength(2);
   });
 

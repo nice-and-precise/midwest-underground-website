@@ -248,3 +248,80 @@ export const rodPassUpdateSchema = z.object({
 
 export type RodPassCreateInput = z.infer<typeof rodPassCreateSchema>
 export type RodPassUpdateInput = z.infer<typeof rodPassUpdateSchema>
+
+// Cost Category Schemas
+export const costCategoryCreateSchema = z.object({
+  name: z.string().min(1, 'Category name is required'),
+  description: z.string().optional(),
+  sortOrder: z.number().int().nonnegative().default(0),
+  isActive: z.boolean().default(true)
+})
+
+export const costCategoryUpdateSchema = costCategoryCreateSchema.partial()
+
+export type CostCategoryCreateInput = z.infer<typeof costCategoryCreateSchema>
+export type CostCategoryUpdateInput = z.infer<typeof costCategoryUpdateSchema>
+
+// Cost Item Schemas
+export const costItemCreateSchema = z.object({
+  categoryId: z.string().min(1, 'Category ID is required'),
+  code: z.string().min(1, 'Item code is required').max(20, 'Code must be 20 characters or less'),
+  name: z.string().min(1, 'Item name is required'),
+  description: z.string().optional(),
+  unit: z.string().min(1, 'Unit is required'), // "LF", "HR", "EA", "CY", etc.
+  unitCost: z.number().nonnegative('Unit cost must be non-negative'),
+  laborRate: z.number().nonnegative().optional(),
+  equipmentRate: z.number().nonnegative().optional(),
+  materialCost: z.number().nonnegative().optional(),
+  productionRate: z.number().positive().optional(), // Units per hour
+  markup: z.number().min(0).max(1).default(0.15), // 0-100% as decimal
+  isActive: z.boolean().default(true),
+  notes: z.string().optional()
+})
+
+export const costItemUpdateSchema = costItemCreateSchema.partial()
+
+export type CostItemCreateInput = z.infer<typeof costItemCreateSchema>
+export type CostItemUpdateInput = z.infer<typeof costItemUpdateSchema>
+
+// Estimate Schemas
+export const estimateCreateSchema = z.object({
+  projectId: z.string().optional(),
+  name: z.string().min(1, 'Estimate name is required'),
+  description: z.string().optional(),
+  status: z.enum(['DRAFT', 'SENT', 'APPROVED', 'REJECTED', 'EXPIRED']).default('DRAFT'),
+  customerName: z.string().optional(),
+  customerEmail: z.string().email().optional().or(z.literal('')),
+  customerPhone: z.string().optional(),
+  validUntil: z.string().datetime().or(z.date()).optional().transform(val => val ? new Date(val) : undefined),
+  markupPercent: z.number().min(0).max(1).default(0.15),
+  taxPercent: z.number().min(0).max(1).default(0),
+  notes: z.string().optional(),
+  terms: z.string().optional()
+})
+
+export const estimateUpdateSchema = estimateCreateSchema.partial()
+
+export type EstimateCreateInput = z.infer<typeof estimateCreateSchema>
+export type EstimateUpdateInput = z.infer<typeof estimateUpdateSchema>
+
+// Estimate Line Schemas
+export const estimateLineCreateSchema = z.object({
+  estimateId: z.string().min(1, 'Estimate ID is required'),
+  costItemId: z.string().optional(),
+  lineNumber: z.number().int().positive(),
+  description: z.string().min(1, 'Description is required'),
+  quantity: z.number().positive('Quantity must be positive'),
+  unit: z.string().min(1, 'Unit is required'),
+  unitCost: z.number().nonnegative('Unit cost must be non-negative'),
+  laborCost: z.number().nonnegative().default(0),
+  equipmentCost: z.number().nonnegative().default(0),
+  materialCost: z.number().nonnegative().default(0),
+  markup: z.number().min(0).default(0),
+  notes: z.string().optional()
+})
+
+export const estimateLineUpdateSchema = estimateLineCreateSchema.partial()
+
+export type EstimateLineCreateInput = z.infer<typeof estimateLineCreateSchema>
+export type EstimateLineUpdateInput = z.infer<typeof estimateLineUpdateSchema>
