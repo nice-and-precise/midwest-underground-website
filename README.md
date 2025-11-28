@@ -75,6 +75,7 @@ npm run dev
 * ✅ 811 ticket system for utility locates
 * ✅ Equipment tracking and maintenance
 * ✅ Customer management with history
+* ✅ **Cost estimating system** with categories, items, and line-item estimates
 
 ### Operations & Analytics
 
@@ -250,5 +251,5 @@ Email: [info@midwestundergroundmn.com](mailto:info@midwestundergroundmn.com)
 ---
 
 **Built with:** Next.js, TypeScript, Prisma, NextAuth
-**Version:** 2.0.0
-**Last Updated:** 2025-11-23
+**Version:** 2.1.0
+**Last Updated:** 2025-11-28

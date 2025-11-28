@@ -9,7 +9,7 @@
 ## Quick Context
 
 This is a **Next.js 15 full-stack application** for Midwest Underground of Minnesota Inc:
-- **Next.js 15 App:** 26 pages, 40 API routes, 20 Prisma models
+- **Next.js 15 App:** 26 pages, 40 API routes, 21 Prisma models
 - **Static Dashboard:** 10 HTML pages in public/dashboard/
 - **Takeoff System:** PDF measurement & estimating tool
 - **Cost Estimating:** Complete HDD project estimation system (NEW!)
@@ -84,13 +84,14 @@ midwest-underground-website/
 │   │       └── DashboardSidebar.tsx  # ✨ NEW: Full sidebar navigation
 │   └── lib/                 # Utilities & services (6 libraries)
 │
-├── tests/                   # Testing suite (19 test files)
-│   ├── unit/               # Unit tests (API, lib)
-│   ├── integration/        # Integration workflows
-│   └── takeoff/            # Takeoff E2E tests (Playwright)
+├── tests/                   # Testing suite (17 test files + 4 fixtures)
+│   ├── e2e/                # E2E tests (6 spec files including estimates)
+│   ├── unit/               # Unit tests (8 files - API, lib)
+│   ├── integration/        # Integration workflows (3 files)
+│   └── fixtures/           # Test fixtures (4 files)
 │
 ├── prisma/                 # Database layer
-│   └── schema.prisma       # 16 models (User, Project, Bore, etc.)
+│   └── schema.prisma       # 21 models (User, Project, Bore, Cost, Estimate, etc.)
 │
 ├── docs/                      # 📚 RESTRUCTURED: Professional documentation (130+ files)
 │   ├── README.md             # Documentation index
@@ -184,7 +185,7 @@ midwest-underground-website/
 
 ## 🗄️ Database (Prisma)
 
-**Models:** 20 total
+**Models:** 21 total
 **Technology:** SQLite (dev) → PostgreSQL (production)
 
 ### Core Models
@@ -269,7 +270,7 @@ midwest-underground-website/
 
 ## 🧪 Testing
 
-**Total Test Files:** 21
+**Total Test Files:** 17 (plus 4 fixtures, 1 setup)
 
 ### Unit Tests (`tests/unit/`)
 - API route handlers (including Contact API)
@@ -286,6 +287,7 @@ midwest-underground-website/
 - Dashboard navigation
 - HDD operations
 - **Marketing Pages:** Home, Services, About, Projects, Contact
+- **Estimates & Cost Management:** Create, list, detail views (NEW)
 - **Takeoff System:** 28/33 tests passing (96% functional)
 
 ### Test Commands
@@ -358,8 +360,8 @@ See `docs/NEXT-SESSION-HANDOFF.md` for:
 - **HTML Pages:** 19 (5 public + 14 dashboard)
 - **React Components:** 13
 - **API Routes:** 40
-- **Database Models:** 20
-- **Test Files:** 19
+- **Database Models:** 21
+- **Test Files:** 17 (plus fixtures/setup)
 - **Documentation Files:** 139 (restructured)
 
 ### Lines of Code
@@ -371,7 +373,7 @@ See `docs/NEXT-SESSION-HANDOFF.md` for:
 
 ### Commits
 - **Total:** 100+ commits
-- **Latest:** 9b0685e (Documentation restructure)
+- **Latest:** c17dc4d (E2E estimates tests)
 - **Branch:** master
 
 ## 🎯 Project Status
@@ -382,14 +384,15 @@ See `docs/NEXT-SESSION-HANDOFF.md` for:
 - **Takeoff System:** 93.5% ✅ (PRODUCTION READY)
 - **Phase 3 (Advanced Features):** Planned 📋
 
-### Recent Milestones (Nov 27, 2025)
+### Recent Milestones (Nov 27-28, 2025)
 1. ✅ Cost Estimating System Complete (Commit: ce71a7b)
 2. ✅ 4 New Database Models (CostCategory, CostItem, Estimate, EstimateLine)
 3. ✅ Cost Calculation Engine with HDD-specific rates
 4. ✅ 7 New API Endpoints for cost/estimate management
 5. ✅ Estimates Dashboard Pages (list, detail, create)
 6. ✅ Contact Form Backend with rate limiting
-7. ✅ 141/141 Tests Passing
+7. ✅ E2E Tests for Estimates (Commit: c17dc4d)
+8. ✅ All Tests Passing
 
 ### Next Steps
 1. **Immediate:** Add cost items seed data
@@ -577,9 +580,9 @@ npm run docs:check-all      # Run all validation
 
 ---
 
-**Last Updated:** November 27, 2025 (Cost Features & Estimating System Added)
+**Last Updated:** November 28, 2025 (E2E Tests for Estimates Added)
 **Branch:** master
-**Commit:** ce71a7b (feat: add complete estimating and cost calculation system)
-**Index Version:** 8.0.0
+**Commit:** c17dc4d (test(e2e): add estimates and cost management e2e tests)
+**Index Version:** 8.1.0
 **Total Size:** ~4,500 tokens (~17KB)
-**Previous Version:** 7.2.0 (Contact API & Rate Limiting)
+**Previous Version:** 8.0.0 (Cost Features & Estimating System)

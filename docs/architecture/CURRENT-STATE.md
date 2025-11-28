@@ -56,7 +56,7 @@
 
 # System Architecture - Current State
 
-<!-- Last Updated: 2025-11-27 -->
+<!-- Last Updated: 2025-11-28 -->
 
 ## Default Branch: master
 
@@ -75,7 +75,7 @@ The master branch represents a **fully migrated Next.js application** with integ
 - ✅ Complete HDD Business Dashboard (6 modules)
 - ✅ PDF Takeoff & Estimating System (Module 1.1-1.3 complete)
 - ✅ Authentication system with role-based access
-- ✅ SQLite database with 17+ HDD operational models
+- ✅ SQLite database with 21 HDD operational models
 - ✅ Production build verified and tagged
 
 ---
@@ -217,7 +217,7 @@ This reflects what is **actually running on master today** (2025-11-23).
 ### Database
 - **ORM:** Prisma 6.0.1
 - **Database:** SQLite (development) - ready for PostgreSQL (production)
-- **Schema:** 17+ HDD operational models (Equipment, Projects, Jobs, Crew, etc.)
+- **Schema:** 21 HDD operational models (User, Project, Bore, Cost, Estimate, etc.)
 - **Seeding:** Automated seed data via `prisma/seed.ts`
 
 ### Specialized Features

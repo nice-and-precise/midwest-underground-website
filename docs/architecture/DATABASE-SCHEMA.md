@@ -32,7 +32,7 @@ The Midwest Underground database schema is designed for comprehensive HDD (Horiz
 
 ### Key Metrics
 
-- **Total Models:** 20
+- **Total Models:** 21
 - **Total Fields:** 300+
 - **Relationships:** 48 foreign keys
 - **Enums:** 11 types
@@ -1350,6 +1350,6 @@ const inspections = await prisma.inspection.findMany({
 
 ---
 
-**Document Version:** 2.0.0
-**Last Updated:** 2025-11-27
+**Document Version:** 2.1.0
+**Last Updated:** 2025-11-28
 **Maintained By:** @nice-and-precise
