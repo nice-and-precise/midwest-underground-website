@@ -3582,7 +3582,7 @@ function clearAllMeasurements() {
  * Called during initialization
  */
 function addPersistenceButtons() {
-    const toolbar = document.querySelector('.measurement-toolbar');
+    const toolbar = document.querySelector('.measurement-tools');
     if (!toolbar) {
         console.warn('[Persistence] Toolbar not found - cannot add persistence buttons');
         return;
@@ -3674,7 +3674,7 @@ function updateScaleIndicator() {
         scaleStatus.style.cssText = 'margin-left: 16px; font-weight: 500;';
 
         // Try to add to status bar
-        const statusBar = document.querySelector('.measurement-status-bar');
+        const statusBar = document.querySelector('.measurement-status');
         if (statusBar) {
             statusBar.appendChild(scaleStatus);
         } else {

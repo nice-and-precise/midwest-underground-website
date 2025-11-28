@@ -167,8 +167,8 @@ function showNotification(message, type = 'info') {
 }
 
 // Add animation keyframes
-const style = document.createElement('style');
-style.textContent = `
+const dashboardAnimationStyle = document.createElement('style');
+dashboardAnimationStyle.textContent = `
   @keyframes slideIn {
     from {
       transform: translateX(400px);
@@ -191,4 +191,4 @@ style.textContent = `
     }
   }
 `;
-document.head.appendChild(style);
+document.head.appendChild(dashboardAnimationStyle);
