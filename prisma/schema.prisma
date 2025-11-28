@@ -128,6 +128,8 @@ model Bore {
 
   @@index([projectId])
   @@index([status])
+  @@index([entryPitId])
+  @@index([exitPitId])
 }
 
 enum BoreStatus {
@@ -161,6 +163,7 @@ model RodPass {
 
   @@index([boreId])
   @@index([sequence])
+  @@index([loggedById])
 }
 
 // ============================================================================
@@ -197,6 +200,8 @@ model DailyReport {
   @@index([projectId])
   @@index([reportDate])
   @@index([status])
+  @@index([createdById])
+  @@index([signedById])
 }
 
 enum ReportStatus {
@@ -219,6 +224,7 @@ model ReportAudit {
   changedBy       User        @relation(fields: [changedById], references: [id])
 
   @@index([reportId])
+  @@index([changedById])
 }
 
 // ============================================================================
@@ -249,6 +255,9 @@ model Inspection {
 
   @@index([projectId])
   @@index([status])
+  @@index([boreId])
+  @@index([assigneeId])
+  @@index([createdById])
 }
 
 enum InspectionStatus {
@@ -275,6 +284,7 @@ model CorrectiveAction {
 
   @@index([inspectionId])
   @@index([status])
+  @@index([assigneeId])
 }
 
 enum CAStatus {
@@ -312,6 +322,9 @@ model RFI {
 
   @@index([projectId])
   @@index([status])
+  @@index([boreId])
+  @@index([createdById])
+  @@index([respondedById])
 }
 
 enum RFIStatus {
@@ -345,6 +358,8 @@ model TMTicket {
 
   @@index([projectId])
   @@index([status])
+  @@index([rfiId])
+  @@index([createdById])
 }
 
 enum TMStatus {
@@ -380,6 +395,9 @@ model ChangeOrder {
 
   @@index([projectId])
   @@index([status])
+  @@index([tmTicketId])
+  @@index([rfiId])
+  @@index([createdById])
 }
 
 enum COStatus {
@@ -434,6 +452,7 @@ model Ticket811Response {
   respondedBy     User        @relation(fields: [respondedById], references: [id])
 
   @@index([ticketId])
+  @@index([respondedById])
 }
 
 // ============================================================================
@@ -458,6 +477,8 @@ model Event {
 
   @@index([projectId])
   @@index([timestamp])
+  @@index([boreId])
+  @@index([createdById])
 }
 
 // ============================================================================
@@ -536,6 +557,7 @@ model Photo {
   @@index([boreId])
   @@index([inspectionId])
   @@index([dailyReportId])
+  @@index([uploadedById])
 }
 
 // ============================================================================
