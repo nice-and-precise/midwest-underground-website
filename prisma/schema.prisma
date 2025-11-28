@@ -156,6 +156,7 @@ model RodPass {
   notes           String?
   loggedById      String
   createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
 
   // Relations
   bore            Bore      @relation(fields: [boreId], references: [id], onDelete: Cascade)
@@ -218,6 +219,7 @@ model ReportAudit {
   changedAt       DateTime    @default(now())
   changes         Json
   snapshot        Json
+  updatedAt       DateTime    @updatedAt
 
   // Relations
   report          DailyReport @relation(fields: [reportId], references: [id], onDelete: Cascade)
@@ -244,6 +246,7 @@ model Inspection {
   location        Json?
   createdById     String
   createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
 
   // Relations
   project         Project             @relation(fields: [projectId], references: [id], onDelete: Cascade)
@@ -277,6 +280,7 @@ model CorrectiveAction {
   resolution      String?
   closedAt        DateTime?
   createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
 
   // Relations
   inspection      Inspection @relation(fields: [inspectionId], references: [id], onDelete: Cascade)
@@ -311,6 +315,7 @@ model RFI {
   attachments     Json        @default("[]")
   createdById     String
   createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
 
   // Relations
   project         Project     @relation(fields: [projectId], references: [id], onDelete: Cascade)
@@ -349,6 +354,7 @@ model TMTicket {
   signature       Json?         // {data, timestamp, name}
   createdById     String
   createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
 
   // Relations
   project         Project       @relation(fields: [projectId], references: [id], onDelete: Cascade)
@@ -386,6 +392,7 @@ model ChangeOrder {
   approvedAt      DateTime?
   createdById     String
   createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
 
   // Relations
   project         Project     @relation(fields: [projectId], references: [id], onDelete: Cascade)
@@ -446,6 +453,7 @@ model Ticket811Response {
   marksDescription String?
   respondedById   String
   createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
 
   // Relations
   ticket          Ticket811   @relation(fields: [ticketId], references: [id], onDelete: Cascade)
@@ -469,6 +477,8 @@ model Event {
   photos          Json      @default("[]")
   timestamp       DateTime  @default(now())
   createdById     String
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
 
   // Relations
   project         Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
@@ -495,6 +505,7 @@ model Pit {
   notes           String?
   photos          Json      @default("[]")
   createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
 
   // Relations
   project         Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
@@ -547,6 +558,7 @@ model Photo {
   dailyReportId String?
   uploadedById  String
   createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
 
   // Relations
   bore          Bore?        @relation(fields: [boreId], references: [id], onDelete: Cascade)
@@ -663,6 +675,7 @@ model EstimateLine {
   total           Float
   notes           String?
   createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
 
   // Relations
   estimate        Estimate  @relation(fields: [estimateId], references: [id], onDelete: Cascade)
