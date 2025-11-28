@@ -1,5 +1,6 @@
 import { auth } from '@/auth'
 import { NextResponse } from 'next/server'
+import { applySecurityHeaders } from '@/lib/security-headers'
 
 export default auth((req) => {
   const { pathname } = req.nextUrl
@@ -30,18 +31,22 @@ export default auth((req) => {
   if (!isPublicRoute && !isAuthenticated) {
     const loginUrl = new URL('/auth/login', req.url)
     loginUrl.searchParams.set('callbackUrl', pathname)
-    return NextResponse.redirect(loginUrl)
+    const redirectResponse = NextResponse.redirect(loginUrl)
+    return applySecurityHeaders(redirectResponse)
   }
 
   // Redirect to dashboard if trying to access login page while authenticated
   if (pathname === '/auth/login' && isAuthenticated) {
-    return NextResponse.redirect(new URL('/dashboard', req.url))
+    const redirectResponse = NextResponse.redirect(new URL('/dashboard', req.url))
+    return applySecurityHeaders(redirectResponse)
   }
 
   // Add pathname to headers so it's available in layouts
   const response = NextResponse.next()
   response.headers.set('x-pathname', pathname)
-  return response
+
+  // Apply security headers to all responses
+  return applySecurityHeaders(response)
 })
 
 // Configure which routes to run middleware on
