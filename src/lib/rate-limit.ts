@@ -4,6 +4,8 @@
  * For production, consider using Redis for distributed rate limiting
  */
 
+import { NextRequest, NextResponse } from 'next/server'
+
 interface RateLimitEntry {
   count: number
   resetTime: number
@@ -71,6 +73,11 @@ export const rateLimitConfigs = {
   contact: {
     maxRequests: 3,
     windowMs: 60 * 60 * 1000 // 1 hour
+  },
+  // Read operations - higher limits
+  read: {
+    maxRequests: 200,
+    windowMs: 60 * 1000 // 1 minute
   }
 } as const
 
@@ -253,4 +260,79 @@ export function createRateLimitIdentifier(ip: string, path?: string): string {
 export function resetRateLimitStore(): void {
   rateLimitStore.clear()
   accountLockStore.clear()
+}
+
+// =============================================================================
+// API Route Compatible Functions
+// These functions match the signature expected by existing API routes
+// =============================================================================
+
+type RateLimitType = 'auth' | 'api' | 'contact' | 'read'
+
+interface RateLimitResult {
+  success: boolean
+  response?: NextResponse
+  headers: Record<string, string>
+}
+
+/**
+ * Rate limit function for API routes
+ * @param request - NextRequest object
+ * @param type - Type of rate limit to apply
+ * @returns Rate limit result with success status and headers
+ */
+export function rateLimit(request: NextRequest, type: RateLimitType = 'api'): RateLimitResult {
+  // Get client IP from headers or fall back to a default
+  const forwardedFor = request.headers.get('x-forwarded-for')
+  const realIp = request.headers.get('x-real-ip')
+  const ip = forwardedFor?.split(',')[0] || realIp || 'anonymous'
+
+  // Get config for this type
+  const config = rateLimitConfigs[type]
+
+  // Create identifier combining IP and path for route-specific limiting
+  const identifier = createRateLimitIdentifier(ip, request.nextUrl.pathname)
+
+  // Check rate limit
+  const result = checkRateLimit(identifier, config)
+  const headers = getRateLimitHeaders(result.remaining, result.resetTime)
+
+  if (!result.allowed) {
+    return {
+      success: false,
+      response: NextResponse.json(
+        {
+          error: 'Too Many Requests',
+          message: 'Rate limit exceeded. Please try again later.',
+          retryAfter: Math.ceil((result.resetTime - Date.now()) / 1000)
+        },
+        {
+          status: 429,
+          headers
+        }
+      ),
+      headers
+    }
+  }
+
+  return {
+    success: true,
+    headers
+  }
+}
+
+/**
+ * Apply rate limit headers to a response
+ * @param response - NextResponse to modify
+ * @param headers - Rate limit headers to apply
+ * @returns The response with headers applied
+ */
+export function withRateLimitHeaders(
+  response: NextResponse,
+  headers: Record<string, string>
+): NextResponse {
+  Object.entries(headers).forEach(([key, value]) => {
+    response.headers.set(key, value)
+  })
+  return response
 }
