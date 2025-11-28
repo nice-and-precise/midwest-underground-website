@@ -1,199 +1,256 @@
 /**
- * Rate Limiting Utility for Next.js API Routes
- *
- * Uses in-memory store for development. For production, consider:
- * - Redis-based rate limiting
- * - Upstash Rate Limit
- * - Vercel Edge Config
+ * Rate Limiting Utility
+ * Implements in-memory rate limiting for API endpoints
+ * For production, consider using Redis for distributed rate limiting
  */
-
-interface RateLimitConfig {
-  interval: number; // Time window in milliseconds
-  limit: number; // Max requests per interval
-}
 
 interface RateLimitEntry {
-  count: number;
-  resetTime: number;
+  count: number
+  resetTime: number
 }
 
-// In-memory store (use Redis in production)
-const rateLimitStore = new Map<string, RateLimitEntry>();
+interface RateLimitConfig {
+  maxRequests: number  // Maximum requests allowed
+  windowMs: number     // Time window in milliseconds
+}
 
-// Default configurations for different route types
-export const RATE_LIMIT_CONFIGS = {
-  // Strict limit for auth endpoints (prevent brute force)
-  auth: { interval: 15 * 60 * 1000, limit: 5 }, // 5 requests per 15 minutes
+interface AccountLockEntry {
+  failedAttempts: number
+  lockUntil: number | null
+  lastAttempt: number
+}
 
-  // Standard API limit
-  api: { interval: 60 * 1000, limit: 60 }, // 60 requests per minute
+// In-memory stores (use Redis in production for distributed systems)
+const rateLimitStore = new Map<string, RateLimitEntry>()
+const accountLockStore = new Map<string, AccountLockEntry>()
 
-  // Relaxed limit for read-only endpoints
-  read: { interval: 60 * 1000, limit: 120 }, // 120 requests per minute
-
-  // Very strict for sensitive operations
-  sensitive: { interval: 60 * 60 * 1000, limit: 10 }, // 10 requests per hour
-
-  // Contact form (prevent spam)
-  contact: { interval: 60 * 60 * 1000, limit: 5 }, // 5 submissions per hour
-} as const;
+// Cleanup interval to prevent memory leaks
+const CLEANUP_INTERVAL = 60 * 1000 // 1 minute
 
 /**
- * Clean up expired entries periodically
+ * Cleanup expired entries periodically
  */
-function cleanupExpiredEntries(): void {
-  const now = Date.now();
+function cleanupExpiredEntries() {
+  const now = Date.now()
+
+  // Cleanup rate limit entries
   for (const [key, entry] of rateLimitStore.entries()) {
-    if (now > entry.resetTime) {
-      rateLimitStore.delete(key);
+    if (entry.resetTime < now) {
+      rateLimitStore.delete(key)
+    }
+  }
+
+  // Cleanup account lock entries (keep for 24 hours after last attempt)
+  for (const [key, entry] of accountLockStore.entries()) {
+    if (entry.lastAttempt + 24 * 60 * 60 * 1000 < now) {
+      accountLockStore.delete(key)
     }
   }
 }
 
-// Run cleanup every 5 minutes
-if (typeof setInterval !== 'undefined') {
-  setInterval(cleanupExpiredEntries, 5 * 60 * 1000);
+// Start cleanup interval (only in non-test environments)
+if (typeof setInterval !== 'undefined' && process.env.NODE_ENV !== 'test') {
+  setInterval(cleanupExpiredEntries, CLEANUP_INTERVAL)
 }
 
 /**
- * Get client identifier from request
+ * Default rate limit configurations for different endpoint types
  */
-export function getClientIdentifier(request: Request): string {
-  // Check for forwarded IP (behind proxy/load balancer)
-  const forwarded = request.headers.get('x-forwarded-for');
-  if (forwarded) {
-    return forwarded.split(',')[0].trim();
+export const rateLimitConfigs = {
+  // Auth endpoints - strict limiting
+  auth: {
+    maxRequests: 5,
+    windowMs: 15 * 60 * 1000 // 15 minutes
+  },
+  // API endpoints - moderate limiting
+  api: {
+    maxRequests: 100,
+    windowMs: 60 * 1000 // 1 minute
+  },
+  // Contact form - prevent spam
+  contact: {
+    maxRequests: 3,
+    windowMs: 60 * 60 * 1000 // 1 hour
   }
-
-  // Check for real IP header
-  const realIp = request.headers.get('x-real-ip');
-  if (realIp) {
-    return realIp;
-  }
-
-  // Fallback to a hash of user-agent + accept-language for uniqueness
-  const userAgent = request.headers.get('user-agent') || 'unknown';
-  const acceptLang = request.headers.get('accept-language') || 'unknown';
-  return `ua:${hashString(userAgent + acceptLang)}`;
-}
+} as const
 
 /**
- * Simple string hash function
+ * Account lockout configuration
  */
-function hashString(str: string): string {
-  let hash = 0;
-  for (let i = 0; i < str.length; i++) {
-    const char = str.charCodeAt(i);
-    hash = ((hash << 5) - hash) + char;
-    hash = hash & hash; // Convert to 32bit integer
-  }
-  return Math.abs(hash).toString(36);
+export const accountLockConfig = {
+  maxFailedAttempts: 5,      // Lock after 5 failed attempts
+  lockDurationMs: 15 * 60 * 1000, // 15 minute lockout
+  attemptWindowMs: 60 * 60 * 1000 // 1 hour window for counting attempts
 }
 
 /**
  * Check rate limit for a given identifier
+ * @param identifier - Unique identifier (IP address, user ID, etc.)
+ * @param config - Rate limit configuration
+ * @returns Object with allowed status and remaining requests
  */
 export function checkRateLimit(
   identifier: string,
-  config: RateLimitConfig = RATE_LIMIT_CONFIGS.api
-): { success: boolean; remaining: number; resetTime: number } {
-  const now = Date.now();
-  const key = identifier;
+  config: RateLimitConfig = rateLimitConfigs.api
+): { allowed: boolean; remaining: number; resetTime: number } {
+  const now = Date.now()
+  const key = identifier
 
-  let entry = rateLimitStore.get(key);
+  const entry = rateLimitStore.get(key)
 
-  // If no entry or expired, create new one
-  if (!entry || now > entry.resetTime) {
-    entry = {
+  // No existing entry or expired entry
+  if (!entry || entry.resetTime < now) {
+    rateLimitStore.set(key, {
       count: 1,
-      resetTime: now + config.interval
-    };
-    rateLimitStore.set(key, entry);
+      resetTime: now + config.windowMs
+    })
     return {
-      success: true,
-      remaining: config.limit - 1,
-      resetTime: entry.resetTime
-    };
+      allowed: true,
+      remaining: config.maxRequests - 1,
+      resetTime: now + config.windowMs
+    }
   }
 
   // Check if limit exceeded
-  if (entry.count >= config.limit) {
+  if (entry.count >= config.maxRequests) {
     return {
-      success: false,
+      allowed: false,
       remaining: 0,
       resetTime: entry.resetTime
-    };
+    }
   }
 
   // Increment count
-  entry.count++;
-  rateLimitStore.set(key, entry);
+  entry.count++
+  rateLimitStore.set(key, entry)
 
   return {
-    success: true,
-    remaining: config.limit - entry.count,
+    allowed: true,
+    remaining: config.maxRequests - entry.count,
     resetTime: entry.resetTime
-  };
+  }
 }
 
 /**
- * Rate limit middleware for API routes
+ * Record a failed login attempt
+ * @param identifier - User identifier (email or IP)
+ * @returns Whether the account is now locked
  */
-export function rateLimit(
-  request: Request,
-  configType: keyof typeof RATE_LIMIT_CONFIGS = 'api'
-): { success: boolean; headers: Headers; response?: Response } {
-  const identifier = getClientIdentifier(request);
-  const config = RATE_LIMIT_CONFIGS[configType];
-  const result = checkRateLimit(`${configType}:${identifier}`, config);
+export function recordFailedLogin(identifier: string): {
+  locked: boolean
+  remainingAttempts: number
+  lockUntil: number | null
+} {
+  const now = Date.now()
+  const entry = accountLockStore.get(identifier)
 
-  const headers = new Headers();
-  headers.set('X-RateLimit-Limit', config.limit.toString());
-  headers.set('X-RateLimit-Remaining', result.remaining.toString());
-  headers.set('X-RateLimit-Reset', Math.ceil(result.resetTime / 1000).toString());
-
-  if (!result.success) {
-    const retryAfter = Math.ceil((result.resetTime - Date.now()) / 1000);
-    headers.set('Retry-After', retryAfter.toString());
-
+  // Check if currently locked
+  if (entry?.lockUntil && entry.lockUntil > now) {
     return {
-      success: false,
-      headers,
-      response: new Response(
-        JSON.stringify({
-          error: 'Too Many Requests',
-          message: `Rate limit exceeded. Try again in ${retryAfter} seconds.`,
-          retryAfter
-        }),
-        {
-          status: 429,
-          headers: {
-            'Content-Type': 'application/json',
-            ...Object.fromEntries(headers.entries())
-          }
-        }
-      )
-    };
+      locked: true,
+      remainingAttempts: 0,
+      lockUntil: entry.lockUntil
+    }
   }
 
-  return { success: true, headers };
+  // Create new entry or update existing
+  if (!entry || entry.lastAttempt + accountLockConfig.attemptWindowMs < now) {
+    // Reset if no entry or outside window
+    accountLockStore.set(identifier, {
+      failedAttempts: 1,
+      lockUntil: null,
+      lastAttempt: now
+    })
+    return {
+      locked: false,
+      remainingAttempts: accountLockConfig.maxFailedAttempts - 1,
+      lockUntil: null
+    }
+  }
+
+  // Increment failed attempts
+  const newAttempts = entry.failedAttempts + 1
+  const shouldLock = newAttempts >= accountLockConfig.maxFailedAttempts
+  const lockUntil = shouldLock ? now + accountLockConfig.lockDurationMs : null
+
+  accountLockStore.set(identifier, {
+    failedAttempts: newAttempts,
+    lockUntil,
+    lastAttempt: now
+  })
+
+  return {
+    locked: shouldLock,
+    remainingAttempts: shouldLock ? 0 : accountLockConfig.maxFailedAttempts - newAttempts,
+    lockUntil
+  }
 }
 
 /**
- * Helper to apply rate limit headers to a response
+ * Record a successful login (resets failed attempts)
+ * @param identifier - User identifier (email or IP)
  */
-export function withRateLimitHeaders(
-  response: Response,
-  rateLimitHeaders: Headers
-): Response {
-  const newHeaders = new Headers(response.headers);
-  rateLimitHeaders.forEach((value, key) => {
-    newHeaders.set(key, value);
-  });
+export function recordSuccessfulLogin(identifier: string): void {
+  accountLockStore.delete(identifier)
+}
 
-  return new Response(response.body, {
-    status: response.status,
-    statusText: response.statusText,
-    headers: newHeaders
-  });
+/**
+ * Check if an account is currently locked
+ * @param identifier - User identifier
+ * @returns Lock status and unlock time
+ */
+export function isAccountLocked(identifier: string): {
+  locked: boolean
+  lockUntil: number | null
+  remainingMs: number | null
+} {
+  const now = Date.now()
+  const entry = accountLockStore.get(identifier)
+
+  if (!entry || !entry.lockUntil) {
+    return { locked: false, lockUntil: null, remainingMs: null }
+  }
+
+  if (entry.lockUntil > now) {
+    return {
+      locked: true,
+      lockUntil: entry.lockUntil,
+      remainingMs: entry.lockUntil - now
+    }
+  }
+
+  // Lock expired
+  return { locked: false, lockUntil: null, remainingMs: null }
+}
+
+/**
+ * Get rate limit headers for response
+ * @param remaining - Remaining requests
+ * @param resetTime - Reset timestamp
+ * @returns Headers object
+ */
+export function getRateLimitHeaders(remaining: number, resetTime: number): Record<string, string> {
+  return {
+    'X-RateLimit-Remaining': remaining.toString(),
+    'X-RateLimit-Reset': Math.ceil(resetTime / 1000).toString(),
+    'Retry-After': Math.ceil((resetTime - Date.now()) / 1000).toString()
+  }
+}
+
+/**
+ * Create identifier from request (IP + optional path)
+ * @param ip - IP address
+ * @param path - Optional path for route-specific limiting
+ * @returns Combined identifier
+ */
+export function createRateLimitIdentifier(ip: string, path?: string): string {
+  return path ? `${ip}:${path}` : ip
+}
+
+/**
+ * Reset rate limit for testing purposes
+ */
+export function resetRateLimitStore(): void {
+  rateLimitStore.clear()
+  accountLockStore.clear()
 }
