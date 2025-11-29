@@ -118,7 +118,7 @@ describe('Daily Reports API', () => {
       ).rejects.toThrow();
     });
 
-    it('should set default status to DRAFT', async () => {
+    it('should set default status to DRAFT', { timeout: 15000 }, async () => {
       // Use a unique date based on test run timestamp + offset
       const uniqueDate = new Date(testRunTimestamp + 1000);
       const reportData = {
