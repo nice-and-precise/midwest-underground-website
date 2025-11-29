@@ -152,5 +152,57 @@ describe('Rate Limiting', () => {
       expect(rateLimitConfigs.contact.maxRequests).toBe(3)
       expect(rateLimitConfigs.contact.windowMs).toBe(60 * 60 * 1000)
     })
+
+    it('should have read config with higher limits', () => {
+      expect(rateLimitConfigs.read.maxRequests).toBe(200)
+      expect(rateLimitConfigs.read.windowMs).toBe(60 * 1000)
+    })
+  })
+
+  describe('Account Lockout Edge Cases', () => {
+    it('should return locked status when calling recordFailedLogin on locked account', () => {
+      const identifier = 'locked-user@example.com'
+      // Lock the account
+      for (let i = 0; i < accountLockConfig.maxFailedAttempts; i++) {
+        recordFailedLogin(identifier)
+      }
+
+      // Try to record another failed login while locked
+      const result = recordFailedLogin(identifier)
+      expect(result.locked).toBe(true)
+      expect(result.remainingAttempts).toBe(0)
+    })
+
+    it('should return unlocked for account without lockUntil set', () => {
+      const identifier = 'new-user@example.com'
+      // Record some failures but not enough to lock
+      recordFailedLogin(identifier)
+      recordFailedLogin(identifier)
+
+      const lockStatus = isAccountLocked(identifier)
+      expect(lockStatus.locked).toBe(false)
+      expect(lockStatus.lockUntil).toBeNull()
+      expect(lockStatus.remainingMs).toBeNull()
+    })
+  })
+
+  describe('Rate Limit Entry Expiration', () => {
+    it('should reset after window expires', () => {
+      const identifier = 'expiring-ip'
+      const shortWindow = { maxRequests: 2, windowMs: 10 } // 10ms window
+
+      checkRateLimit(identifier, shortWindow)
+      checkRateLimit(identifier, shortWindow)
+
+      // Wait for window to expire
+      return new Promise<void>((resolve) => {
+        setTimeout(() => {
+          const result = checkRateLimit(identifier, shortWindow)
+          expect(result.allowed).toBe(true)
+          expect(result.remaining).toBe(1)
+          resolve()
+        }, 20)
+      })
+    })
   })
 })
