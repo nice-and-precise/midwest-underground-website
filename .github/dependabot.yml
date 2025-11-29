@@ -1,0 +1,47 @@
+version: 2
+updates:
+  # npm dependencies
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 10
+    labels:
+      - "dependencies"
+      - "npm"
+    groups:
+      development-dependencies:
+        patterns:
+          - "@types/*"
+          - "eslint*"
+          - "typescript"
+          - "vitest"
+          - "@vitest/*"
+          - "playwright"
+          - "@playwright/*"
+        exclude-patterns:
+          - "eslint"
+      production-dependencies:
+        patterns:
+          - "next"
+          - "react"
+          - "react-dom"
+          - "next-auth"
+          - "@auth/*"
+          - "prisma"
+          - "@prisma/*"
+          - "zod"
+    commit-message:
+      prefix: "chore(deps)"
+
+  # GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    labels:
+      - "dependencies"
+      - "github-actions"
+    commit-message:
+      prefix: "chore(ci)"
