@@ -91,7 +91,7 @@ jobs:
           AUTH_SECRET: ci-build-secret-not-for-production
 
       - name: Upload build artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: build-output
           path: .next/
@@ -136,7 +136,7 @@ jobs:
           NODE_ENV: test
 
       - name: Upload Playwright report
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         if: always()
         with:
           name: playwright-report
