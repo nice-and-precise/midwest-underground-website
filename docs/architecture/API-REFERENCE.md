@@ -1,7 +1,7 @@
 # API Reference
 
-**Last Updated:** 2025-11-27
-**Version:** 2.0.0
+**Last Updated:** 2025-11-28
+**Version:** 2.1.0
 **Base URL:** `/api`
 **Authentication:** NextAuth v5 Session-based
 
@@ -19,8 +19,8 @@
 - [Project Management](#project-management)
 - [Bore Log Management](#bore-log-management)
 - [HDD Operations](#hdd-operations)
-- [Cost Categories & Items](#cost-categories--items) (NEW)
-- [Estimates](#estimates) (NEW)
+- [Cost Categories & Items](#cost-categories--items)
+- [Estimates](#estimates)
 - [Photo Management](#photo-management)
 - [KPI & Analytics](#kpi--analytics)
 - [Inspection Management](#inspection-management)
@@ -28,6 +28,7 @@
 - [Field Equipment](#field-equipment)
 - [Customer Management](#customer-management)
 - [Financial Reporting](#financial-reporting)
+- [Utility Libraries](#utility-libraries) (NEW)
 
 ---
 
@@ -2136,6 +2137,131 @@ Content-Type: application/json
 
 ---
 
+## Utility Libraries
+
+### Error Handling (`src/lib/errors.ts`)
+
+Standardized error classes for consistent API responses:
+
+| Error Class | Status Code | Use Case |
+|-------------|-------------|----------|
+| `ValidationError` | 400 | Invalid input data |
+| `AuthenticationError` | 401 | Not authenticated |
+| `AuthorizationError` | 403 | Insufficient permissions |
+| `NotFoundError` | 404 | Resource not found |
+| `ConflictError` | 409 | Duplicate resource |
+| `RateLimitError` | 429 | Rate limit exceeded |
+| `AppError` | 500 | General application error |
+
+**Usage:**
+```typescript
+import { ValidationError, NotFoundError } from '@/lib/errors'
+
+// Throw validation error
+throw new ValidationError('Invalid email format', { field: 'email' })
+
+// Throw not found
+throw new NotFoundError('Project', projectId)
+```
+
+### Rate Limiting (`src/lib/rate-limit.ts`)
+
+IP-based rate limiting to prevent abuse:
+
+```typescript
+import { createRateLimiter, checkRateLimit } from '@/lib/rate-limit'
+
+// Create limiter with custom settings
+const limiter = createRateLimiter({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100 // 100 requests per window
+})
+
+// Check rate limit in API route
+const result = await checkRateLimit(request, limiter)
+if (!result.allowed) {
+  return new Response('Rate limit exceeded', { status: 429 })
+}
+```
+
+### Audit Logging (`src/lib/audit.ts`)
+
+Comprehensive audit trail for security-sensitive actions:
+
+```typescript
+import { auditLogin, auditDataChange, auditSecurityAlert } from '@/lib/audit'
+
+// Log login attempt
+auditLogin(success, { userId, userEmail, ipAddress })
+
+// Log data modification
+auditDataChange('DATA_UPDATE', {
+  userId,
+  resource: 'projects',
+  resourceId: project.id,
+  details: { changedFields: ['status', 'name'] }
+})
+
+// Log security event
+auditSecurityAlert('Suspicious activity detected', { ipAddress, details })
+```
+
+### Monitoring (`src/lib/monitoring.ts`)
+
+Health checks and metrics collection:
+
+```typescript
+import {
+  performHealthCheck,
+  recordRequest,
+  getMetrics,
+  createHealthResponse
+} from '@/lib/monitoring'
+
+// Record API request metrics
+recordRequest(responseTimeMs, isError)
+
+// Get system metrics
+const metrics = getMetrics()
+// { requestCount, errorCount, averageResponseTime }
+
+// Perform health check with custom checks
+const health = await performHealthCheck([
+  { name: 'database', check: async () => { /* ... */ return true } }
+])
+
+// Simple health endpoint response
+const response = createHealthResponse()
+// { status: 'ok', timestamp, uptime, version }
+```
+
+### Security Headers (`src/lib/security-headers.ts`)
+
+HTTP security headers for all responses:
+
+```typescript
+import { getSecurityHeaders, createCSPHeader } from '@/lib/security-headers'
+
+// Get all security headers
+const headers = getSecurityHeaders()
+
+// Apply to response
+Object.entries(headers).forEach(([key, value]) => {
+  response.headers.set(key, value)
+})
+```
+
+Headers included:
+- `Content-Security-Policy`
+- `Strict-Transport-Security`
+- `X-Content-Type-Options`
+- `X-Frame-Options`
+- `X-XSS-Protection`
+- `Referrer-Policy`
+- `Permissions-Policy`
+
+---
+
 ## Related Documentation
 
 - [Architecture Overview](./OVERVIEW.md) - System architecture
@@ -2143,6 +2269,7 @@ Content-Type: application/json
 - [Architectural Decisions](./DECISIONS.md) - API design decisions
 - [Development Guide](../guides/DEVELOPMENT.md) - API development
 - [Testing Guide](../guides/TESTING.md) - API testing
+- [Security Guide](../guides/SECURITY.md) - Security implementation
 
 ---
 
