@@ -142,6 +142,15 @@ export async function performHealthCheck(
   const checks: HealthCheckResult['checks'] = []
   let overallStatus: HealthCheckResult['status'] = 'healthy'
 
+  // Helper to update status without triggering type narrowing issues
+  const updateStatus = (newStatus: 'degraded' | 'unhealthy') => {
+    if (newStatus === 'unhealthy') {
+      overallStatus = 'unhealthy'
+    } else if (newStatus === 'degraded' && overallStatus === 'healthy') {
+      overallStatus = 'degraded'
+    }
+  }
+
   // Memory check
   if (typeof process !== 'undefined' && process.memoryUsage) {
     try {
@@ -156,8 +165,8 @@ export async function performHealthCheck(
         message: `Heap usage: ${heapUsedMB.toFixed(1)}MB / ${heapTotalMB.toFixed(1)}MB (${heapPercent.toFixed(1)}%)`
       })
 
-      if (heapPercent > 90) overallStatus = 'unhealthy'
-      else if (heapPercent > 75 && overallStatus !== 'unhealthy') overallStatus = 'degraded'
+      if (heapPercent > 90) updateStatus('unhealthy')
+      else if (heapPercent > 75) updateStatus('degraded')
     } catch {
       checks.push({
         name: 'memory',
@@ -175,8 +184,8 @@ export async function performHealthCheck(
     message: `Error rate: ${errorRate.toFixed(2)}%`
   })
 
-  if (errorRate > 5) overallStatus = 'unhealthy'
-  else if (errorRate > 1 && overallStatus !== 'unhealthy') overallStatus = 'degraded'
+  if (errorRate > 5) updateStatus('unhealthy')
+  else if (errorRate > 1) updateStatus('degraded')
 
   // Response time check
   const percentiles = getResponseTimePercentiles()
@@ -186,8 +195,8 @@ export async function performHealthCheck(
     message: `P95 response time: ${percentiles.p95}ms`
   })
 
-  if (percentiles.p95 > 2000) overallStatus = 'unhealthy'
-  else if (percentiles.p95 > 1000 && overallStatus !== 'unhealthy') overallStatus = 'degraded'
+  if (percentiles.p95 > 2000) updateStatus('unhealthy')
+  else if (percentiles.p95 > 1000) updateStatus('degraded')
 
   // Custom checks
   if (customChecks) {
@@ -201,7 +210,7 @@ export async function performHealthCheck(
           status: result ? 'pass' : 'fail',
           duration
         })
-        if (!result) overallStatus = 'unhealthy'
+        if (!result) updateStatus('unhealthy')
       } catch (err) {
         const duration = Date.now() - startTime
         checks.push({
@@ -210,7 +219,7 @@ export async function performHealthCheck(
           message: err instanceof Error ? err.message : 'Check failed',
           duration
         })
-        overallStatus = 'unhealthy'
+        updateStatus('unhealthy')
       }
     }
   }
